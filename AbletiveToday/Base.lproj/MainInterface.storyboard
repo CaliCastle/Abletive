@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="15C40a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="u1A-vr-raW">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <scenes>
+        <!--Today Table View Controller-->
+        <scene sceneID="2ZU-aI-jOu">
+            <objects>
+                <tableViewController id="u1A-vr-raW" customClass="TodayTableViewController" customModule="AbletiveToday" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="75" sectionHeaderHeight="28" sectionFooterHeight="28" id="PtM-CL-q80">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TodayCell" rowHeight="75" id="337-Wq-Bkv" customClass="TodayTableViewCell" customModule="AbletiveToday" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="320" height="75"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="337-Wq-Bkv" id="Vh9-Rl-V6l">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ifq-gz-zFs">
+                                            <rect key="frame" x="8" y="12" width="65" height="50"/>
+                                            <animations/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="50" id="DK3-cq-N9h"/>
+                                                <constraint firstAttribute="width" constant="65" id="vdr-Tr-fXo"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="加载中..." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cGP-Su-PDx">
+                                            <rect key="frame" x="81" y="8" width="231" height="35"/>
+                                            <animations/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="35" id="TEy-Qg-n5W"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="加载中..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AlN-qf-g5m">
+                                            <rect key="frame" x="81" y="47" width="47" height="18"/>
+                                            <animations/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="18" id="EzI-R6-bGX"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <animations/>
+                                    <constraints>
+                                        <constraint firstItem="cGP-Su-PDx" firstAttribute="leading" secondItem="ifq-gz-zFs" secondAttribute="trailing" constant="8" id="5GG-Uf-XHv"/>
+                                        <constraint firstItem="ifq-gz-zFs" firstAttribute="leading" secondItem="Vh9-Rl-V6l" secondAttribute="leading" constant="8" id="BQr-ox-Rp3"/>
+                                        <constraint firstItem="AlN-qf-g5m" firstAttribute="leading" secondItem="ifq-gz-zFs" secondAttribute="trailing" constant="8" id="Dri-Fc-NZC"/>
+                                        <constraint firstItem="cGP-Su-PDx" firstAttribute="trailing" secondItem="Vh9-Rl-V6l" secondAttribute="trailingMargin" id="XLO-kl-nap"/>
+                                        <constraint firstItem="cGP-Su-PDx" firstAttribute="top" secondItem="Vh9-Rl-V6l" secondAttribute="topMargin" id="kUk-8S-Naj"/>
+                                        <constraint firstItem="ifq-gz-zFs" firstAttribute="centerY" secondItem="Vh9-Rl-V6l" secondAttribute="centerY" id="mpa-H4-oY0"/>
+                                        <constraint firstItem="AlN-qf-g5m" firstAttribute="top" secondItem="cGP-Su-PDx" secondAttribute="bottom" constant="4" id="vKM-rO-Vcu"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <animations/>
+                                <connections>
+                                    <outlet property="authorLabel" destination="AlN-qf-g5m" id="cgx-B1-8cF"/>
+                                    <outlet property="thumbnailView" destination="ifq-gz-zFs" id="CRx-P4-rTM"/>
+                                    <outlet property="titleLabel" destination="cGP-Su-PDx" id="sNg-ih-45s"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="u1A-vr-raW" id="Xm4-3w-XsW"/>
+                            <outlet property="delegate" destination="u1A-vr-raW" id="8XT-QD-iwl"/>
+                        </connections>
+                    </tableView>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="240"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7gz-l3-fmo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="506" y="380"/>
+        </scene>
+    </scenes>
+</document>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="100" id="KGk-i7-Jjw" customClass="AuthorTableViewCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="99"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="default-avatar" translatesAutoresizingMaskIntoConstraints="NO" id="2wx-uL-K1V">
+                        <rect key="frame" x="8" y="18" width="65" height="65"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="65" id="TVS-pA-BhB"/>
+                            <constraint firstAttribute="height" constant="65" id="TbS-dT-z1X"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eek-59-aFo">
+                        <rect key="frame" x="81" y="10" width="41" height="18"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="1" green="0.69803921570000005" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ILQ-xR-Bq5">
+                        <rect key="frame" x="226" y="70" width="86" height="29"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <state key="normal" title="查看Ta的文章">
+                            <color key="titleColor" red="0.77731681029999999" green="0.82335668100000003" blue="0.82809806029999999" alpha="1" colorSpace="calibratedRGB"/>
+                        </state>
+                        <connections>
+                            <action selector="viewAuthorPostDidClick:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="u1q-TG-ErS"/>
+                        </connections>
+                    </button>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fcM-gL-Vee">
+                        <rect key="frame" x="81" y="64" width="30" height="27"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="27" id="YO6-To-bhC"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <state key="normal" title="作者"/>
+                    </button>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="..." lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gRL-O8-BKT">
+                        <rect key="frame" x="81" y="30" width="231" height="32"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="32" id="Dm4-rV-SUI"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="0.35103612588652483" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <animations/>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstItem="gRL-O8-BKT" firstAttribute="leading" secondItem="2wx-uL-K1V" secondAttribute="trailing" constant="8" id="9sQ-IL-CjQ"/>
+                    <constraint firstItem="2wx-uL-K1V" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="8" id="EhE-Ww-Xrw"/>
+                    <constraint firstItem="fcM-gL-Vee" firstAttribute="leading" secondItem="2wx-uL-K1V" secondAttribute="trailing" constant="8" id="Ibi-ZY-fql"/>
+                    <constraint firstItem="fcM-gL-Vee" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" id="J84-gu-ztD"/>
+                    <constraint firstItem="ILQ-xR-Bq5" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="LCf-bW-DMW"/>
+                    <constraint firstItem="eek-59-aFo" firstAttribute="leading" secondItem="2wx-uL-K1V" secondAttribute="trailing" constant="8" id="NWv-q0-fvx"/>
+                    <constraint firstItem="fcM-gL-Vee" firstAttribute="top" secondItem="gRL-O8-BKT" secondAttribute="bottom" constant="2" id="Op5-ca-Pjh"/>
+                    <constraint firstItem="2wx-uL-K1V" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="T6L-Ai-IQV"/>
+                    <constraint firstItem="gRL-O8-BKT" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="c7i-kb-cNN"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="ILQ-xR-Bq5" secondAttribute="bottom" constant="-8" id="duJ-oK-440"/>
+                    <constraint firstItem="eek-59-aFo" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="2" id="xgN-D4-E1u"/>
+                </constraints>
+            </tableViewCellContentView>
+            <animations/>
+            <connections>
+                <outlet property="authorAvatarView" destination="2wx-uL-K1V" id="Bnd-al-kpN"/>
+                <outlet property="authorDescriptionLabel" destination="gRL-O8-BKT" id="roC-6T-LrU"/>
+                <outlet property="authorNameLabel" destination="eek-59-aFo" id="xth-9V-smH"/>
+                <outlet property="authorPostButton" destination="ILQ-xR-Bq5" id="Zwk-de-afi"/>
+                <outlet property="authorTagButton" destination="fcM-gL-Vee" id="csd-0R-yKY"/>
+            </connections>
+            <point key="canvasLocation" x="402" y="358"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="default-avatar" width="87" height="87"/>
+    </resources>
+</document>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15C40a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MeGuestHeaderViewController">
+            <connections>
+                <outlet property="guestAvatarView" destination="Ah3-gH-Fg7" id="mUm-u3-7mi"/>
+                <outlet property="headerView" destination="i5M-Pr-FkT" id="8Ua-li-SvS"/>
+                <outlet property="loginButton" destination="GE0-Hp-W1c" id="pJS-cL-cYb"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT" customClass="MeGuestHeaderView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="170"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-avatar" translatesAutoresizingMaskIntoConstraints="NO" id="Ah3-gH-Fg7">
+                    <rect key="frame" x="265" y="16" width="70" height="70"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="J2e-SD-QeW"/>
+                        <constraint firstAttribute="height" constant="70" id="Qcv-UZ-tH2"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="未登录" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cuN-Y0-mWP">
+                    <rect key="frame" x="278" y="94" width="45" height="18"/>
+                    <animations/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GE0-Hp-W1c">
+                    <rect key="frame" x="218" y="127" width="165" height="33"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="165" id="KZY-3t-jw3"/>
+                    </constraints>
+                    <state key="normal" title="登录或注册享受更多功能"/>
+                    <connections>
+                        <action selector="loginDidClick:" destination="-1" eventType="touchUpInside" id="1jX-ni-3cv"/>
+                    </connections>
+                </button>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="GE0-Hp-W1c" secondAttribute="bottom" constant="10" id="8Bw-DB-Jlc"/>
+                <constraint firstItem="GE0-Hp-W1c" firstAttribute="top" secondItem="cuN-Y0-mWP" secondAttribute="bottom" constant="15" id="E28-yI-NFB"/>
+                <constraint firstItem="Ah3-gH-Fg7" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="FBY-N6-jjm"/>
+                <constraint firstItem="cuN-Y0-mWP" firstAttribute="top" secondItem="Ah3-gH-Fg7" secondAttribute="bottom" constant="8" id="XOu-af-yC4"/>
+                <constraint firstItem="cuN-Y0-mWP" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="YHr-7c-XIG"/>
+                <constraint firstItem="Ah3-gH-Fg7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="30" id="iOD-Fi-VJW"/>
+                <constraint firstItem="GE0-Hp-W1c" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="oVu-Yq-ako"/>
+                <constraint firstItem="Ah3-gH-Fg7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="topMargin" constant="8" id="vpF-dT-9UT"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="iOD-Fi-VJW"/>
+                </mask>
+            </variation>
+        </view>
+    </objects>
+    <resources>
+        <image name="default-avatar" width="87" height="87"/>
+    </resources>
+</document>

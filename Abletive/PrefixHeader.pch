@@ -1,0 +1,23 @@
+//
+//  PrefixHeader.pch
+//  Abletive
+//
+//  Created by Cali on 11/16/15.
+//  Copyright © 2015 CaliCastle. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import "AppColor.h"
+    #import "AbletiveAPIClient.h"
+#endif
+
+
+#endif /* PrefixHeader_pch */

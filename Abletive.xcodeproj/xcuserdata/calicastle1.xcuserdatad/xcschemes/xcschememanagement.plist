@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Abletive.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>AbletiveToday.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>AbletiveWatchApp.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>Glance - AbletiveWatchApp.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>Notification - AbletiveWatchApp.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>9D315A0A1B2BEA7200A258CA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9D315A261B2BEA7200A258CA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9D315A311B2BEA7200A258CA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>9D6652591BFB4D18001DBAE4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F12032741C4636BE00A84A70</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F12033151C463A5600A84A70</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F16D15611C3A46060042E412</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F16D158B1C3A55180042E412</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>
