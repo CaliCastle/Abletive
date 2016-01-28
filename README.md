@@ -1,8 +1,8 @@
 #Abletive iOS App Source Code
-###版本1.0 (Build 1071)
+###版本1.0 (Build 1072)
 
 有任何bug可以提交issue或者发送邮件到<cali@calicastle.com>
-####正式在2016年01月18日提交与App Store审核（版本1070）
+####正式在2016年01月25日提交与App Store审核（版本1072）
 
 ##==== Screenshots/截图 ====
 ![Screenshot1](https://is1-ssl.mzstatic.com/image/thumb/Purple49/v4/a4/d0/26/a4d02674-d50f-f73c-6a8b-33fe18e0e178/pr_source.jpg/500x500bb.jpg)
@@ -22,9 +22,9 @@
 <li>***新增 Watch设置，在应用中『设置』中即可选择加载文章个数</li>
 <li>**自定义Today Widget(通知中心)的文章个数</li>
 <li>**自定义3D Touch菜单，可使用3D Touch快速进入签到页面</li>
-<li>*在『我的会员』中使用  Pay 购买会员(iOS 9.2 +)</li>
+<li><del>*在『我的会员』中使用  Pay 购买会员(iOS 9.2 +)</del></li>
 <li>*新增自定义签到提醒推送内容设置</li>
-<li>*新增『我的会员』页面</li>
+<li><del>*新增『我的会员』页面</del></li>
 <li>*新增全屏手势返回</li>
 <li>*文章上拉刷新的全新SoundFX</li>
 <li>新增文章点赞，收藏工具栏</li>
@@ -33,6 +33,7 @@
 
 ##==== Bug Fixes/修复 ====
 <ul>
+<li>***修复了 Watch登录同步问题</li>
 <li>***修复了3D Touch设置更改后崩溃的bug</li>
 <li>**修复登录，注册，注销崩溃的bug</li>
 <li>*iPhone 5s以下签到提醒设置显示不全问题</li>
