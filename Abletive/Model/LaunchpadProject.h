@@ -8,7 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *  LaunchpadProject model
+ */
 @interface LaunchpadProject : NSObject
+
+#pragma mark Properties
+
 /**
  *  Name of the project
  */
@@ -42,8 +48,23 @@
  */
 @property (nonatomic,strong) NSString *maker;
 
+#pragma mark Methods
+
+/**
+ *  Factory method of newing up with the given attributes
+ *
+ *  @param attributes NSDictionary
+ *
+ *  @return LaunchpadProject instance
+ */
 + (instancetype)launchpadProjectWithAttributes:(NSDictionary *)attributes;
 
+/**
+ *  Get projects with star
+ *
+ *  @param star  Star number
+ *  @param block Callback block
+ */
 + (void)getLaunchpadProjectsWithStar:(NSUInteger)star andBlock:(void (^)(NSArray *projects, NSError *error))block;
 
 @end

@@ -10,14 +10,34 @@
 #import "User.h"
 #import "AbletiveAPIClient.h"
 
+/**
+ *  Enumeration for different sort type
+ */
 typedef NS_ENUM(NSInteger, PostSortType) {
+    /**
+     *  By Category
+     */
     PostSortTypeCategory,
+    /**
+     *  By Tag
+     */
     PostSortTypeTag,
+    /**
+     *  By Author
+     */
     PostSortTypeAuthor,
+    /**
+     *  By Calendar
+     */
     PostSortTypeCalendar
 };
 
+/**
+ *  Post model
+ */
 @interface Post : NSObject
+
+#pragma mark Properties
 
 /**
  Post ID of the post
@@ -72,26 +92,66 @@ typedef NS_ENUM(NSInteger, PostSortType) {
  */
 @property (nonatomic,strong) NSString *shortDescription;
 
+#pragma mark Methods
+
+/**
+ *  Initializer with the given attributes
+ *
+ *  @param attributes NSDictionary
+ *
+ *  @return Post instance
+ */
 - (instancetype)initWithAttributes:(NSDictionary *)attributes;
 
+/**
+ *  Initializer with the given cache
+ *
+ *  @param cache NSDictionary
+ *
+ *  @return Post instance
+ */
 - (instancetype)initWithCache:(NSDictionary *)cache;
 
 /**
- Send request to the server and get global timeline posts
- 
- @param cookie The cookie stored in the User Defaults
- @param page The current page index
- @param count How many posts to be loaded
- @param block Call back when the posts are done loaded
- 
- @return A session data task
+ *  Send request to the server and get global timeline posts
+ *
+ *  @param cookie The cookie stored in the User Defaults
+ *  @param page   The current page index
+ *  @param count  How many posts to be loaded
+ *  @param block  Call back when the posts are done loaded
+ *
+ *  @return NSURLSessionDataTask
  */
 + (NSURLSessionDataTask *)globalTimelinePostsWithCookie:(NSString *)cookie andPage:(NSUInteger)page andCount:(NSUInteger)count andBlock:(void (^)(NSArray *, NSArray *, NSError *))block;
 
+/**
+ *  Get recent posts
+ *
+ *  @param cookie The cookie stored in the User Defaults
+ *  @param block  Callback block
+ *
+ *  @return NSURLSessionDataTask
+ */
 + (NSURLSessionDataTask *)recentPostsWithCookie:(NSString *)cookie andBlock:(void (^)(NSArray *,NSArray *,NSError *))block;
 
+/**
+ *  Sorted posts with sort type
+ *
+ *  @param type           Sort type
+ *  @param identification identifier
+ *  @param date           Datetime
+ *  @param page           Page number
+ *  @param block          Callback block
+ */
 + (void)postSortedWithSortType:(PostSortType)type andID:(NSUInteger)identification withDate:(NSString *)date atPage:(NSUInteger)page inBlock:(void (^)(NSArray *, NSError *))block;
 
+/**
+ *  Search posts with keywords
+ *
+ *  @param searchText keywords
+ *  @param page       Page number
+ *  @param block      Callback block
+ */
 + (void)postSearchWithSearchText:(NSString *)searchText forPage:(NSUInteger)page inBlock:(void (^)(NSArray *, NSError *))block;
 
 @end

@@ -8,7 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ *  Post Category model
+ */
 @interface PostCategory : NSObject
+
+#pragma mark Properties
 
 /**
  ID for the category, primary key
@@ -31,7 +36,21 @@
  */
 @property (nonatomic,assign) NSUInteger postCount;
 
+#pragma mark Methods
+/**
+ *  Initializer with the given attributes
+ *
+ *  @param attributes NSDictionary
+ *
+ *  @return Post Category instance
+ */
 - (instancetype)initWithAttributes:(NSDictionary *)attributes;
+
+/**
+ *  Get post categories
+ *
+ *  @param block Callback block
+ */
 + (void)postCategoriesWithBlock:(void (^)(NSArray *, NSError *))block;
 
 @end

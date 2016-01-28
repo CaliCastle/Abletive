@@ -10,6 +10,8 @@
 
 @interface UserOrder : NSObject
 
+#pragma mark Properties
+
 /**
  *  Unique order ID (Primary Key in DB)
  */
@@ -42,6 +44,8 @@
  *  Yes is spent in Cash, or else in Credit
  */
 @property (nonatomic,assign) BOOL cash;
+
+#pragma mark Methods
 
 /**
  *  Factory Method for instantiation a UserOrder model

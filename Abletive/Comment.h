@@ -12,6 +12,8 @@
 
 @interface Comment : NSObject
 
+#pragma mark Properties
+
 /**
  *  Comment ID (Primary Key)
  */
@@ -36,6 +38,8 @@
  *  User agent of the comment
  */
 @property (nonatomic,strong) NSString *agent;
+
+#pragma mark Methods
 
 /**
  *  Instantiate a Comment object

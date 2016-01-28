@@ -11,6 +11,8 @@
 
 @interface UserCredit : NSObject
 
+#pragma mark Properties
+
 /**
  * The date of the credit being operated
  */
@@ -19,6 +21,8 @@
  *  The detail content of the credit
  */
 @property (nonatomic,strong) NSString *content;
+
+#pragma mark Methods
 
 /**
  *  Factory Method for Instantiation

@@ -10,6 +10,7 @@
 
 @interface PostTag : NSObject
 
+#pragma mark Properties
 /**
  ID of the tag, primary key
  */
@@ -27,8 +28,22 @@
  */
 @property (nonatomic,assign) NSUInteger postCount;
 
+#pragma mark Methods
+
+/**
+ *  Initializer with the given attributes
+ *
+ *  @param attributes NSDicionary
+ *
+ *  @return Post Tag instance
+ */
 - (instancetype)initWithAttributes:(NSDictionary *)attributes;
 
+/**
+ *  Get post tags
+ *
+ *  @param block Callback block
+ */
 + (void)postTagWithBlock:(void (^)(NSArray *,NSError *))block;
 
 @end
