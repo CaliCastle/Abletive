@@ -88,29 +88,52 @@
 
 - (void)fetchMessages {
     [TAOverlay showOverlayWithLogo];
-    [ChatMessage getChatMessagesFromUserID:self.currentUser.userID andBlock:^(NSArray *chatMessages) {
-        [TAOverlay hideOverlay];
-        if (chatMessages) {
-            messageLoaded = YES;
-            if (chatMessages.count) {
-                [self.allMessages addObjectsFromArray:chatMessages];
-                [self.tableView reloadData];
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-            } else {
-                ChatMessage *helloMessage = [ChatMessage chatMessageWithContent:@"Hi😄, 我们还没聊过天呢，想找我说些什么？" andType:ChatMessageTypePlainText andIsSender:NO withUserID:self.currentUser.userID];
-                [self.allMessages addObject:helloMessage];
-                [self.tableView reloadData];
-            }
-        } else {
-            [TAOverlay showOverlayWithErrorText:@"加载失败, 请重试"];
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-    }];
+    if (!self.currentUser) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [User getUserinfoWithID:self.userID andBlock:^(User * _Nullable user, NSError * _Nullable error) {
+                if (!error) {
+                    self.currentUser = user;
+                    [ChatMessage getChatMessagesFromUserID:self.currentUser.userID andBlock:^(NSArray *chatMessages) {
+                        [self messagesLoaded:chatMessages];
+                    }];
+                    [self setupUser];
+                } else {
+                    [TAOverlay showOverlayWithErrorText:@"加载失败, 请重试"];
+                    [self.navigationController popViewControllerAnimated:YES];
+                }
+            }];
+        });
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [ChatMessage getChatMessagesFromUserID:self.currentUser.userID andBlock:^(NSArray *chatMessages) {
+                [self messagesLoaded:chatMessages];
+            }];
+        });
+    }
 }
 
 - (void)setupUser {
     self.title = self.currentUser.name;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"author"] style:UIBarButtonItemStyleDone target:self action:@selector(avatarDidTap)];
+}
+
+- (void)messagesLoaded:(NSArray *)chatMessages {
+    [TAOverlay hideOverlay];
+    if (chatMessages) {
+        messageLoaded = YES;
+        if (chatMessages.count) {
+            [self.allMessages addObjectsFromArray:chatMessages];
+            [self.tableView reloadData];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        } else {
+            ChatMessage *helloMessage = [ChatMessage chatMessageWithContent:@"Hi😄, 我们还没聊过天呢，想找我说些什么？" andType:ChatMessageTypePlainText andIsSender:NO withUserID:self.currentUser.userID];
+            [self.allMessages addObject:helloMessage];
+            [self.tableView reloadData];
+        }
+    } else {
+        [TAOverlay showOverlayWithErrorText:@"加载失败, 请重试"];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)viewDidLoad {
@@ -163,24 +186,36 @@
     [userInfo[UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
     keyboardFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
     
-    if (self.isKeyboardOpen && isOpen) {
-        self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (keyboardFrame.size.height * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
-    } else {
-        if (animationLock && !isOpen) {
-            animationLock = NO;
-            return;
-        }
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationCurve:animationCurve];
-        [UIView setAnimationDuration:animationDuration];
+    CGFloat contentSizeHeight = self.tableView.contentSize.height + self.navigationController.navigationBar.frame.size.height;
+    
+    if (self.tableView.frame.size.height - keyboardFrame.size.height >= contentSizeHeight) {
         
-        self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (keyboardFrame.size.height * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-        [UIView commitAnimations];
-        if (!isOpen && self.tableView.isDragging) {
-            animationLock = YES;
+    } else {
+        if (self.isKeyboardOpen && isOpen) {
+            self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (keyboardFrame.size.height * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
+        } else {
+            if (animationLock && !isOpen) {
+                animationLock = NO;
+                return;
+            }
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationCurve:animationCurve];
+            [UIView setAnimationDuration:animationDuration];
+            
+            if (contentSizeHeight >= self.tableView.frame.size.height) {
+                self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (keyboardFrame.size.height * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
+            } else {
+                self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (isOpen ? -1 : 1) * (contentSizeHeight - (self.tableView.frame.size.height - keyboardFrame.size.height)), self.tableView.frame.size.width, self.tableView.frame.size.height);
+            }
+            
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            [UIView commitAnimations];
+            if (!isOpen && self.tableView.isDragging) {
+                animationLock = YES;
+            }
         }
     }
+    
 }
 
 - (void)inputBarSizeWillChange:(CGFloat)height {
@@ -211,9 +246,13 @@
 }
 
 - (void)avatarDidTap {
+    [self avatarDidTap:NO];
+}
+
+- (void)avatarDidTap:(BOOL)isMyself {
     // User tapped the sender's avatar
     PersonalPageTableViewController *personalPage = [self.storyboard instantiateViewControllerWithIdentifier:@"PersonalPage"];
-    personalPage.currentUser = self.currentUser;
+    personalPage.currentUser = isMyself ? nil : self.currentUser;
     
     [self.navigationController pushViewController:personalPage animated:YES];
 }

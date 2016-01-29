@@ -31,7 +31,7 @@
 
 @protocol MessageTableViewDelegate <NSObject>
 
-- (void)avatarDidTap;
+- (void)avatarDidTap:(BOOL)isMyself;
 - (void)linkDidTapAtURL:(NSString *)url;
 
 @end

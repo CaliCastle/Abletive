@@ -430,7 +430,10 @@ typedef NS_ENUM(NSUInteger, ThemeType){
         return;
     }
     if (notification[@"message_from"]) {
+        ChatMessageTableViewController *chatMessageTVC = [baseController.storyboard instantiateViewControllerWithIdentifier:@"ChatMessage"];
+        chatMessageTVC.userID = [notification[@"message_from"] intValue];
         
+        [baseController.selectedViewController pushViewController:chatMessageTVC animated:YES];
     }
 }
 

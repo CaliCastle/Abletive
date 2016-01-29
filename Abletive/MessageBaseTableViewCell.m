@@ -167,7 +167,7 @@
 }
 
 - (void)avatarTapped:(UITapGestureRecognizer *)tapper {
-    [self.delegate avatarDidTap];
+    [self.delegate avatarDidTap:self.messageModel.isSender];
 }
 
 - (void)errorDidTap {

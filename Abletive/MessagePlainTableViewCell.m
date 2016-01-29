@@ -99,10 +99,10 @@
         mBubbleImageView.highlighted = YES;
         
         UIMenuItem *copy = [[UIMenuItem alloc]initWithTitle:@"复制" action:@selector(menuCopy)];
-        UIMenuItem *remove = [[UIMenuItem alloc]initWithTitle:@"删除" action:@selector(menuRemove)];
+//        UIMenuItem *remove = [[UIMenuItem alloc]initWithTitle:@"删除" action:@selector(menuRemove)];
         
         UIMenuController *menu = [UIMenuController sharedMenuController];
-        [menu setMenuItems:@[copy,remove]];
+        [menu setMenuItems:@[copy]];
         [menu setTargetRect:mBubbleImageView.frame inView:self];
         [menu setMenuVisible:YES animated:YES];
         
