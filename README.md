@@ -1,5 +1,5 @@
 #Abletive iOS App Source Code
-###版本1.0 (Build 1072)
+###版本1.0 (Build 1075)
 
 有任何bug可以提交issue或者发送邮件到<cali@calicastle.com>
 ####正式在2016年01月25日提交与App Store审核（版本1072）
@@ -33,6 +33,8 @@
 
 ##==== Bug Fixes/修复 ====
 <ul>
+<li>***修复了聊天时键盘弹出导致看不到消息</li>
+<li>***修复了聊天时点击自己头像的bug</li>
 <li>***修复了 Watch登录同步问题</li>
 <li>***修复了3D Touch设置更改后崩溃的bug</li>
 <li>**修复登录，注册，注销崩溃的bug</li>
@@ -43,6 +45,7 @@
 </ul>
 ##==== Improvements/优化改善 ====
 <ul>
+<li>**优化了聊天私信消息推送后直接进入聊天界面</li>
 <li>*优化了更改资料页面</li>
 <li>*优化了『我』选项卡下的布局</li>
 <li>优化了签到页面点击头像的处理</li>
