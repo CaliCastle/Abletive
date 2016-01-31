@@ -110,6 +110,7 @@
     if ([self.currentPost.content containsString:@"http://share.acg.tv/flash.swf"]) {
         self.currentPost.content = [self filterBilibili:self.currentPost.content];
     }
+    
     self.currentPost.content = [self filterHTML:self.currentPost.content];
     self.currentPost.content = [NSString parseString:self.currentPost.content];
     
@@ -263,6 +264,7 @@
 }
 
 - (NSString *)filterLinkText:(NSString *)html {
+    html = [html stringByReplacingOccurrencesOfString:@"document.createElement('video');" withString:@""];
     NSScanner * scanner = [NSScanner scannerWithString:html];
     NSString * text = nil;
     while([scanner isAtEnd]==NO) {
@@ -425,7 +427,21 @@
 - (void)openLink:(UITapGestureRecognizer *)sender {
     NSUInteger linkIndex = sender.self.view.tag;
     NSString *link = self.links[linkIndex];
-    [self.delegate openLinkWithURL:link];
+    if ([link containsString:@"\">"]) {
+        link = [link substringToIndex:[link rangeOfString:@"\">"].location];
+    }
+    
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"操作" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"复制链接" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [UIPasteboard generalPasteboard].string = link;
+        [self.delegate showStatus:@"复制成功"];
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"打开链接" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self.delegate openLinkWithURL:link];
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 //- (void)

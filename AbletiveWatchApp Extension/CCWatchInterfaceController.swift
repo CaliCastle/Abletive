@@ -47,11 +47,6 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
             currentUser = CCUser()
         }
         updateViews()
-    }
-
-    override func willActivate() {
-        // This method is called when watch view controller is about to be visible to user
-        super.willActivate()
         
         // If the WC is supported, activate it
         if WCSession.isSupported() && WCSession.defaultSession().reachable {
@@ -61,6 +56,11 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
             
             fetchUserFromiPhone(session)
         }
+    }
+
+    override func willActivate() {
+        // This method is called when watch view controller is about to be visible to user
+        super.willActivate()
     }
     
     func fetchUserFromiPhone(session : WCSession = WCSession.defaultSession()) {

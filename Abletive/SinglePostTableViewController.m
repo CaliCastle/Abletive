@@ -252,8 +252,11 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
     }];
 }
 
+- (void)showStatus:(NSString *)string {
+    [MozTopAlertView showWithType:MozAlertTypeSuccess text:string parentView:self.navigationController.navigationBar];
+}
+
 - (void)openLinkWithURL:(NSString *)url {
-    
     if ([url containsString:@"http://abletive.com/"]) {
         SinglePostTableViewController *singlePostTVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SinglePostTVC"];
         singlePostTVC.postSlug = url;

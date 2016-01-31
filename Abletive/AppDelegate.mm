@@ -160,10 +160,12 @@ typedef NS_ENUM(NSUInteger, ThemeType){
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoggedOut) name:@"User_Logout" object:nil];
     
     // If WatchConnectivity Session supported, turn it on for message receiving
-    if ([WCSession isSupported]) {
-        WCSession *session = [WCSession defaultSession];
-        session.delegate = self;
-        [session activateSession];
+    if (IOS_VERSION_9_OR_ABOVE) {
+        if ([WCSession isSupported] && [WCSession defaultSession].isPaired && [WCSession defaultSession].isWatchAppInstalled) {
+            WCSession *session = [WCSession defaultSession];
+            session.delegate = self;
+            [session activateSession];
+        }
     }
     
     /**

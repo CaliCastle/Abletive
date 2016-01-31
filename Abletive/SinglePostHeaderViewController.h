@@ -16,6 +16,8 @@
 
 - (void)showPhotos:(NSArray *)images atIndex:(NSUInteger)index;
 
+- (void)showStatus:(NSString *)string;
+
 @end
 
 @interface SinglePostHeaderViewController : UIViewController

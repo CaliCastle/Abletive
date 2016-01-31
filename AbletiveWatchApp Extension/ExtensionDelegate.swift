@@ -9,27 +9,11 @@
 import WatchKit
 import WatchConnectivity
 
-class ExtensionDelegate: NSObject, WKExtensionDelegate,WCSessionDelegate {
+class ExtensionDelegate: NSObject, WKExtensionDelegate {
 
-    let kCheckInKey = "Apple_Watch_Check_In_Enabled"
-    let kPostCountKey = "Apple_Watch_Post_Count"
-    
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.
-        if WCSession.isSupported() {
-            let session = WCSession.defaultSession()
-            session.delegate = self
-            session.activateSession()
-        }
         
-    }
-    
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject]) {
-        if message[kCheckInKey] != nil {
-            
-        } else if message[kPostCountKey] != nil {
-            
-        }
     }
 
     func applicationDidBecomeActive() {

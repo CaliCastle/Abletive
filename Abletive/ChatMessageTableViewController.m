@@ -17,6 +17,8 @@
 #import "PersonalPageTableViewController.h"
 #import "SinglePostTableViewController.h"
 
+#define DEFAULT_BAR_HEIGHT 44.0
+
 @interface ChatMessageTableViewController ()<UITableViewDataSource,UITableViewDelegate,MessageTableViewDelegate>
 
 @property (nonatomic,strong) NSMutableArray *allMessages;
@@ -191,8 +193,16 @@
     if (self.tableView.frame.size.height - keyboardFrame.size.height >= contentSizeHeight) {
         
     } else {
+        /**
+         *  If we currently have a keyboard (Mostly likely when the user taps on Emoticon button)
+         */
         if (self.isKeyboardOpen && isOpen) {
-            self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (keyboardFrame.size.height * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
+            if (contentSizeHeight >= self.tableView.frame.size.height) {
+                self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (keyboardFrame.size.height * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
+            } else {
+                self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (isOpen ? -1 : 1) * (contentSizeHeight - (self.tableView.frame.size.height - keyboardFrame.size.height)), self.tableView.frame.size.width, self.tableView.frame.size.height);
+            }
+            
         } else {
             if (animationLock && !isOpen) {
                 animationLock = NO;
@@ -203,9 +213,9 @@
             [UIView setAnimationDuration:animationDuration];
             
             if (contentSizeHeight >= self.tableView.frame.size.height) {
-                self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (keyboardFrame.size.height * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
+                self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (keyboardFrame.size.height * (isOpen ? -1 : 1)) + ((self.inputBar.frame.size.height - DEFAULT_BAR_HEIGHT) * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
             } else {
-                self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (isOpen ? -1 : 1) * (contentSizeHeight - (self.tableView.frame.size.height - keyboardFrame.size.height)), self.tableView.frame.size.width, self.tableView.frame.size.height);
+                self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (isOpen ? -1 : 1) * (contentSizeHeight - (self.tableView.frame.size.height - keyboardFrame.size.height)) + ((self.inputBar.frame.size.height - DEFAULT_BAR_HEIGHT) * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
             }
             
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
@@ -219,7 +229,7 @@
 }
 
 - (void)inputBarSizeWillChange:(CGFloat)height {
-    self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.tableView.frame.size.height - height + self.barHeight);
+    self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y - height + self.barHeight, self.tableView.frame.size.width, self.tableView.frame.size.height);
     self.barHeight = height;
 }
 
