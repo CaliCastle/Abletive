@@ -32,6 +32,7 @@ static NSString * const identifier = @"NotificationReuse";
     BOOL _isLoading;
     BOOL _noMore;
     UIImageView *noResultImageView;
+    UILabel *notLoggedLabel;
 }
 
 - (NSMutableArray *)allNotifications {
@@ -164,7 +165,7 @@ static NSString * const identifier = @"NotificationReuse";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (![[NSUserDefaults standardUserDefaults]boolForKey:@"user_is_logged"]) {
-        return [UIScreen mainScreen].bounds.size.height;
+        return 0;
     }
     return 70;
 }
@@ -189,12 +190,18 @@ static NSString * const identifier = @"NotificationReuse";
         if (!cell) {
             cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NonLogged"];
         }
-        cell.textLabel.text = @"请先登录";
-        cell.textLabel.textColor = [UIColor whiteColor];
-        cell.textLabel.font = [UIFont systemFontOfSize:45];
+        notLoggedLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 40)];
+        notLoggedLabel.text = @"请先登录";
+        notLoggedLabel.textColor = [UIColor whiteColor];
+        notLoggedLabel.font = [UIFont systemFontOfSize:35];
+        notLoggedLabel.center = CGPointMake(self.view.center.x, self.view.center.y - 50);
+        notLoggedLabel.textAlignment = NSTextAlignmentCenter;
+        
+        [self.view addSubview:notLoggedLabel];
         
         return cell;
     } else {
+        [notLoggedLabel removeFromSuperview];
         [noResultImageView removeFromSuperview];
         NotificationTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
         

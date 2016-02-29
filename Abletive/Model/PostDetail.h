@@ -77,6 +77,11 @@
  */
 @property (nonatomic,assign) NSUInteger numberOfBookmarks;
 
+/**
+ * Raw presentation of the model
+ */
+@property (nonatomic,strong) NSDictionary *rawPresentation;
+
 #pragma mark Methods
 
 /**
@@ -123,5 +128,21 @@
  *  @param block Callback block
  */
 + (void)getPostDetailBySlug:(NSString *)slug andBlock:(void (^)(PostDetail *, NSError *))block;
+
+/**
+ *  Init with coder
+ *
+ *  @param coder Coder
+ *
+ *  @return Post Detail instance
+ */
+- (instancetype)initWithCoder:(NSCoder *)coder;
+
+/**
+ *  Encode with coder
+ *
+ *  @param coder Coder
+ */
+- (void)encodeWithCoder:(NSCoder *)coder;
 
 @end

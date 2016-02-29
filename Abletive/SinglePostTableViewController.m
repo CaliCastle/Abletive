@@ -30,6 +30,7 @@
 #import "CBStoreHouseRefreshControl.h"
 #import "PostDetail.h"
 #import "STPopup.h"
+#import "AppDelegate.h"
 
 #import "NSString+FontAwesome.h"
 #import "UIFont+FontAwesome.h"
@@ -94,6 +95,19 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
     BOOL _submitting;
 }
 
+- (PostDetail *)currentPost {
+    if (!_currentPost) {
+        NSDictionary *cachedPosts = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"posts"];
+        NSData *cachedData = [cachedPosts objectForKey:[NSString stringWithFormat:@"post_%@", _postSlug ? _postSlug : [NSString stringWithFormat:@"%@", [NSNumber numberWithUnsignedInteger:_postID]]]];
+        if (cachedData) {
+            _currentPost = [NSKeyedUnarchiver unarchiveObjectWithData:cachedData];
+        } else {
+            _currentPost = nil;
+        }
+    }
+    return _currentPost;
+}
+
 - (SinglePostHeaderViewController *)headerController {
     if (!_headerController) {
         _headerController = [[SinglePostHeaderViewController alloc]initWithNibName:@"SinglePostHeaderViewController" bundle:[NSBundle mainBundle]];
@@ -125,45 +139,52 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
     }
     
     if (!self.isPage) {
-        // Show the progress loading
-        if (self.postSlug) {
-            [PostDetail getPostDetailBySlug:self.postSlug andBlock:^(PostDetail *detailPost, NSError *error) {
-                if (!error) {
-                    if (!self.isFromPeek) {
-                        [TAOverlay hideOverlay];
-                    }
-                    self.currentPost = detailPost;
-                    
-                    [self dataLoaded];
-                    
-                } else {
-                    [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
-                        if (finished) {
-                            [self.navigationController popViewControllerAnimated:YES];
-                        }
-                    }];
-                }
-            }];
+        // If we already cached it
+        if (self.currentPost) {
+            if (!self.isFromPeek) {
+                [TAOverlay hideOverlay];
+            }
+            [self dataLoaded];
         } else {
-            [PostDetail postDetailByID:self.postID withCookie:[[NSUserDefaults standardUserDefaults]stringForKey:@"user_cookie"] andBlock:^(PostDetail *detailPost, NSError *error) {
-                if (!error) {
-                    if (!self.isFromPeek) {
-                        [TAOverlay hideOverlay];
-                    }
-                    self.currentPost = detailPost;
-                    
-                    [self dataLoaded];
-                    
-                } else {
-                    [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
-                        if (finished) {
-                            [self.navigationController popViewControllerAnimated:YES];
+            // Show the progress loading
+            if (self.postSlug) {
+                [PostDetail getPostDetailBySlug:self.postSlug andBlock:^(PostDetail *detailPost, NSError *error) {
+                    if (!error) {
+                        if (!self.isFromPeek) {
+                            [TAOverlay hideOverlay];
                         }
-                    }];
-                }
-            }];
+                        self.currentPost = detailPost;
+                        
+                        [self dataLoaded];
+                        
+                    } else {
+                        [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
+                            if (finished) {
+                                [self.navigationController popViewControllerAnimated:YES];
+                            }
+                        }];
+                    }
+                }];
+            } else {
+                [PostDetail postDetailByID:self.postID withCookie:[[NSUserDefaults standardUserDefaults]stringForKey:@"user_cookie"] andBlock:^(PostDetail *detailPost, NSError *error) {
+                    if (!error) {
+                        if (!self.isFromPeek) {
+                            [TAOverlay hideOverlay];
+                        }
+                        self.currentPost = detailPost;
+                        
+                        [self dataLoaded];
+                        
+                    } else {
+                        [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
+                            if (finished) {
+                                [self.navigationController popViewControllerAnimated:YES];
+                            }
+                        }];
+                    }
+                }];
+            }
         }
-        
     } else {
         // Show the progress loading
         [PostDetail pageDetailByID:self.postID andBlock:^(PostDetail *detailPage, NSError *error) {
@@ -188,6 +209,11 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
     [self.tableView registerNib:[UINib nibWithNibName:@"AuthorTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:authorCellReuse];
     [self.tableView registerNib:[UINib nibWithNibName:@"CommentTableViewCell" bundle:nil] forCellReuseIdentifier:commentCellReuse];
     
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    // Save Post into cache
+    [self saveModel];
 }
 
 - (void)dataLoaded {
@@ -236,7 +262,15 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
     [self registerForKeyboardNotifications];
     [self scrollViewDidScroll:self.tableView];
     [self.tableView reloadData];
-    
+}
+
+- (void)saveModel {
+    // If this is not a page
+    if (!self.isPage) {
+        NSMutableDictionary *cachedPosts = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"posts"]];
+        [cachedPosts setObject:[NSKeyedArchiver archivedDataWithRootObject:self.currentPost] forKey:[NSString stringWithFormat:@"post_%@", self.postSlug ? self.postSlug : [NSString stringWithFormat:@"%@", [NSNumber numberWithUnsignedInteger:self.postID]]]];
+        [[NSUserDefaults standardUserDefaults] setObject:cachedPosts forKey:@"posts"];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -274,16 +308,37 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
 }
 
 - (void)headerRefreshTriggered:(id)sender {
-    [PostDetail postDetailByID:self.currentPost.postID withCookie:[[NSUserDefaults standardUserDefaults]stringForKey:@"user_cookie"] andBlock:^(PostDetail *detailPost, NSError *error) {
-        [self.headerRefreshControl finishingLoading];
-        if (!error) {
-            self.currentPost = detailPost;
-            [self setUpHeaderForPostContent];
-            [self.tableView reloadData];
-        } else {
-            [TAOverlay showOverlayWithError];
-        }
-    }];
+    if (self.postSlug) {
+        [PostDetail getPostDetailBySlug:self.postSlug andBlock:^(PostDetail *detailPost, NSError *error) {
+            if (!error) {
+                [self.headerRefreshControl finishingLoading];
+                self.currentPost = detailPost;
+                
+                [self dataLoaded];
+            } else {
+                [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
+                    if (finished) {
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }
+                }];
+            }
+        }];
+    } else {
+        [PostDetail postDetailByID:self.postID withCookie:[[NSUserDefaults standardUserDefaults]stringForKey:@"user_cookie"] andBlock:^(PostDetail *detailPost, NSError *error) {
+            if (!error) {
+                [self.headerRefreshControl finishingLoading];
+                self.currentPost = detailPost;
+                
+                [self dataLoaded];
+            } else {
+                [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
+                    if (finished) {
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }
+                }];
+            }
+        }];
+    }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {

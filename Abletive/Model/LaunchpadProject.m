@@ -1,3 +1,4 @@
+
 //
 //  LaunchpadProject.m
 //  Abletive
@@ -14,13 +15,13 @@
 - (instancetype)initWithAttributes:(NSDictionary *)attributes {
     if (self = [super init]) {
         self.projectName = attributes[@"title"];
-        self.baiduLink = attributes[@"baidu"];
-        self.qiniuLink = attributes[@"qiniu"];
-        self.thumbnail = attributes[@"img_src"];
-        self.star = [attributes[@"star"]intValue];
+        self.baiduLink = attributes[@"baidu_link"];
+        self.qiniuLink = attributes[@"qiniu_link"];
+        self.thumbnail = attributes[@"thumbnail"];
+        self.star = [[attributes[@"difficulty"] substringToIndex:1] intValue];
         self.maker = attributes[@"maker"];
-        self.videoLink = attributes[@"video"];
-        self.postLink = attributes[@"post_url"];
+        self.videoLink = attributes[@"video_link"] ? attributes[@"video_link"] : attributes[@"video_download"];
+        self.postLink = attributes[@"details_link"];
     }
     return self;
 }
@@ -30,7 +31,7 @@
 }
 
 + (void)getLaunchpadProjectsWithStar:(NSUInteger)star andBlock:(void (^)(NSArray *, NSError *))block {
-    [[AbletiveAPIClient sharedVIPClient] POST:@"interface.php" parameters:@{@"star":[NSNumber numberWithInteger:star]} success:^(NSURLSessionDataTask *task, NSDictionary *JSON) {
+    [[AbletiveAPIClient sharedVIPClient] GET:[NSString stringWithFormat:@"projects/%lu", (unsigned long)star] parameters:nil success:^(NSURLSessionDataTask *task, NSDictionary *JSON) {
         if (JSON[@"list"]) {
             NSArray *rawAttributes = JSON[@"list"];
             NSMutableArray *projects = [NSMutableArray array];

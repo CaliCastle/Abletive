@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9052" systemVersion="15B30a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9040"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -22,7 +23,6 @@
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D2H-Ha-dq2">
                     <rect key="frame" x="8" y="8" width="584" height="60"/>
-                    <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="Avv-kQ-EQv"/>
                     </constraints>
@@ -32,15 +32,13 @@
                 </label>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="visit-eye" translatesAutoresizingMaskIntoConstraints="NO" id="8lb-0K-iLW">
                     <rect key="frame" x="8" y="76" width="15" height="15"/>
-                    <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="15" id="23E-i8-WqI"/>
                         <constraint firstAttribute="width" constant="15" id="Pdr-bc-F95"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="100000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPA-ge-zKN">
-                    <rect key="frame" x="31" y="73" width="48" height="18"/>
-                    <animations/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="100000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HPA-ge-zKN">
+                    <rect key="frame" x="31" y="73" width="44" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="kmT-tw-oHS"/>
                         <constraint firstAttribute="width" constant="48" id="oaE-OM-kLJ"/>
@@ -54,17 +52,15 @@
                         </mask>
                     </variation>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="comment" translatesAutoresizingMaskIntoConstraints="NO" id="l2F-9z-WSL">
-                    <rect key="frame" x="87" y="76" width="15" height="15"/>
-                    <animations/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="comment" translatesAutoresizingMaskIntoConstraints="NO" id="l2F-9z-WSL">
+                    <rect key="frame" x="83" y="76" width="15" height="15"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="15" id="eA2-b9-2Bi"/>
                         <constraint firstAttribute="width" constant="15" id="x5x-WV-Yyg"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="1000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gdf-MF-s91">
-                    <rect key="frame" x="110" y="73" width="31" height="18"/>
-                    <animations/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1000" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gdf-MF-s91">
+                    <rect key="frame" x="106" y="73" width="29" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="N1N-MR-BEU"/>
                         <constraint firstAttribute="width" constant="31" id="UKL-2e-4r1"/>
@@ -79,8 +75,7 @@
                     </variation>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2014-12-10" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DuM-g5-mXZ">
-                    <rect key="frame" x="517" y="73" width="75" height="18"/>
-                    <animations/>
+                    <rect key="frame" x="521" y="73" width="71" height="18"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="75" id="88E-ns-bUc"/>
                         <constraint firstAttribute="height" constant="18" id="i2q-6I-WT9"/>
@@ -88,18 +83,21 @@
                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="88E-ns-bUc"/>
+                        </mask>
+                    </variation>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="categories-item" translatesAutoresizingMaskIntoConstraints="NO" id="twW-45-yCr">
-                    <rect key="frame" x="149" y="76" width="15" height="15"/>
-                    <animations/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="categories-item" translatesAutoresizingMaskIntoConstraints="NO" id="twW-45-yCr">
+                    <rect key="frame" x="143" y="76" width="15" height="15"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="15" id="Enx-13-V2I"/>
                         <constraint firstAttribute="width" constant="15" id="wjE-Qr-dZf"/>
                     </constraints>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Launchpad工程" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A66-a6-tkj">
-                    <rect key="frame" x="172" y="73" width="90" height="18"/>
-                    <animations/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Launchpad工程" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A66-a6-tkj">
+                    <rect key="frame" x="166" y="73" width="90" height="18"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="18" id="4np-uS-j10"/>
                         <constraint firstAttribute="width" constant="90" id="OsM-lD-Mfb"/>
@@ -109,7 +107,6 @@
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
-            <animations/>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="HPA-ge-zKN" firstAttribute="leading" secondItem="8lb-0K-iLW" secondAttribute="trailing" constant="8" id="0uW-WA-pSF"/>

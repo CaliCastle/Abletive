@@ -16,6 +16,7 @@
 
 @property (weak, nonatomic) IBOutlet UISwitch *wifiSwitch;
 @property (weak, nonatomic) IBOutlet UILabel *imageCacheSizeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *postCacheLabel;
 
 @end
 
@@ -30,6 +31,8 @@ static NSString * const reuseIdentifier = @"SwitchReuse";
     CGFloat cacheSize = [[SDImageCache sharedImageCache]getSize] / 1024.0 / 1024.0;
     
     self.imageCacheSizeLabel.text = cacheSize >= 1 ? [NSString stringWithFormat:@"%.2fM",cacheSize] : [NSString stringWithFormat:@"%.2fKB",cacheSize * 1024];
+    NSDictionary *cachedPosts = [[NSUserDefaults standardUserDefaults] dictionaryForKey:@"posts"];
+    self.postCacheLabel.text = [NSString stringWithFormat:@"%@篇", [NSNumber numberWithUnsignedInteger:cachedPosts.count]];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,7 +49,9 @@ static NSString * const reuseIdentifier = @"SwitchReuse";
 - (void)tableView:(nonnull UITableView *)tableView didSelectRowAtIndexPath:(nonnull NSIndexPath *)indexPath {
     switch (indexPath.section) {
         case 1:
+        {
             if (indexPath.row == 0) {
+                // Clear image caches
                 [HHAlertView showAlertWithStyle:HHAlertStyleWarning inView:self.view Title:@"确定要清理缓存吗？" detail:@"所有加载过的图片都会被清除" cancelButton:@"取消" Okbutton:@"确定" block:^(HHAlertButton buttonindex) {
                     if (buttonindex == HHAlertButtonOk) {
                         CGFloat cacheSize = [[SDImageCache sharedImageCache]getSize] / 1024.0 / 1024.0;
@@ -60,9 +65,20 @@ static NSString * const reuseIdentifier = @"SwitchReuse";
                         });
                     }
                 }];
+            } else {
+                // Clear post caches
+                [HHAlertView showAlertWithStyle:HHAlertStyleWarning inView:self.view Title:@"确定要清理缓存吗？" detail:@"所有加载过的文章缓存都会被清除" cancelButton:@"取消" Okbutton:@"确定" block:^(HHAlertButton buttonindex) {
+                    if (buttonindex == HHAlertButtonOk) {
+                        [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"posts"];
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            [TAOverlay showOverlayWithLabel:@"成功清除文章缓存" Options:TAOverlayOptionAutoHide | TAOverlayOptionOverlayShadow | TAOverlayOptionOverlayTypeSuccess];
+                            self.postCacheLabel.text = @"0篇";
+                        });
+                    }
+                }];
             }
             break;
-            
+        }
         default:
             break;
     }

@@ -21,6 +21,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.iconImageView.layer.masksToBounds = YES;
+    self.iconImageView.layer.cornerRadius = self.iconImageView.bounds.size.width * 0.175;
+    self.iconImageView.layer.shadowColor = [UIColor colorWithWhite:0 alpha:1].CGColor;
+    self.iconImageView.layer.shadowOffset = CGSizeMake(0, 15);
+    self.iconImageView.layer.shadowOpacity = 0.5;
     self.versionLabel.text = [NSString stringWithFormat:@"v%@ (Build %@)", [AppConfiguration versionNumber], [AppConfiguration buildNumber]];
 }
 

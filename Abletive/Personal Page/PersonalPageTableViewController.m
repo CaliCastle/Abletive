@@ -417,7 +417,7 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
     }
     switch (self.currentViewType) {
         case PersonalPageViewTypeProfile:
-            return 3;
+            return 2;
         case PersonalPageViewTypeFollowing:
             if ([self.headerViewController getFollowingCount]) {
                 return 1;
@@ -440,9 +440,9 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
         switch (section) {
             case 0:
                 return 4;
+//            case 1:
+//                return 2;
             case 1:
-                return 2;
-            case 2:
                 return 6;
             default:
                 break;
@@ -464,11 +464,11 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (self.currentViewType == PersonalPageViewTypeProfile) {
         switch (section) {
+//            case 1:
+//            {
+//                return [self setHeaderForSectionWithTitle:@"会员信息"];
+//            }
             case 1:
-            {
-                return [self setHeaderForSectionWithTitle:@"会员信息"];
-            }
-            case 2:
             {
                 return [self setHeaderForSectionWithTitle:@"基本信息"];
             }
@@ -537,47 +537,47 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 break;
             }
+//            case 1:
+//            {
+//                switch (indexPath.row) {
+//                    case 0:
+//                    {
+//                        NSString *userType = self.headerViewController.userProfile.membership[@"user_type"];
+//                        if ([userType containsString:@"过期"]) {
+//                            cell.imageView.image = [[UIImage imageNamed:@"membership-expired"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//                            cell.textLabel.text = NSLocalizedString(@"过期会员", nil);
+//                        } else if ([userType containsString:@"月费"]) {
+//                            cell.imageView.image = [[UIImage imageNamed:@"monthly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//                            cell.textLabel.text = NSLocalizedString(@"月费会员", nil);
+//                        } else if ([userType containsString:@"季费"]) {
+//                            cell.imageView.image = [[UIImage imageNamed:@"seasonly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//                            cell.textLabel.text = NSLocalizedString(@"季费会员", nil);
+//                        } else if ([userType containsString:@"年费"]) {
+//                            cell.imageView.image = [[UIImage imageNamed:@"yearly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//                            cell.textLabel.text = NSLocalizedString(@"年费会员", nil);
+//                        } else if ([userType containsString:@"终身"]) {
+//                            cell.imageView.image = [[UIImage imageNamed:@"eternal-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//                            cell.textLabel.text = NSLocalizedString(@"终身会员", nil);
+//                        } else {
+//                            cell.imageView.image = [[UIImage imageNamed:@"membership-expired"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//                            cell.textLabel.text = NSLocalizedString(@"非会员", nil);
+//                        }
+//                        break;
+//                    }
+//                    case 1:
+//                    {
+//                        cell.textLabel.text = NSLocalizedString(@"到期时间", nil);
+//                        cell.detailTextLabel.text = self.headerViewController.userProfile.membership[@"user_status"];
+//                        cell.imageView.image = [[UIImage imageNamed:@"membership-date"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+////                        cell.accessoryType = self.headerViewController.isMyself ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+//                        break;
+//                    }
+//                    default:
+//                        break;
+//                }
+//                break;
+//            }
             case 1:
-            {
-                switch (indexPath.row) {
-                    case 0:
-                    {
-                        NSString *userType = self.headerViewController.userProfile.membership[@"user_type"];
-                        if ([userType containsString:@"过期"]) {
-                            cell.imageView.image = [[UIImage imageNamed:@"membership-expired"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                            cell.textLabel.text = NSLocalizedString(@"过期会员", nil);
-                        } else if ([userType containsString:@"月费"]) {
-                            cell.imageView.image = [[UIImage imageNamed:@"monthly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                            cell.textLabel.text = NSLocalizedString(@"月费会员", nil);
-                        } else if ([userType containsString:@"季费"]) {
-                            cell.imageView.image = [[UIImage imageNamed:@"seasonly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                            cell.textLabel.text = NSLocalizedString(@"季费会员", nil);
-                        } else if ([userType containsString:@"年费"]) {
-                            cell.imageView.image = [[UIImage imageNamed:@"yearly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                            cell.textLabel.text = NSLocalizedString(@"年费会员", nil);
-                        } else if ([userType containsString:@"终身"]) {
-                            cell.imageView.image = [[UIImage imageNamed:@"eternal-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                            cell.textLabel.text = NSLocalizedString(@"终身会员", nil);
-                        } else {
-                            cell.imageView.image = [[UIImage imageNamed:@"membership-expired"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                            cell.textLabel.text = NSLocalizedString(@"非会员", nil);
-                        }
-                        break;
-                    }
-                    case 1:
-                    {
-                        cell.textLabel.text = NSLocalizedString(@"到期时间", nil);
-                        cell.detailTextLabel.text = self.headerViewController.userProfile.membership[@"user_status"];
-                        cell.imageView.image = [[UIImage imageNamed:@"membership-date"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-                        cell.accessoryType = self.headerViewController.isMyself ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
-                        break;
-                    }
-                    default:
-                        break;
-                }
-                break;
-            }
-            case 2:
             {
                 switch (indexPath.row) {
                     case 0:
@@ -806,19 +806,19 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
                     }
                     break;
                 }
+//                case 1:
+//                {
+//                    if (indexPath.row == 1 && self.isMyself) {
+//                        // Membership page
+////                        KINWebBrowserViewController *browser = [KINWebBrowserViewController webBrowser];
+////                        browser.barTintColor = [AppColor mainBlack];
+////                        browser.tintColor = [AppColor mainYellow];
+////                        [self.navigationController pushViewController:browser animated:YES];
+////                        [browser loadURLString:[NSString stringWithFormat:@"http://abletive.com/author/%lu?tab=membership",(unsigned long)self.currentUser.userID]];
+//                    }
+//                    break;
+//                }
                 case 1:
-                {
-                    if (indexPath.row == 1 && self.isMyself) {
-                        // Membership page
-                        KINWebBrowserViewController *browser = [KINWebBrowserViewController webBrowser];
-                        browser.barTintColor = [AppColor mainBlack];
-                        browser.tintColor = [AppColor mainYellow];
-                        [self.navigationController pushViewController:browser animated:YES];
-                        [browser loadURLString:[NSString stringWithFormat:@"http://abletive.com/author/%lu?tab=membership",(unsigned long)self.currentUser.userID]];
-                    }
-                    break;
-                }
-                case 2:
                 {
                     switch (indexPath.row) {
                         case 1:

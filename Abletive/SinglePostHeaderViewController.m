@@ -382,8 +382,8 @@
         // Calculate the totally lines
         NSUInteger lines = 1;
         NSUInteger length = [component lengthOfBytesUsingEncoding:NSUTF8StringEncoding];
-        while (length >= 30) {
-            length -= 30;
+        while (length >= 28) {
+            length -= 28;
             lines++;
         }
         UICopiableLabel *textLabel = [[UICopiableLabel alloc]initWithFrame:CGRectMake(ScreenPadding, currentYOffset + 2 * ScreenPadding, ScreenWidth - 2 * ScreenPadding, lines * LabelHeight)];
@@ -393,14 +393,44 @@
         textLabel.font = [AppFont defaultFont];
         
         if ([component containsString:@"`LINK"]) {
-            textLabel.textColor = [AppColor mainYellow];
-            textLabel.text = NSLocalizedString(@"点击查看链接", nil);
-            textLabel.tag = linkIndex;
-            UITapGestureRecognizer *linkGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openLink:)];
-            [textLabel addGestureRecognizer:linkGesture];
-            [self.links setObject:[self getLinkURL:self.links[linkIndex]] atIndexedSubscript:linkIndex];
-            [self.linkLabels addObject:textLabel];
-            linkIndex++;
+            if ([[self getLinkURL:self.links[linkIndex]] containsString:@".mp4"] || [[self getLinkURL:self.links[linkIndex]] containsString:@".flv"]
+                || [[self getLinkURL:self.links[linkIndex]] containsString:@".wmv"] || [[self getLinkURL:self.links[linkIndex]] containsString:@".avi"]) {
+                // This is actually a video
+                UIImageView *videoThumb = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"video-thumbnail"]];
+                videoThumb.userInteractionEnabled = YES;
+                [videoThumb setFrame:CGRectMake(ScreenPadding, currentYOffset + 2 * ScreenPadding, ScreenWidth - 2 * ScreenPadding, VideoHeight)];
+                videoThumb.tag = videoIndex;
+                videoThumb.layer.masksToBounds = YES;
+                videoThumb.layer.cornerRadius = 10.0f;
+                
+                UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openVideo:)];
+                [videoThumb addGestureRecognizer:tapGesture];
+                [self.view addSubview:videoThumb];
+                
+                [self.videoViews addObject:videoThumb];
+                
+                NSString *videoLink = [self getLinkURL:self.links[linkIndex]];
+                videoLink = [videoLink substringToIndex:[videoLink rangeOfString:@"\""].location];
+                
+                [self.videos insertObject:videoLink atIndex:videoIndex];
+                [self.links removeObjectAtIndex:linkIndex];
+                
+                videoIndex++;
+                // Increment it
+                currentYOffset+=(VideoHeight + ScreenPadding);
+                self.fullHeight+=(VideoHeight + ScreenPadding);
+                
+                continue;
+            } else {
+                textLabel.textColor = [AppColor mainYellow];
+                textLabel.text = NSLocalizedString(@"点击查看链接", nil);
+                textLabel.tag = linkIndex;
+                UITapGestureRecognizer *linkGesture = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(openLink:)];
+                [textLabel addGestureRecognizer:linkGesture];
+                [self.links setObject:[self getLinkURL:self.links[linkIndex]] atIndexedSubscript:linkIndex];
+                [self.linkLabels addObject:textLabel];
+                linkIndex++;
+            }
         } else {
             textLabel.textColor = [UIColor whiteColor];
         }
@@ -431,7 +461,7 @@
         link = [link substringToIndex:[link rangeOfString:@"\">"].location];
     }
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"操作" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"链接操作" message:link preferredStyle:UIAlertControllerStyleActionSheet];
     [alertController addAction:[UIAlertAction actionWithTitle:@"复制链接" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [UIPasteboard generalPasteboard].string = link;
         [self.delegate showStatus:@"复制成功"];

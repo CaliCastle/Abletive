@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2FFCBC82344C64F9FB6EFD3B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E4F0262C63C03C931A6F0DA /* libPods.a */; };
 		9D0003151BCA3E120076765A /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D0003141BCA3E120076765A /* UserProfile.m */; };
 		9D04F5981B33E4C700607E77 /* login-background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9D04F5971B33E4C700607E77 /* login-background.jpg */; };
 		9D04F5A21B34638400607E77 /* register-background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9D04F5A11B34638400607E77 /* register-background.jpg */; };
@@ -580,7 +581,7 @@
 		F1B999C01C350E4C00252DA5 /* CheckInCustomizeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B999BF1C350E4C00252DA5 /* CheckInCustomizeTableViewController.swift */; };
 		F1BA60CE1C280E58005D4028 /* PaymentOrderPriceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1BA60CD1C280E58005D4028 /* PaymentOrderPriceTableViewCell.swift */; };
 		F1C731CB1C467CB4006808E2 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C731CA1C467CB4006808E2 /* ImageLoader.swift */; };
-		F1CDE3DF1C2456A40051379C /* XmasAppIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = F1CDE3DE1C2456A40051379C /* XmasAppIcon.png */; };
+		F1D672001C6C4BD0006C88FA /* 4.0Logo.png in Resources */ = {isa = PBXBuildFile; fileRef = F1D671FF1C6C4BD0006C88FA /* 4.0Logo.png */; };
 		F1FE062D1C478C2D00681712 /* CCUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FE062C1C478C2D00681712 /* CCUser.swift */; };
 		F1FE062F1C47CC7E00681712 /* CCPostTableInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FE062E1C47CC7E00681712 /* CCPostTableInterfaceController.swift */; };
 		F1FE06311C47CFA500681712 /* CCPost.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FE06301C47CFA500681712 /* CCPost.swift */; };
@@ -664,6 +665,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8E4F0262C63C03C931A6F0DA /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D0003131BCA3E120076765A /* UserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserProfile.h; path = Model/UserProfile.h; sourceTree = "<group>"; };
 		9D0003141BCA3E120076765A /* UserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserProfile.m; path = Model/UserProfile.m; sourceTree = "<group>"; };
 		9D04F5971B33E4C700607E77 /* login-background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "login-background.jpg"; sourceTree = "<group>"; };
@@ -1659,6 +1661,8 @@
 		9DFB7FA31BCD683F00BD41B5 /* UserComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserComment.m; path = Model/UserComment.m; sourceTree = "<group>"; };
 		9DFC72D51BC290A9006A4A94 /* UICopiableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICopiableLabel.h; sourceTree = "<group>"; };
 		9DFC72D61BC290A9006A4A94 /* UICopiableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICopiableLabel.m; sourceTree = "<group>"; };
+		D8CC18A61A74853DCE28E3B4 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		F0928D43222BDA9AA910A316 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		F11557741C495186005E3FB4 /* CommunityCreditRankTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityCreditRankTableViewController.swift; sourceTree = "<group>"; };
 		F11557771C495D8C005E3FB4 /* CreditRank.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreditRank.h; path = Model/CreditRank.h; sourceTree = "<group>"; };
 		F11557781C495D8C005E3FB4 /* CreditRank.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreditRank.m; path = Model/CreditRank.m; sourceTree = "<group>"; };
@@ -1713,7 +1717,7 @@
 		F1B999BF1C350E4C00252DA5 /* CheckInCustomizeTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckInCustomizeTableViewController.swift; sourceTree = "<group>"; };
 		F1BA60CD1C280E58005D4028 /* PaymentOrderPriceTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentOrderPriceTableViewCell.swift; sourceTree = "<group>"; };
 		F1C731CA1C467CB4006808E2 /* ImageLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
-		F1CDE3DE1C2456A40051379C /* XmasAppIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = XmasAppIcon.png; sourceTree = "<group>"; };
+		F1D671FF1C6C4BD0006C88FA /* 4.0Logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4.0Logo.png; sourceTree = "<group>"; };
 		F1FE062C1C478C2D00681712 /* CCUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CCUser.swift; path = Model/CCUser.swift; sourceTree = "<group>"; };
 		F1FE062E1C47CC7E00681712 /* CCPostTableInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CCPostTableInterfaceController.swift; sourceTree = "<group>"; };
 		F1FE06301C47CFA500681712 /* CCPost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CCPost.swift; sourceTree = "<group>"; };
@@ -1757,6 +1761,7 @@
 				9D5226631B6BC37600B8FA47 /* libicucore.tbd in Frameworks */,
 				9D5226611B6BC34700B8FA47 /* libsqlite3.tbd in Frameworks */,
 				9D0722881BC1487D004065E1 /* libWeChatSDK.a in Frameworks */,
+				2FFCBC82344C64F9FB6EFD3B /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2302,6 +2307,7 @@
 				F12033261C463A5700A84A70 /* AbletiveWatchApp Extension */,
 				9DA7DA431BDFDA5000CAF12E /* Frameworks */,
 				9D315A0C1B2BEA7200A258CA /* Products */,
+				F0298E91B3943FA471AAD8EC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -3563,6 +3569,7 @@
 				9DC004CA1BF9614100624D95 /* UIKit.framework */,
 				9DC004C81BF9612800624D95 /* Foundation.framework */,
 				9DA7DA441BDFDA5000CAF12E /* NotificationCenter.framework */,
+				8E4F0262C63C03C931A6F0DA /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3599,7 +3606,7 @@
 				9D6B4D6C1B30822D0045166D /* Icons.xcassets */,
 				F12F64CB1C4B92EC009A2E8F /* Features.xcassets */,
 				9DB36B921B2E5B1A004B770D /* 512px.png */,
-				F1CDE3DE1C2456A40051379C /* XmasAppIcon.png */,
+				F1D671FF1C6C4BD0006C88FA /* 4.0Logo.png */,
 				9DE6C06F1BAD983F00AA770E /* logo-loading */,
 				9DB965521BA65F1900E9D344 /* Abletive LOGO Light Transparent.png */,
 				9DB965501BA65E7000E9D344 /* LaunchLOGO.png */,
@@ -4182,6 +4189,15 @@
 			name = Controls;
 			sourceTree = "<group>";
 		};
+		F0298E91B3943FA471AAD8EC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D8CC18A61A74853DCE28E3B4 /* Pods.debug.xcconfig */,
+				F0928D43222BDA9AA910A316 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		F11557731C495175005E3FB4 /* Credit Rank */ = {
 			isa = PBXGroup;
 			children = (
@@ -4376,11 +4392,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9D315A3B1B2BEA7200A258CA /* Build configuration list for PBXNativeTarget "Abletive" */;
 			buildPhases = (
+				5B8AC79222BDB26C6B83F584 /* Check Pods Manifest.lock */,
 				9D315A071B2BEA7200A258CA /* Sources */,
 				9D315A081B2BEA7200A258CA /* Frameworks */,
 				9D315A091B2BEA7200A258CA /* Resources */,
 				9D6816CB1BD246C000B21CAC /* Embed Watch Content */,
 				9DFC55FC1BD94BC9000A9111 /* Embed App Extensions */,
+				C5857A50019C3EBAAF553272 /* Embed Pods Frameworks */,
+				50F2997DCBD11129EC6CED43 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -4498,8 +4517,11 @@
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
 							};
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
 							com.apple.OMC = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.Push = {
 								enabled = 1;
@@ -4591,6 +4613,7 @@
 				9D07228A1BC1487D004065E1 /* ShareSDK.bundle in Resources */,
 				9D3B433E1BAF8C0E00A9AF6E /* logo-loading-02.png in Resources */,
 				9D20AE611BFDB93200974867 /* PersonalCardWallpaper.plist in Resources */,
+				F1D672001C6C4BD0006C88FA /* 4.0Logo.png in Resources */,
 				9DDC8ECA1B36F9F9007028D1 /* TAOverlay.bundle in Resources */,
 				9D822E051B41B46F00E48DBF /* Authors.plist in Resources */,
 				9D0722871BC1487D004065E1 /* WeiboSDK.bundle in Resources */,
@@ -4611,7 +4634,6 @@
 				9D3B43431BAF8C0E00A9AF6E /* logo-loading-07.png in Resources */,
 				9D3B43501BAF8C0E00A9AF6E /* logo-loading-20.png in Resources */,
 				F12F64CC1C4B92EC009A2E8F /* Features.xcassets in Resources */,
-				F1CDE3DF1C2456A40051379C /* XmasAppIcon.png in Resources */,
 				9DB965511BA65E7000E9D344 /* LaunchLOGO.png in Resources */,
 				9DB965531BA65F1900E9D344 /* Abletive LOGO Light Transparent.png in Resources */,
 				F17655D51C22ADAC0091D106 /* Pull.wav in Resources */,
@@ -4681,6 +4703,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		50F2997DCBD11129EC6CED43 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5B8AC79222BDB26C6B83F584 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C5857A50019C3EBAAF553272 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		9D315A071B2BEA7200A258CA /* Sources */ = {
@@ -5348,6 +5418,7 @@
 		};
 		9D315A3C1B2BEA7200A258CA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D8CC18A61A74853DCE28E3B4 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -5391,6 +5462,7 @@
 		};
 		9D315A3D1B2BEA7200A258CA /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F0928D43222BDA9AA910A316 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;

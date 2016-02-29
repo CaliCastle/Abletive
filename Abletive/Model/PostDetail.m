@@ -34,6 +34,7 @@
             NSCharacterSet *characterSet = [NSCharacterSet characterSetWithCharactersInString:imagePath];
             self.thumbnail = [imagePath stringByAddingPercentEncodingWithAllowedCharacters:characterSet];
         }
+        self.rawPresentation = attributes;
     }
     return self;
 }
@@ -104,6 +105,19 @@
             block(nil, error);
         }
     }];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    self = [super init];
+    if (self) {
+        self = [self initWithAttributes:[coder decodeObjectForKey:@"raw"]];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder
+{
+    [coder encodeObject:self.rawPresentation forKey:@"raw"];
 }
 
 @end
