@@ -39,7 +39,18 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         super.awakeWithContext(context)
         
         // Configure interface objects here.
-        if let defaults = NSUserDefaults.standardUserDefaults().objectForKey("userInfo") as? NSDictionary {
+        initSetup()
+    }
+
+    override func willActivate() {
+        // This method is called when watch view controller is about to be visible to user
+        super.willActivate()
+        
+        initSetup()
+    }
+    
+    func initSetup() {
+        if let defaults = NSUserDefaults.standardUserDefaults().objectForKey("userInformation") as? NSDictionary {
             userID = NSUserDefaults.standardUserDefaults().stringForKey("userID")
             currentUser = CCUser(attributes: defaults)
             loggedIn = true
@@ -49,18 +60,15 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         updateViews()
         
         // If the WC is supported, activate it
-        if WCSession.isSupported() && WCSession.defaultSession().reachable {
+        print(WCSession.isSupported())
+        
+        if WCSession.isSupported() {
             let session = WCSession.defaultSession()
             session.delegate = self
             session.activateSession()
             
             fetchUserFromiPhone(session)
         }
-    }
-
-    override func willActivate() {
-        // This method is called when watch view controller is about to be visible to user
-        super.willActivate()
     }
     
     func fetchUserFromiPhone(session : WCSession = WCSession.defaultSession()) {
@@ -97,14 +105,23 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         
         NSUserDefaults.standardUserDefaults().setObject(userID!, forKey: "userID")
         
-        let request = NSURLRequest(URL: NSURL(string: "http://abletive.com/api/user/get_personal_page_detail/?user_id=\(userID!)")!)
+        let request = NSURLRequest(URL: NSURL(string: "https://abletive.com/api/user/get_personal_page_detail/?user_id=\(userID!)")!)
         
         NSURLSession.sharedSession().dataTaskWithRequest(request) { (data:NSData?, response:NSURLResponse?, error:NSError?) -> Void in
             if error == nil {
                 // Request succeeded
                 do {
-                    let JSON = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
-                    NSUserDefaults.standardUserDefaults().setObject(JSON, forKey: "userInfo")
+                    var JSON = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+                    JSON = NSMutableDictionary(dictionary: JSON as! [NSObject : AnyObject])
+                    
+                    let userMembershipInfo = NSMutableDictionary(dictionary: JSON["membership"] as! [NSObject : AnyObject])
+                    
+                    userMembershipInfo.removeObjectForKey("id")
+                    
+                    JSON.removeObjectForKey("membership")
+                    JSON.setObject(userMembershipInfo, forKey: "membership")
+                    
+                    NSUserDefaults.standardUserDefaults().setObject(JSON, forKey: "userInformation")
 
                     self.currentUser = CCUser(attributes: JSON as! NSDictionary)
 
@@ -141,8 +158,10 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         
         if loggedIn {
             if currentUser?.avatarURL != "" {
-                ImageLoader.sharedLoader.imageForUrl((currentUser?.avatarURL)!, completionHandler: { (image, url) -> () in
-                    self.avatarImage.setImage(image)
+                ImageLoader.sharedLoader.imageForUrl(CCFilterImageTag.filter((currentUser?.avatarURL)!)! as String, completionHandler: { (image, url) -> () in
+                    if image != nil {
+                        self.avatarImage.setImage(image)
+                    }
                 })
             }
             if currentUser?.userFollowing != nil {
@@ -173,7 +192,7 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
             presentAlertControllerWithTitle("出错啦", message: text, preferredStyle: .SideBySideButtonsAlert, actions: [okAction,retryAction])
         }
         presentAlertControllerWithTitle("出错啦", message: text, preferredStyle: .Alert, actions: [okAction])
-        WKInterfaceDevice.currentDevice().playHaptic(.Retry)
+//        WKInterfaceDevice.currentDevice().playHaptic(.Retry)
     }
 
     override func didDeactivate() {
@@ -183,7 +202,7 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
     
     @IBAction func checkInDidTap() {
         // Send check in message
-        if WCSession.isSupported() && loggedIn && WCSession.defaultSession().reachable {
+        if WCSession.isSupported() && loggedIn {
             checkInButton.setEnabled(false)
             checkInButton.setTitle("签到中...")
             WKInterfaceDevice.currentDevice().playHaptic(.Start)
@@ -218,7 +237,7 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
     @IBAction func qrCodeButtonDidTap() {
         // Load QRCode
         // Send check in message
-        if WCSession.isSupported() && loggedIn && WCSession.defaultSession().reachable {
+        if WCSession.isSupported() && loggedIn {
             let session = WCSession.defaultSession()
             WKInterfaceDevice.currentDevice().playHaptic(.Success)
             session.sendMessage(["fetchQRCode":"1"], replyHandler: { (replies : Dictionary?) -> Void in
@@ -258,7 +277,7 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         } else if message["userLoggedOut"] != nil {
             // User has logged out
             loggedIn = false
-            NSUserDefaults.standardUserDefaults().removeObjectForKey("userInfo")
+            NSUserDefaults.standardUserDefaults().removeObjectForKey("userInformation")
             NSUserDefaults.standardUserDefaults().removeObjectForKey("userID")
             updateViews()
         } else if message[kSettingKey] != nil {

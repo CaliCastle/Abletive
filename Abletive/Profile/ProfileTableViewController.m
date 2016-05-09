@@ -20,6 +20,8 @@
 #import "UserProfile.h"
 #import "MozTopAlertView.h"
 #import "HHAlertView.h"
+#import <LocalAuthentication/LocalAuthentication.h>
+#import "CCDeviceDetecter.h"
 
 @interface ProfileTableViewController () <ProfileGenderDelegate,ProfileStandardInputDelegate,ProfileComplexInputDelegate,ProfileAvatarUploadDelegate>
 
@@ -45,6 +47,48 @@
 
 @implementation ProfileTableViewController
 
+- (void)authenticateUser {
+    LAContext* context = [[LAContext alloc] init];
+ 
+    NSError* error = nil;
+    NSString* result = @"您已开启密码保护";
+    LAPolicy policy = LAPolicyDeviceOwnerAuthenticationWithBiometrics;
+    
+    if (IOS_VERSION_9_OR_ABOVE) {
+        policy = LAPolicyDeviceOwnerAuthentication;
+    }
+    
+    if ([context canEvaluatePolicy:policy error:&error]) {
+        [context evaluatePolicy:policy localizedReason:result reply:^(BOOL success, NSError *error) {
+            if (!success) {
+                NSLog(@"%@",error.localizedDescription);
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }
+        }];
+    } else {
+        
+        switch (error.code) {
+            case LAErrorTouchIDNotEnrolled:
+            {
+                NSLog(@"TouchID is not enrolled");
+                break;
+            }
+            case LAErrorPasscodeNotSet:
+            {
+                NSLog(@"A passcode has not been set");
+                break;
+            }
+            default:
+            {
+                NSLog(@"TouchID not available");
+                break;
+            }
+        }
+        
+        NSLog(@"%@",error.localizedDescription);
+    }
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
@@ -53,6 +97,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Authentication_Profile"]) {
+        [self authenticateUser];
+    }
     
     self.tableView.backgroundColor = [AppColor secondaryBlack];
     self.saveButton.layer.cornerRadius = 8;

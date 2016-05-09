@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9060" systemVersion="15C47a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10115" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10084"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PersonalPageHeaderViewController">
@@ -22,7 +22,6 @@
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0f2-D5-7VC">
                     <rect key="frame" x="186" y="8" width="240" height="128"/>
-                    <animations/>
                     <constraints>
                         <constraint firstAttribute="width" constant="80" id="khx-vb-nZV">
                             <variation key="widthClass=compact" constant="70"/>
@@ -46,7 +45,6 @@
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GlM-ks-ghh">
                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                    <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="32C-KG-iCT"/>
                         <constraint firstAttribute="width" constant="121" id="d5b-w1-scj"/>
@@ -69,7 +67,6 @@
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading..." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fr9-Bg-2du">
                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                    <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="60" id="uGG-AJ-Jhl"/>
                     </constraints>
@@ -89,7 +86,6 @@
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZxW-66-aks">
                     <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                    <animations/>
                     <constraints>
                         <constraint firstAttribute="width" constant="50" id="9wC-3y-vIN">
                             <variation key="widthClass=compact" constant="70"/>
@@ -110,7 +106,6 @@
                 </button>
                 <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="fQG-PY-nRA">
                     <rect key="frame" x="-60" y="-14" width="121" height="29"/>
-                    <animations/>
                     <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
                     <segments>
                         <segment title="First"/>
@@ -122,7 +117,6 @@
                     </connections>
                 </segmentedControl>
             </subviews>
-            <animations/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="fQG-PY-nRA" secondAttribute="trailing" constant="8" id="FYD-ND-kQ2"/>

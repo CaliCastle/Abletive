@@ -16,4 +16,6 @@
 
 @property (nonatomic,strong) ChatMessage *messageModel;
 
+@property (nonatomic,weak) id delegate;
+
 @end

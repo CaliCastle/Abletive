@@ -31,6 +31,7 @@ static NSString * followedEachOtherText = @"≒相互关注";
 
 @implementation PersonalPageHeaderViewController{
     UIImageView *_backgroundImageView;
+    UIVisualEffectView *_blurEffectView;
     BOOL _isRequestingFollowing;
     BOOL _isRequestingFollower;
 }
@@ -40,17 +41,21 @@ static NSString * followedEachOtherText = @"≒相互关注";
     self.currentFollowingPageIndex = 1;
     self.currentFollowerPageIndex = 1;
     // Do any additional setup after loading the view from its nib.
-    _backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, -240, ScreenWidth, 335)];
+    _backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, -300, ScreenWidth, 395)];
+    _backgroundImageView.layer.masksToBounds = YES;
+    _backgroundImageView.clipsToBounds = YES;
+    _backgroundImageView.contentMode = UIViewContentModeBottom;
+    
+    CCGradientView *gradientView = [[CCGradientView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, 395) andMainColor:self.dominantColor];
     
     UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:self.blurStyle];
-    UIVisualEffectView *blurEffectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
-    blurEffectView.frame = _backgroundImageView.frame;
+    _blurEffectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
+    _blurEffectView.frame = CGRectMake(0, 0, _backgroundImageView.frame.size.width, _backgroundImageView.frame.size.height - 3);
     
-    CCGradientView *gradientView = [[CCGradientView alloc]initWithFrame:CGRectMake(0, -240, ScreenWidth, 335) andMainColor:self.dominantColor];
+    [_backgroundImageView addSubview:_blurEffectView];
     
-    [self.view insertSubview:gradientView atIndex:0];
+    [_backgroundImageView addSubview:gradientView];
     
-    [self.view insertSubview:blurEffectView atIndex:0];
     
     [self.view insertSubview:_backgroundImageView atIndex:0];
     
@@ -386,6 +391,10 @@ static NSString * followedEachOtherText = @"≒相互关注";
             break;
         }
     }
+}
+
+- (void)changeBlurEffectWithAlpha:(CGFloat)alpha {
+    _blurEffectView.alpha = alpha;
 }
 
 /*

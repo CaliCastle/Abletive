@@ -30,10 +30,10 @@ class SettingAppleWatchTableViewController: UITableViewController {
         tableView.tableFooterView = UIView()
         
         if #available(iOS 9.0, *) {
-            if WCSession.isSupported() && WCSession.defaultSession().reachable && WCSession.defaultSession().watchAppInstalled {
+            if WCSession.isSupported() && WCSession.defaultSession().watchAppInstalled {
                 WCSession.defaultSession().activateSession()
                 
-                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: "saveSettings")
+                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: Selector(saveSettings()))
                 
                 watchSupported = true
                 
@@ -91,22 +91,33 @@ class SettingAppleWatchTableViewController: UITableViewController {
         }
         
         if #available(iOS 9.0, *) {
-            let session = WCSession.defaultSession()
+            if WCSession.isSupported() {
+                let session = WCSession.defaultSession()
+                
+                isSaving = true
             
-            isSaving = true
-            
-            session.sendMessage(["Settings_Changed":"1","CheckIn":NSUserDefaults.standardUserDefaults().boolForKey(kCheckInKey),"PostCount":NSUserDefaults.standardUserDefaults().objectForKey(kPostCountKey)!], replyHandler: { (replies : Dictionary?) -> Void in
-                self.isSaving = false
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.navigationController?.popViewControllerAnimated(true)
-                    TAOverlay.showOverlayWithSuccessText("设置成功!")
-                })
-                }, errorHandler: { (error) -> Void in
+                session.sendMessage(["Settings_Changed":"1","CheckIn":NSUserDefaults.standardUserDefaults().boolForKey(kCheckInKey),"PostCount":NSUserDefaults.standardUserDefaults().objectForKey(kPostCountKey) == nil ? 5 : NSUserDefaults.standardUserDefaults().objectForKey(kPostCountKey)!], replyHandler: { (replies : Dictionary?) -> Void in
+                    
                     self.isSaving = false
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        TAOverlay.showOverlayWithErrorText("设置失败! 确保已在Watch上打开应用")
-                    })
-            })
+                    
+                    if replies != nil {
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            self.navigationController?.popViewControllerAnimated(true)
+                            TAOverlay.showOverlayWithSuccessText("设置成功!")
+                        })
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            TAOverlay.showOverlayWithErrorText("设置失败! 确保已在Watch上打开应用")
+                        })
+                    }
+                    
+                    }, errorHandler: { (error) -> Void in
+                        self.isSaving = false
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            TAOverlay.showOverlayWithErrorText("设置失败! 确保已在Watch上打开应用")
+                        })
+                })
+            }
         } else {
             // Fallback on earlier versions
         }

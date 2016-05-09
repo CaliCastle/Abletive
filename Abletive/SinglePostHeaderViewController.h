@@ -37,4 +37,6 @@
 
 @property (nonatomic,strong) NSMutableArray *imagesWithAttribute;
 
+- (void)setupViews;
+
 @end

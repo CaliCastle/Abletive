@@ -31,7 +31,7 @@ class PersonalCardSettingsTableViewController: UITableViewController,PersonalCar
         title = "更改名片样式"
         
         view.backgroundColor = AppColor.secondaryBlack()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "saveSettings")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(PersonalCardSettingsTableViewController.saveSettings))
         backgroundIndex = NSUserDefaults.standardUserDefaults().integerForKey("card-backgroundIndex")
         backgroundBlurSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey("card-blur")
         qrCodeStyleSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey("card-qrCodeStyle")

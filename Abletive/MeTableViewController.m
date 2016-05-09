@@ -68,6 +68,7 @@
         self.guestHeaderViewController = [[MeGuestHeaderViewController alloc]initWithNibName:@"MeGuestHeaderViewController" bundle:[NSBundle mainBundle]];
         self.guestHeaderViewController.delegate = self;
         self.tableView.tableHeaderView = self.guestHeaderViewController.view;
+        
         [self.tableView reloadData];
     }
     else {
@@ -111,8 +112,18 @@
         self.userHeaderViewController = [[MeLoggedHeaderViewController alloc]initWithNibName:@"MeLoggedHeaderViewController" bundle:[NSBundle mainBundle]];
         self.userHeaderViewController.delegate = self;
         self.tableView.tableHeaderView = self.userHeaderViewController.view;
+        
+        self.checkInButton.image = [self hasCheckedIn] ? [UIImage imageNamed:@"checkedin"] : [UIImage imageNamed:@"checkin"];
+        
         [self.tableView reloadData];
     }
+}
+
+- (BOOL) hasCheckedIn {
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDateFormat:@"YYYYMMdd"];
+    NSString *checkedDate = [[NSUserDefaults standardUserDefaults] stringForKey:@"daily_checkin"]?[[NSUserDefaults standardUserDefaults] stringForKey:@"daily_checkin"]:@"";
+    return [checkedDate isEqualToString:[dateFormatter stringFromDate:[NSDate date]]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
@@ -195,6 +206,7 @@
         [application setShortcutItems: updatedShortcutItems];
     }
     
+    self.checkInButton.image = [[UIImage imageNamed:@"checkin"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     self.checkInButton.enabled = NO;
 }
 
@@ -315,7 +327,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {
         case 0:
-            return 1;
+            return 2;
         case 1:
             return 2;
         default:
@@ -372,7 +384,7 @@
                 PersonalPageTableViewController *personalPageTVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PersonalPage"];
                 [self.navigationController pushViewController:personalPageTVC animated:YES];
             } else {
-//                [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Membership"] animated:YES];
+                [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Membership"] animated:YES];
             }
             break;
         }

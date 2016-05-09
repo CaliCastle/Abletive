@@ -57,32 +57,6 @@ install_resource()
       ;;
   esac
 }
-if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "VKFoundation/Assets/VKFoundation_themes.plist"
-  install_resource "VKFoundation/Assets/VKPickerButton_bg.png"
-  install_resource "VKFoundation/Assets/VKPickerButton_bg@2x.png"
-  install_resource "VKFoundation/Assets/VKPickerButton_cross.png"
-  install_resource "VKFoundation/Assets/VKPickerButton_cross@2x.png"
-  install_resource "VKFoundation/Assets/VKScrubber_max.png"
-  install_resource "VKFoundation/Assets/VKScrubber_max@2x.png"
-  install_resource "VKFoundation/Assets/VKScrubber_min.png"
-  install_resource "VKFoundation/Assets/VKScrubber_min@2x.png"
-  install_resource "VKFoundation/Assets/VKScrubber_thumb.png"
-  install_resource "VKFoundation/Assets/VKScrubber_thumb@2x.png"
-fi
-if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "VKFoundation/Assets/VKFoundation_themes.plist"
-  install_resource "VKFoundation/Assets/VKPickerButton_bg.png"
-  install_resource "VKFoundation/Assets/VKPickerButton_bg@2x.png"
-  install_resource "VKFoundation/Assets/VKPickerButton_cross.png"
-  install_resource "VKFoundation/Assets/VKPickerButton_cross@2x.png"
-  install_resource "VKFoundation/Assets/VKScrubber_max.png"
-  install_resource "VKFoundation/Assets/VKScrubber_max@2x.png"
-  install_resource "VKFoundation/Assets/VKScrubber_min.png"
-  install_resource "VKFoundation/Assets/VKScrubber_min@2x.png"
-  install_resource "VKFoundation/Assets/VKScrubber_thumb.png"
-  install_resource "VKFoundation/Assets/VKScrubber_thumb@2x.png"
-fi
 
 mkdir -p "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
 rsync -avr --copy-links --no-relative --exclude '*/.svn/*' --files-from="$RESOURCES_TO_COPY" / "${CONFIGURATION_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"

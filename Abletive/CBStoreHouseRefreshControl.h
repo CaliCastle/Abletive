@@ -27,6 +27,8 @@
                           reverseLoadingAnimation:(BOOL)reverseLoadingAnimation
                           internalAnimationFactor:(CGFloat)internalAnimationFactor;
 
++ (CBStoreHouseRefreshControl *)abletiveControl:(UIScrollView *)scrollView target:(id)target refreshAction:(SEL)refreshAction;
+
 - (void)scrollViewDidScroll;
 
 - (void)scrollViewDidEndDragging;

@@ -596,7 +596,7 @@ static NSString * const authorReuseIdentifier = @"AuthorCell";
     [self setupRefreshSound];
     
     // First time show the welcome message
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunched"]) {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"HasLaunched"] && IPHONE_DEVICE) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self presentViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Welcome"] animated:NO completion:^{
                 [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"HasLaunched"];

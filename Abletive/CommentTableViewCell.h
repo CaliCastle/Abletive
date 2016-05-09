@@ -14,6 +14,7 @@
 - (void)replyDidTapAtCommentID:(NSUInteger)commentID withName:(NSString *)name inRowID:(NSUInteger)rowID;
 - (void)avatarDidTapAtUser:(User *)user;
 - (void)nameDidTapAtUser:(User *)user;
+- (void)linkDidTapAtURL:(NSString *)url;
 
 @end
 
@@ -24,7 +25,7 @@
 @property (nonatomic,strong) Comment *currentComment;
 @property (weak, nonatomic) IBOutlet UIImageView *avatarView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *contentLabel;
+@property (weak, nonatomic) IBOutlet UITextView *contentTextView;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UIButton *replyButton;
 @property (weak, nonatomic) IBOutlet UILabel *rowLabel;

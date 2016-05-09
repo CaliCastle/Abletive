@@ -68,6 +68,11 @@ typedef NS_ENUM(NSUInteger,NotificationType) {
  */
 @property (nonatomic,strong) User * _Nonnull user;
 
+/**
+ * Raw representation
+ */
+@property (nonatomic,strong) NSDictionary * _Nonnull rawRepresentation;
+
 #pragma mark Methods
 
 /**
@@ -78,5 +83,8 @@ typedef NS_ENUM(NSUInteger,NotificationType) {
  *  @param block Callback block
  */
 + (void)getNotificationsWithPage:(NSUInteger)page andCount:(NSUInteger)count andBlock:(void (^ _Nonnull)(NSArray * _Nullable notifs, NSError * _Nullable error))block;
+
+- (_Nonnull instancetype)initWithCoder:(NSCoder * _Nonnull)coder;
+- (void)encodeWithCoder:(NSCoder * _Nonnull)coder;
 
 @end

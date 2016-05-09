@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import StoreKit
 
-class MembershipTableViewController: UITableViewController {
+class MembershipTableViewController: UITableViewController, SKProductsRequestDelegate, SKPaymentTransactionObserver {
 
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var memberBadgeImageView: UIImageView!
@@ -17,17 +18,24 @@ class MembershipTableViewController: UITableViewController {
     @IBOutlet weak var membershipTypeLabel: UILabel!
     @IBOutlet weak var membershipStatusLabel: UILabel!
     
-    @IBOutlet weak var amountLabel: UILabel!
     @IBOutlet weak var renewButton: UIButton!
     @IBOutlet weak var totalPriceLabel: UILabel!
     
     var currentMembership : Membership?
     var currentMembershipSelection : Int = 0
-    var currentAmount : Int = 1
     var totalPrice : Int = 0
     var canRenew = true
+    var vipType : UInt = 0
     
-    let membershipInfo = [0:"9",1:"25",2:"90",3:"300"]
+    var request : SKProductsRequest?
+    var products : [SKProduct]?
+    
+    let membershipInfo = [0:"12",1:"30",2:"88",3:"298"]
+    let membershipNames = ["月费会员", "季费会员", "年费会员", "终身会员"]
+    let productIds = NSArray(contentsOfURL: NSBundle.mainBundle().URLForResource("product_ids", withExtension: "plist")!)
+    
+    let kInAppPurchaseFailedNotification = "kInAppPurchaseFailedNotification"
+    let kInAppPurchaseSucceededNotification = "kInAppPurchaseSucceededNotification"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,9 +59,12 @@ class MembershipTableViewController: UITableViewController {
         tableView.separatorColor = AppColor.transparent()
         tableView.indicatorStyle = .White
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "paymentSucceeded", name: "PaymentSuccess", object: nil)
-        
         fetchData()
+        loadFromStore()
+    }
+    
+    func loadFromStore() {
+        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
     }
     
     func fetchData(fromNotification:Bool = false) {
@@ -128,27 +139,143 @@ class MembershipTableViewController: UITableViewController {
         updatePrice()
     }
     
-    @IBAction func amountStepperDidChange(sender: UIStepper) {
-        amountLabel.text = "x \(Int(sender.value))"
-        currentAmount = Int(sender.value)
-        updatePrice()
-    }
-    
     @IBAction func renewDidClick(sender: UIButton) {
-        let paymentVC = storyboard?.instantiateViewControllerWithIdentifier("Payment") as! PaymentTableViewController
-        paymentVC.totalAmount = "\(totalPrice).00"
-        paymentVC.vipType = UInt(currentMembershipSelection + 1)
-        navigationController?.pushViewController(paymentVC, animated: true)
+        vipType = UInt(currentMembershipSelection + 1)
+        
+        let alertController = UIAlertController(title: "确认您的购买选择", message: "确定要购买价值￥\(totalPrice)的\(membershipNames[currentMembershipSelection])吗?", preferredStyle: .Alert)
+        let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) -> Void in
+            
+        }
+        let confirmAction = UIAlertAction(title: "确定", style: .Destructive) { (action) -> Void in
+            self.validateProductIdentifiers(self.productIds!)
+        }
+        alertController.addAction(cancelAction)
+        alertController.addAction(confirmAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
     }
     
     func updatePrice() {
-        totalPrice = currentAmount * Int(membershipInfo[currentMembershipSelection]!)!
+        totalPrice = Int(membershipInfo[currentMembershipSelection]!)!
         totalPriceLabel.text = "￥\(totalPrice).00"
-
     }
     
+    func displayStoreUI() {
+        if products?.count >= 1 {
+            var product : SKProduct?
+            for p in products! {
+                if productIds![currentMembershipSelection] as! String == p.productIdentifier {
+                    product = p
+                }
+            }
+            let payment = SKPayment(product: product!)
+            SKPaymentQueue.defaultQueue().addPayment(payment)
+        }
+    }
+    
+    func paid() {
+        TAOverlay.showOverlayWithLogoAndLabel("正在处理中...请稍候")
+        
+        Membership.payMembershipWithType(vipType) { (newMembership) -> Void in
+            
+            if newMembership != nil {
+                TAOverlay.hideOverlay()
+                
+                self.currentMembership = newMembership
+                self.updateViews()
+                
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), { () -> Void in
+                    TAOverlay.showOverlayWithSuccessText("充值成功！感谢支持")
+                })
+            } else {
+                TAOverlay.hideOverlay()
+                TAOverlay.showOverlayWithError()
+            }
+        }
+        
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "IsVIP")
+    }
+    
+    // MARK: Transaction helper methods
+    func transactionFinished(transaction : SKPaymentTransaction, wasSuccessful : Bool) {
+        SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+        
+        let userInfo = NSDictionary(dictionary: ["transaction" : transaction])
+        
+        if wasSuccessful {
+            // Send out a notification that we've finished the transaction
+            NSNotificationCenter.defaultCenter().postNotificationName(kInAppPurchaseSucceededNotification, object: self, userInfo: userInfo as [NSObject : AnyObject])
+        } else {
+            NSNotificationCenter.defaultCenter().postNotificationName(kInAppPurchaseFailedNotification, object: self, userInfo: userInfo as [NSObject : AnyObject])
+        }
+    }
+    
+    func transactionCompleted(transaction : SKPaymentTransaction) {
+        transactionFinished(transaction, wasSuccessful: true)
+        paid()
+    }
+    
+    func transactionFailed(transaction : SKPaymentTransaction) {
+        transactionFinished(transaction, wasSuccessful: false)
+    }
+    
+    func transactionRestored(transaction : SKPaymentTransaction) {
+        transactionFinished(transaction, wasSuccessful: true)
+        paid()
+    }
+    
+    // Called when the payment is successful and received response from our server
     func paymentSucceeded() {
         fetchData(true)
+    }
+    
+    /**
+     Validate the product identifiers to the App Store
+     
+     - parameter productIdentifiers: productIdentifiers
+     */
+    func validateProductIdentifiers(productIdentifiers : NSArray) {
+        TAOverlay.showOverlayWithLoading()
+        
+        if request == nil {
+            let productsRequest = SKProductsRequest(productIdentifiers: NSSet(array: productIdentifiers as [AnyObject]) as! Set<String>)
+            request = productsRequest
+            productsRequest.delegate = self
+            productsRequest.start()
+        } else {
+            TAOverlay.hideOverlay()
+            displayStoreUI()
+        }
+    }
+    
+    // MARK: SKProductsRequestDelegate methods
+    func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
+        products = response.products
+        
+        for invalidIdentifier in response.invalidProductIdentifiers {
+            print("Invalid identifier: \(invalidIdentifier)")
+        }
+        TAOverlay.hideOverlay()
+        displayStoreUI()
+    }
+    
+    // MARK: SKPaymentTransactionObserver methods
+    func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        for transaction in transactions {
+            switch transaction.transactionState {
+            case .Purchased:
+                transactionCompleted(transaction)
+                break;
+            case .Failed:
+                transactionFailed(transaction)
+                break;
+            case .Restored:
+                transactionRestored(transaction)
+                break;
+            default:
+                break;
+            }
+        }
     }
     
     override func didReceiveMemoryWarning() {

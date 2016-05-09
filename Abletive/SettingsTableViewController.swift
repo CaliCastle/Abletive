@@ -10,10 +10,18 @@ import UIKit
 
 class SettingsTableViewController: UITableViewController {
 
+    var threeDTouchAvailable = false
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if #available(iOS 9.0, *) {
+            threeDTouchAvailable = true
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,11 +39,15 @@ class SettingsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 2
+            return 3
         case 1:
             return 2
         default:
-            return 3
+            if threeDTouchAvailable {
+                return 3
+            } else {
+                return 2
+            }
         }
     }
 

@@ -22,8 +22,8 @@
 
 #define kReuseIDSeparate               (@"-") //可重用ID字符串区分符号
 
-#define kImageNameChat_send_nor        (@"bubble_self_normal")
-#define kImageNameChat_send_press      (@"bubble_self_pressed")
+#define kImageNameChat_send_nor        (@"bubble_self_pressed")
+#define kImageNameChat_send_press      (@"bubble_self_normal")
 
 
 #define kImageNameChat_Recieve_nor     (@"bubble_other_normal")

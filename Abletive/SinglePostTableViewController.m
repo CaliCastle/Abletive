@@ -13,6 +13,7 @@
 #import "SortPostTableViewController.h"
 #import "SinglePostTableViewController.h"
 #import "SinglePostHeaderViewController.h"
+#import "UITableView+FDTemplateLayoutCell.h"
 #import "UIImageView+WebCache.h"
 #import "UIImage+Rounded.h"
 #import "NSString+FilterHTML.h"
@@ -32,11 +33,16 @@
 #import "STPopup.h"
 #import "AppDelegate.h"
 
+#import "Abletive-Swift.h"
+
 #import "NSString+FontAwesome.h"
 #import "UIFont+FontAwesome.h"
 
 #import "SingleImageViewController.h"
 #import "CCDeviceDetecter.h"
+
+#import <AVKit/AVKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 #define ScreenWidth  [UIScreen mainScreen].bounds.size.width
 #define ScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -148,7 +154,7 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
         } else {
             // Show the progress loading
             if (self.postSlug) {
-                [PostDetail getPostDetailBySlug:self.postSlug andBlock:^(PostDetail *detailPost, NSError *error) {
+                [PostDetail getPostDetailBySlug:self.postSlug andOrder:YES andBlock:^(PostDetail *detailPost, NSError *error) {
                     if (!error) {
                         if (!self.isFromPeek) {
                             [TAOverlay hideOverlay];
@@ -158,15 +164,26 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
                         [self dataLoaded];
                         
                     } else {
-                        [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
-                            if (finished) {
-                                [self.navigationController popViewControllerAnimated:YES];
+                        [PostDetail getPageDetailBySlug:self.postSlug andBlock:^(PostDetail *detailPost, NSError *error) {
+                            if (!error) {
+                                if (!self.isFromPeek) {
+                                    [TAOverlay hideOverlay];
+                                }
+                                self.currentPost = detailPost;
+                                
+                                [self dataLoaded];
+                            } else {
+                                [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
+                                    if (finished) {
+                                        [self.navigationController popViewControllerAnimated:YES];
+                                    }
+                                }];
                             }
                         }];
                     }
                 }];
             } else {
-                [PostDetail postDetailByID:self.postID withCookie:[[NSUserDefaults standardUserDefaults]stringForKey:@"user_cookie"] andBlock:^(PostDetail *detailPost, NSError *error) {
+                [PostDetail postDetailByID:self.postID withCookie:[[NSUserDefaults standardUserDefaults]stringForKey:@"user_cookie"] andOrder:YES andBlock:^(PostDetail *detailPost, NSError *error) {
                     if (!error) {
                         if (!self.isFromPeek) {
                             [TAOverlay hideOverlay];
@@ -187,7 +204,7 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
         }
     } else {
         // Show the progress loading
-        [PostDetail pageDetailByID:self.postID andBlock:^(PostDetail *detailPage, NSError *error) {
+        [PostDetail pageDetailByID:self.postID andOrder:YES andBlock:^(PostDetail *detailPage, NSError *error) {
             if (!error) {
                 if (!self.isFromPeek) {
                     [TAOverlay hideOverlay];
@@ -208,7 +225,6 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
     
     [self.tableView registerNib:[UINib nibWithNibName:@"AuthorTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:authorCellReuse];
     [self.tableView registerNib:[UINib nibWithNibName:@"CommentTableViewCell" bundle:nil] forCellReuseIdentifier:commentCellReuse];
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -309,12 +325,21 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
 
 - (void)headerRefreshTriggered:(id)sender {
     if (self.postSlug) {
-        [PostDetail getPostDetailBySlug:self.postSlug andBlock:^(PostDetail *detailPost, NSError *error) {
+        [PostDetail getPostDetailBySlug:self.postSlug andOrder:YES andBlock:^(PostDetail *detailPost, NSError *error) {
             if (!error) {
                 [self.headerRefreshControl finishingLoading];
                 self.currentPost = detailPost;
                 
-                [self dataLoaded];
+                self.likeLabel.text = [NSString stringWithFormat:@"点赞 %lu 次",(unsigned long)self.currentPost.numberOfLikes];
+                self.bookmarkLabel.text = [NSString stringWithFormat:@"收藏 %lu 人",(unsigned long)self.currentPost.numberOfBookmarks];
+                self.title = self.currentPost.title;
+
+                self.headerController.currentPost = detailPost;
+                [self.headerController setupViews];
+                
+                [self.tableView reloadData];
+                
+                [self saveModel];
             } else {
                 [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
                     if (finished) {
@@ -324,12 +349,20 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
             }
         }];
     } else {
-        [PostDetail postDetailByID:self.postID withCookie:[[NSUserDefaults standardUserDefaults]stringForKey:@"user_cookie"] andBlock:^(PostDetail *detailPost, NSError *error) {
+        [PostDetail postDetailByID:self.postID withCookie:[[NSUserDefaults standardUserDefaults]stringForKey:@"user_cookie"] andOrder:YES andBlock:^(PostDetail *detailPost, NSError *error) {
             if (!error) {
                 [self.headerRefreshControl finishingLoading];
                 self.currentPost = detailPost;
                 
-                [self dataLoaded];
+                self.likeLabel.text = [NSString stringWithFormat:@"点赞 %lu 次",(unsigned long)self.currentPost.numberOfLikes];
+                self.bookmarkLabel.text = [NSString stringWithFormat:@"收藏 %lu 人",(unsigned long)self.currentPost.numberOfBookmarks];
+                self.title = self.currentPost.title;
+                
+                self.headerController.currentPost = detailPost;
+                [self.headerController setupViews];
+                
+                [self.tableView reloadData];
+                [self saveModel];
             } else {
                 [TAOverlay hideOverlayWithCompletionBlock:^(BOOL finished) {
                     if (finished) {
@@ -367,14 +400,14 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
 #pragma mark Setup
 
 - (void)setUpBackgroundView {
-    _backgroundView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ScreenHeight, ScreenHeight)];
+    _backgroundView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
     _backgroundView.center = self.view.center;
     _backgroundView.contentMode = UIViewContentModeScaleAspectFill;
     [_backgroundView sd_setImageWithURL:[NSURL URLWithString:self.currentPost.thumbnail] placeholderImage:[UIImage imageNamed:@"login-background.jpg"]];
     
     _blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
     _blurEffectView = [[UIVisualEffectView alloc]initWithEffect:_blurEffect];
-    _blurEffectView.frame = _backgroundView.frame;
+    _blurEffectView.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight);
     
     [_backgroundView addSubview:_blurEffectView];
     [self.tableView setBackgroundView:_backgroundView];
@@ -494,6 +527,7 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
                 [MozTopAlertView showWithType:MozAlertTypeSuccess text:@"评论成功" parentView:self.navigationController.navigationBar];
                 [self.tableView reloadData];
             });
+            [self saveModel];
         } else {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [MozTopAlertView showWithType:MozAlertTypeError text:@"评论失败，请重试" parentView:self.navigationController.navigationBar];
@@ -545,6 +579,9 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
             [self addCollection];
         }];
     }
+    [actionSheet addButtonWithTitle:@"分享给社区好友" image:[UIImage imageNamed:@"send-to-friends"] type:AHKActionSheetButtonTypeDefault handler:^(AHKActionSheet *actionSheet) {
+        [self share:ShareTypeLocal];
+    }];
     [actionSheet addButtonWithTitle:@"分享到新浪微博" image:[UIImage imageNamed:@"weibo"] type:AHKActionSheetButtonTypeDefault handler:^(AHKActionSheet *actionSheet) {
         [self share:ShareTypeSinaWeibo];
     }];
@@ -563,9 +600,6 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
     [actionSheet addButtonWithTitle:@"短信分享" image:[UIImage imageNamed:@"sms"] type:AHKActionSheetButtonTypeDefault handler:^(AHKActionSheet *actionSheet) {
         [self share:ShareTypeSMS];
     }];
-//    [actionSheet addButtonWithTitle:@"分享给社区好友" image:[UIImage imageNamed:@"send-to-friends"] type:AHKActionSheetButtonTypeDefault handler:^(AHKActionSheet *actionSheet) {
-//        [self share:ShareTypeLocal];
-//    }];
     [actionSheet addButtonWithTitle:@"复制链接" image:[UIImage imageNamed:@"copy-link"] type:AHKActionSheetButtonTypeDefault handler:^(AHKActionSheet *actionSheet) {
         [self share:ShareTypeCopyURL];
     }];
@@ -774,8 +808,25 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
             break;
         }
         case ShareTypeLocal:
-//#warning TODO:
+        {
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:@"user_is_logged"]) {
+                
+                ChatShareTableViewController *chatSharer = [self.storyboard instantiateViewControllerWithIdentifier:@"ChatShare"];
+                chatSharer.linkAddress = self.currentPost.postUrl;
+                chatSharer.sharePrefix = [NSString stringWithFormat:@"分享社区文章：【%@】", self.currentPost.title];
+                chatSharer.delegate = self;
+                
+                STPopupController *popup = [[STPopupController alloc]initWithRootViewController:chatSharer];
+                popup.style = STPopupStyleFormSheet;
+                UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+                popup.backgroundView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+                popup.cornerRadius = 8;
+                [popup presentInViewController:self];
+            } else {
+                [TAOverlay showOverlayWithErrorText:@"请先登录"];
+            }
             break;
+        }
         case ShareTypeCopyURL:
         {
             [ShareSDK share:SSDKPlatformTypeCopy parameters:shareParams onStateChanged:^(SSDKResponseState state, NSDictionary *userData, SSDKContentEntity *contentEntity, NSError *error) {
@@ -856,6 +907,36 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
     [self.navigationController pushViewController:personalPageTVC animated:YES];
 }
 
+- (void)linkDidTapAtURL:(NSString *)url {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"链接操作" message:url preferredStyle:UIAlertControllerStyleActionSheet];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"打开链接" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self openLink:url];
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"拷贝链接" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [UIPasteboard generalPasteboard].string = url;
+        [TAOverlay showOverlayWithSuccessText:@"拷贝成功"];
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"在Safari打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    }]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)openLink:(NSString *)url {
+    if ([url containsString:@"//abletive.com/"] && ![url containsString:@"//abletive.com/author"]) {
+        SinglePostTableViewController *singlePostTVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SinglePostTVC"];
+        singlePostTVC.postSlug = url;
+        
+        [self.navigationController pushViewController:singlePostTVC animated:YES];
+    } else {
+        KINWebBrowserViewController *webBrowser = [KINWebBrowserViewController webBrowser];
+        [self.navigationController pushViewController:webBrowser animated:YES];
+        [webBrowser loadURLString:url];
+    }
+}
+
 - (void)showPhotos:(NSArray *)images atIndex:(NSUInteger)index {
     self.photos = [NSMutableArray array];
     for (NSString *url in images) {
@@ -874,6 +955,10 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
     photoBrowser.currentIndexPath = [NSIndexPath indexPathForItem:index inSection:0];
     
     [self presentViewController:photoBrowser animated:NO completion:nil];
+}
+
+- (void)shared {
+    [MozTopAlertView showWithType:MozAlertTypeSuccess text:NSLocalizedString(@"分享成功", nil) parentView:self.navigationController.navigationBar];
 }
 
 #pragma mark - Table view data source
@@ -905,7 +990,7 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
             } else {
                 currentComment = self.currentPost.comments[indexPath.row];
             }
-            return ([[NSString filterHTML:currentComment.content] length] / 25) * 18 + 90;
+            return ([[NSString filterHTML:currentComment.content] length] / 26) * 18 + 105;
         }
         default:
             return 0;
@@ -948,8 +1033,6 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
             cell.membershipType = currentComment.author.membership;
             [cell setCurrentComment:currentComment];
             
-            cell.nameLabel.textColor = [AppColor loginButtonColor];
-            
             NSUInteger currentCommentParent = currentComment.parent;
             NSUInteger currentIndex = 0;
             if (currentComment.parent) {
@@ -979,8 +1062,6 @@ static NSString * const unloggedReplyPlaceholder = @"登录以后才能发表评
                 cell.authorIdenficationLabel.text = @"";
                 [cell.authorIdenficationLabel setBackgroundColor:[AppColor transparent]];
             }
-            
-            cell.backgroundColor = [UIColor colorWithWhite:0.1 alpha:0.4];
             
             cell.delegate = self;
             

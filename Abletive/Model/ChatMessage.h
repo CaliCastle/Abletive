@@ -71,7 +71,7 @@ typedef NS_ENUM(NSUInteger, MessageSendStatus) {
 /**
  *  Datetime
  */
-@property (nonatomic,strong) NSDate *date;
+@property (nonatomic,strong) NSString *date;
 
 /**
  *  Is sender?

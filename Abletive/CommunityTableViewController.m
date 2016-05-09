@@ -49,14 +49,14 @@
 
 - (NSArray *)imageURLStrings {
     if (!_imageURLStrings) {
-        _imageURLStrings = @[@"http://abletive.com/wp-content/uploads/2016/01/shuangyizhibo.jpg",@"http://abletive.com/wp-content/uploads/2016/01/xiaomingzhibo.jpg",@"http://abletive.com/wp-content/uploads/2016/01/zbreaklive.jpg",@"http://abletive.com/wp-content/uploads/2016/01/66F6D572E01CF171A46E6494A5764283.jpg"];
+        _imageURLStrings = @[@"https://dn-abletive.qbox.me/v%2Fimages%2Ftopshelfbanner.jpg", @"http://abletive.com/wp-content/uploads/2016/01/shuangyizhibo.jpg", @"http://abletive.com/wp-content/uploads/2016/01/xiaomingzhibo.jpg",@"http://abletive.com/wp-content/uploads/2016/01/zbreaklive.jpg",@"http://abletive.com/wp-content/uploads/2016/01/66F6D572E01CF171A46E6494A5764283.jpg"];
     }
     return _imageURLStrings;
 }
 
 - (NSArray *)titles {
     if (!_titles) {
-        _titles = @[@"雙一PandaTV直播",@"小明斗鱼Launchpad直播",@"赵总Zbreak PandaTV直播",@"锅哥Launchpad斗鱼直播"];
+        _titles = @[@"Abletive教学视频站", @"雙一PandaTV直播", @"小明斗鱼Launchpad直播",@"赵总Zbreak PandaTV直播",@"锅哥Launchpad斗鱼直播"];
     }
     return _titles;
 }
@@ -67,6 +67,8 @@
     self.view.backgroundColor = [AppColor secondaryBlack];
     [self.tableView setSeparatorColor:[AppColor transparent]];
     [self setUpHeader];
+    
+    self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     
 //    self.sideBar = [[SideBar alloc]initWithSourceView:self.view menuItems:@[@"First",@"Second",@"Third"]];
 //    self.sideBar.delegate = self;
@@ -97,12 +99,15 @@
     NSMutableString *URLString = [NSMutableString stringWithString:@"<h1>直播网页地址：（长按复制）"];
     switch (index) {
         case 0:
+//            [self pushTutorialViewController];
+            return;
+        case 1:
             [URLString appendString:@"http://www.panda.tv/24935"];
             break;
-        case 1:
+        case 2:
             [URLString appendString:@"http://www.douyutv.com/ZoZen"];
             break;
-        case 2:
+        case 3:
             [URLString appendString:@"http://www.panda.tv/22271"];
             break;
         default:
@@ -118,13 +123,17 @@
 #pragma mark - Side Bar Delegate
 
 - (void)sideBarDidSelectOnIndex:(NSInteger)index {
-    NSLog(@"Selected: %ld",(long)index);
+//    NSLog(@"Selected: %ld",(long)index);
 }
 
 #pragma mark - Table view data source
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 65;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 10;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -134,11 +143,11 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {
 //        case 0:
-//            return 2;
+//            return 1;
         case 0:
             return 3;
         case 1:
-            return 1;
+            return 2;
         default:
             break;
     }
@@ -154,8 +163,9 @@
 //        case 0:
 //        {
 //            // Community Section
-//            cell.titleLabel.text = @"开发中...";
-//            cell.descLabel.text = @"";
+//            cell.titleLabel.text = @"视频教学专栏";
+//            cell.imgView.image = [[UIImage imageNamed:@"v.abletive"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+//            cell.descLabel.text = @"专业的电子乐等教学视频";
 //            break;
 //        }
         case 0:
@@ -189,7 +199,12 @@
                     cell.titleLabel.text = @"积分排行榜";
                     cell.descLabel.text = @"看看谁是积分老大";
                     break;
-                    
+                case 1:
+                    cell.imgView.image = [[UIImage imageNamed:@"membership-expired"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                    cell.imgView.tintColor = [AppColor mainYellow];
+                    cell.titleLabel.text = @"社区会员";
+                    cell.descLabel.text = @"如何成为会员与特权";
+                    break;
                 default:
                     break;
             }
@@ -204,8 +219,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     switch (indexPath.section) {
 //        case 0:
-//            
+//        {
+//            [self pushTutorialViewController];
 //            break;
+//        }
         case 0:
         {
             switch (indexPath.row) {
@@ -220,7 +237,15 @@
                 case 1:
                 {
                     if (![[NSUserDefaults standardUserDefaults]boolForKey:@"IsVIP"]) {
-                        [MozTopAlertView showWithType:MozAlertTypeWarning text:@"您还未开通会员" parentView:self.view];
+                        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"user_is_logged"]) {
+                            [MozTopAlertView showWithType:MozAlertTypeWarning text:@"您还未开通会员" parentView:self.view];
+                            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.65 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                                [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Membership"] animated:YES];
+                            });
+                        } else {
+                            [MozTopAlertView showWithType:MozAlertTypeWarning text:@"您还未登录" parentView:self.view];
+                        }
+                    
                         return;
                     }
                     [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"CommunityVIP"] animated:YES];
@@ -246,7 +271,15 @@
                 case 0:
                     [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"CreditRank"] animated:YES];
                     break;
+                case 1:
+                {
+                    SinglePostTableViewController *pageTVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SinglePostTVC"];
+                    pageTVC.isPage = YES;
+                    pageTVC.postID = 4883;
                     
+                    [self.navigationController pushViewController:pageTVC animated:YES];
+                    break;
+                }
                 default:
                     break;
             }
@@ -255,48 +288,9 @@
             break;
     }
 }
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+- (void)pushTutorialViewController {
+    [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"ScreenCastRoot"] animated:YES];
 }
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

@@ -61,7 +61,7 @@
     }
     self.titleLabel.text = _userCollection.title;
     self.authorLabel.text = _userCollection.authorName;
-    self.dateLabel.text = [CCDateToString getStringFromDate:_userCollection.date];
+    self.dateLabel.text = _userCollection.date;
     self.dateLabel.font = [UIFont systemFontOfSize:7];
     self.visitLabel.text = [NSString stringWithFormat:@"%lu",(unsigned long)_userCollection.views];
     self.commentLabel.text = _userCollection.commentCount;

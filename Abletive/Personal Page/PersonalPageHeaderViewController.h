@@ -69,4 +69,6 @@ typedef NS_ENUM(NSUInteger,PersonalPageFollowStatus) {
 
 - (void)followAction;
 
+- (void)changeBlurEffectWithAlpha:(CGFloat)alpha;
+
 @end

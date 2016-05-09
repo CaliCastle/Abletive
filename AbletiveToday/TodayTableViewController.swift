@@ -82,17 +82,23 @@ class TodayTableViewController: UITableViewController,NCWidgetProviding {
         Post.globalTimelinePostsWithPage(indexPath.row + 1) { (post : Post!, error : NSError!) -> Void in
             if error == nil {
                 cell.currentPost = post
-                indicator.removeFromSuperview()
-                self.getDataFromUrl(NSURL(string: post.imageMediumPath)!, completion: { (data, response, error) -> Void in
-                    if error == nil {
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            indicator.removeFromSuperview()
-                            let image = UIImage(data: data!, scale: 1)
-                            cell.thumbnailView.image = image
-                            cell.thumbnailView.contentMode = .ScaleAspectFit
-                        })
-                    }
-                })
+            
+                if post.imageMediumPath != nil && post.imageMediumPath != "" {
+                    self.getDataFromUrl(NSURL(string: post.imageMediumPath)!, completion: { (data, response, error) -> Void in
+                        if error == nil {
+                            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                indicator.removeFromSuperview()
+                                let image = UIImage(data: data!, scale: 1)
+                                cell.thumbnailView.image = image
+                                cell.thumbnailView.contentMode = .ScaleAspectFit
+                            })
+                        }
+                    })
+                } else {
+                    indicator.removeFromSuperview()
+                    cell.thumbnailView.image = UIImage(named: "placeholder")
+                    cell.thumbnailView.contentMode = .ScaleAspectFit
+                }
                 cell.titleLabel.text = post.title
                 cell.authorLabel.text = post.author.name
             }

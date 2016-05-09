@@ -28,6 +28,7 @@
 #import "CCDeviceDetecter.h"
 
 #define NAVBAR_CHANGE_POINT 110
+#define BLUR_EFFECT_CHANGE_POINT -85
 #define SCROLL_EVENT_POINT -210
 #define PROGRESS_SIZE 50
 #define ScreenWidth  [UIScreen mainScreen].bounds.size.width
@@ -156,11 +157,12 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
             [self updateStatusBarColorWithChromoplast:self.chromoplast];
             self.view.backgroundColor = self.chromoplast.dominantColor;
             
-            self.headerRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.tableView target:self refreshAction:@selector(headerRefreshTriggered:) plist:@"abletive-logo" color:self.chromoplast.firstHighlight lineWidth:1.2f dropHeight:100 scale:1.2f horizontalRandomness:350 reverseLoadingAnimation:NO internalAnimationFactor:0.8f];
+            self.headerRefreshControl = [CBStoreHouseRefreshControl attachToScrollView:self.tableView target:self refreshAction:@selector(headerRefreshTriggered:) plist:@"abletive-logo" color:self.chromoplast.firstHighlight lineWidth:1.2f dropHeight:100 scale:0.95f horizontalRandomness:350 reverseLoadingAnimation:YES internalAnimationFactor:0.8f];
+            self.headerRefreshControl.hidden = YES;
         }
     }];
 
-    if (!self.isMyself) {
+    if (!self.isMyself && [self userLoggedIn]) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[[UIImage imageNamed:@"private_message"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] style:UIBarButtonItemStyleDone target:self action:@selector(messageButtonDidTap)];
     }
     
@@ -191,26 +193,29 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
     }
     
     [self scrollViewDidScroll:self.tableView];
-    [self.tableView scrollsToTop];
 }
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    
-    [self scrollViewDidScroll:self.tableView];
     
     [self updateStatusBarColorWithChromoplast:self.chromoplast];
     [self.navigationController.navigationBar lt_setBackgroundColor:[AppColor transparent]];
     self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[AppColor transparent]};
     self.navigationController.navigationBar.tintColor = self.chromoplast.firstHighlight;
     [self.navigationController.navigationBar setShadowImage:[UIImage new]];
+    
+    if (self.isMyself || ![self userLoggedIn]) {
+        [self.navigationItem.rightBarButtonItem setEnabled:NO];
+    }
+    
+    [self scrollViewDidScroll:self.tableView];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [self scrollViewDidScroll:self.tableView];
     self.navigationController.navigationBar.tintColor = self.chromoplast.firstHighlight;
     self.navigationController.navigationBar.barStyle = UIBarStyleBlackTranslucent;
+    [self scrollViewDidScroll:self.tableView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -234,6 +239,10 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)userLoggedIn {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"user_is_logged"];
+}
+
 - (void)setUpHeaderView {
     self.headerViewController.delegate = self;
     self.headerViewController.dominantColor = self.chromoplast.dominantColor;
@@ -250,6 +259,7 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    self.headerRefreshControl.hidden = NO;
     [self.headerRefreshControl scrollViewDidScroll];
     
     UIColor *mainColor = self.chromoplast.dominantColor;
@@ -260,6 +270,10 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
         CGFloat alpha = MIN(1, 1 - ((NAVBAR_CHANGE_POINT + 64 - offsetY) / 64));
         [self.navigationController.navigationBar lt_setBackgroundColor:[mainColor colorWithAlphaComponent:alpha]];
         self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[secondaryColor colorWithAlphaComponent:alpha]};
+    } else if (offsetY <= BLUR_EFFECT_CHANGE_POINT) {
+        CGFloat alpha = MAX(0, MIN(1, ABS(ABS(offsetY / BLUR_EFFECT_CHANGE_POINT) - ABS(offsetY + BLUR_EFFECT_CHANGE_POINT) / 81.5) - ABS(offsetY/85 - BLUR_EFFECT_CHANGE_POINT/85)));
+        [self.headerViewController changeBlurEffectWithAlpha:alpha];
+
     } else {
         [self.navigationController.navigationBar lt_setBackgroundColor:[mainColor colorWithAlphaComponent:0]];
         self.navigationController.navigationBar.titleTextAttributes = @{NSForegroundColorAttributeName:[UIColor clearColor]};
@@ -407,6 +421,7 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
         [self.headerRefreshControl finishingLoading];
     }
     _isLoading = NO;
+    [self.headerViewController changeBlurEffectWithAlpha:1];
 }
 
 #pragma mark - Table view data source
@@ -417,7 +432,7 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
     }
     switch (self.currentViewType) {
         case PersonalPageViewTypeProfile:
-            return 2;
+            return 3;
         case PersonalPageViewTypeFollowing:
             if ([self.headerViewController getFollowingCount]) {
                 return 1;
@@ -440,9 +455,9 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
         switch (section) {
             case 0:
                 return 4;
-//            case 1:
-//                return 2;
             case 1:
+                return 2;
+            case 2:
                 return 6;
             default:
                 break;
@@ -464,11 +479,11 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (self.currentViewType == PersonalPageViewTypeProfile) {
         switch (section) {
-//            case 1:
-//            {
-//                return [self setHeaderForSectionWithTitle:@"会员信息"];
-//            }
             case 1:
+            {
+                return [self setHeaderForSectionWithTitle:@"会员信息"];
+            }
+            case 2:
             {
                 return [self setHeaderForSectionWithTitle:@"基本信息"];
             }
@@ -537,47 +552,47 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
                 break;
             }
-//            case 1:
-//            {
-//                switch (indexPath.row) {
-//                    case 0:
-//                    {
-//                        NSString *userType = self.headerViewController.userProfile.membership[@"user_type"];
-//                        if ([userType containsString:@"过期"]) {
-//                            cell.imageView.image = [[UIImage imageNamed:@"membership-expired"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//                            cell.textLabel.text = NSLocalizedString(@"过期会员", nil);
-//                        } else if ([userType containsString:@"月费"]) {
-//                            cell.imageView.image = [[UIImage imageNamed:@"monthly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//                            cell.textLabel.text = NSLocalizedString(@"月费会员", nil);
-//                        } else if ([userType containsString:@"季费"]) {
-//                            cell.imageView.image = [[UIImage imageNamed:@"seasonly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//                            cell.textLabel.text = NSLocalizedString(@"季费会员", nil);
-//                        } else if ([userType containsString:@"年费"]) {
-//                            cell.imageView.image = [[UIImage imageNamed:@"yearly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//                            cell.textLabel.text = NSLocalizedString(@"年费会员", nil);
-//                        } else if ([userType containsString:@"终身"]) {
-//                            cell.imageView.image = [[UIImage imageNamed:@"eternal-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//                            cell.textLabel.text = NSLocalizedString(@"终身会员", nil);
-//                        } else {
-//                            cell.imageView.image = [[UIImage imageNamed:@"membership-expired"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//                            cell.textLabel.text = NSLocalizedString(@"非会员", nil);
-//                        }
-//                        break;
-//                    }
-//                    case 1:
-//                    {
-//                        cell.textLabel.text = NSLocalizedString(@"到期时间", nil);
-//                        cell.detailTextLabel.text = self.headerViewController.userProfile.membership[@"user_status"];
-//                        cell.imageView.image = [[UIImage imageNamed:@"membership-date"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-////                        cell.accessoryType = self.headerViewController.isMyself ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
-//                        break;
-//                    }
-//                    default:
-//                        break;
-//                }
-//                break;
-//            }
             case 1:
+            {
+                switch (indexPath.row) {
+                    case 0:
+                    {
+                        NSString *userType = self.headerViewController.userProfile.membership[@"user_type"];
+                        if ([userType containsString:@"过期"]) {
+                            cell.imageView.image = [[UIImage imageNamed:@"membership-expired"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                            cell.textLabel.text = NSLocalizedString(@"过期会员", nil);
+                        } else if ([userType containsString:@"月费"]) {
+                            cell.imageView.image = [[UIImage imageNamed:@"monthly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                            cell.textLabel.text = NSLocalizedString(@"月费会员", nil);
+                        } else if ([userType containsString:@"季费"]) {
+                            cell.imageView.image = [[UIImage imageNamed:@"seasonly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                            cell.textLabel.text = NSLocalizedString(@"季费会员", nil);
+                        } else if ([userType containsString:@"年费"]) {
+                            cell.imageView.image = [[UIImage imageNamed:@"yearly-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                            cell.textLabel.text = NSLocalizedString(@"年费会员", nil);
+                        } else if ([userType containsString:@"终身"]) {
+                            cell.imageView.image = [[UIImage imageNamed:@"eternal-membership"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                            cell.textLabel.text = NSLocalizedString(@"终身会员", nil);
+                        } else {
+                            cell.imageView.image = [[UIImage imageNamed:@"membership-expired"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                            cell.textLabel.text = NSLocalizedString(@"非会员", nil);
+                        }
+                        break;
+                    }
+                    case 1:
+                    {
+                        cell.textLabel.text = NSLocalizedString(@"到期时间", nil);
+                        cell.detailTextLabel.text = self.headerViewController.userProfile.membership[@"user_status"];
+                        cell.imageView.image = [[UIImage imageNamed:@"membership-date"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+                        cell.accessoryType = self.headerViewController.isMyself ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+                        break;
+                    }
+                    default:
+                        break;
+                }
+                break;
+            }
+            case 2:
             {
                 switch (indexPath.row) {
                     case 0:
@@ -806,19 +821,15 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
                     }
                     break;
                 }
-//                case 1:
-//                {
-//                    if (indexPath.row == 1 && self.isMyself) {
-//                        // Membership page
-////                        KINWebBrowserViewController *browser = [KINWebBrowserViewController webBrowser];
-////                        browser.barTintColor = [AppColor mainBlack];
-////                        browser.tintColor = [AppColor mainYellow];
-////                        [self.navigationController pushViewController:browser animated:YES];
-////                        [browser loadURLString:[NSString stringWithFormat:@"http://abletive.com/author/%lu?tab=membership",(unsigned long)self.currentUser.userID]];
-//                    }
-//                    break;
-//                }
                 case 1:
+                {
+                    if (indexPath.row == 1 && self.isMyself) {
+                        // Membership page
+                        [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Membership"] animated:YES];
+                    }
+                    break;
+                }
+                case 2:
                 {
                     switch (indexPath.row) {
                         case 1:

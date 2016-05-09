@@ -44,7 +44,7 @@ class WelcomeViewController: UIViewController,UIScrollViewDelegate {
             imageView.frame = CGRect(origin: CGPoint(x:  CGFloat(screenWidth * index), y: 0), size: UIScreen.mainScreen().bounds.size)
             
             if index == 4 {
-                let tapper = UITapGestureRecognizer(target: self, action: "lastOneTapped")
+                let tapper = UITapGestureRecognizer(target: self, action: #selector(WelcomeViewController.lastOneTapped))
                 imageView.userInteractionEnabled = true
                 imageView.addGestureRecognizer(tapper)
             }

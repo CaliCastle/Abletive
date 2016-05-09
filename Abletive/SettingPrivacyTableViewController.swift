@@ -7,13 +7,18 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class SettingPrivacyTableViewController: UITableViewController {
 
+    @IBOutlet weak var blurSwitch: UISwitch!
+    @IBOutlet weak var authSwitch: UISwitch!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
         
+        blurSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey("Background_Blur")
+        authSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey("Authentication_Profile")
     }
 
     override func didReceiveMemoryWarning() {
@@ -21,54 +26,50 @@ class SettingPrivacyTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        switch indexPath {
-            case NSIndexPath(forRow: 1, inSection: 0):
-//                let popup = STPopupController(rootViewController: storyboard?.instantiateViewControllerWithIdentifier("SettingTheme"))
-//                popup.backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .Dark))
-//                popup.cornerRadius = 12
-//                popup.presentInViewController(self)
-                break;
-            default:
-                break;
+    @IBAction func blurSwitchDidChange(sender: UISwitch) {
+        NSUserDefaults.standardUserDefaults().setBool(sender.on, forKey: "Background_Blur")
+    }
+    
+    @IBAction func authSwitchDidChange(sender: UISwitch) {
+        authenticateUser(sender.on)
+    }
+
+    func authenticateUser(on : Bool) -> Void {
+        let context = LAContext()
+        var error : NSError?
+        
+        if #available(iOS 9.0, *) {
+            if context.canEvaluatePolicy(.DeviceOwnerAuthentication, error: &error) {
+                context.evaluatePolicy(.DeviceOwnerAuthentication, localizedReason: "用来验证身份，保护资料信息", reply: { (success, error) in
+                    if success {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            NSUserDefaults.standardUserDefaults().setBool(on, forKey: "Authentication_Profile")
+                        })
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), { 
+                            self.authSwitch.setOn(!on, animated: true)
+                        })
+                    }
+                })
+            }
+        } else {
+            // Fallback on earlier versions
+            if context.canEvaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, error: &error) {
+                context.evaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, localizedReason: "用来验证身份，保护资料信息", reply: { (success, error) in
+                    if success {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            NSUserDefaults.standardUserDefaults().setBool(on, forKey: "Authentication_Profile")
+                        })
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.authSwitch.setOn(!on, animated: true)
+                        })
+                    }
+                })
+            }
         }
     }
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
+    
     /*
     // MARK: - Navigation
 

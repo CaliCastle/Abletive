@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<string>com.calicastle.monthly_subscription</string>
+	<string>com.calicastle.seasonly_subscription</string>
+	<string>com.calicastle.yearly_subscription</string>
+	<string>com.calicastle.premium_subscription</string>
+</array>
+</plist>

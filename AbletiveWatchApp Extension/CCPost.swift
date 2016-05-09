@@ -11,7 +11,7 @@ import Foundation
 public class CCPost : NSObject {
     var title : String = ""
     var author : String = ""
-    var thumbnailURL : String = ""
+    var thumbnailURL : String?
     
     private static var posts : Array<CCPost> = []
     
@@ -24,7 +24,7 @@ public class CCPost : NSObject {
     init(attributes : NSDictionary) {
         title = attributes["title"] as! String
         author = attributes["author"]!["nickname"] as! String
-        thumbnailURL = attributes["thumbnail"] as! String
+        thumbnailURL = attributes["thumbnail"] as? String
     }
     
     class func allPosts() -> Array<CCPost> {
@@ -32,7 +32,7 @@ public class CCPost : NSObject {
     }
     
     class func fetchPosts(page : UInt = 1, count : UInt = 5, callback: (posts : Array<CCPost>) -> Void) {
-        let request = NSURLRequest(URL: NSURL(string: "http://abletive.com/api/get_posts?page=\(page)&count=\(count)")!)
+        let request = NSURLRequest(URL: NSURL(string: "https://abletive.com/api/get_posts?page=\(page)&count=\(count)")!)
         
         NSURLSession.sharedSession().dataTaskWithRequest(request) { (data : NSData?, response : NSURLResponse?, error : NSError?) -> Void in
             if error == nil {
@@ -55,7 +55,7 @@ public class CCPost : NSObject {
     }
     
     class func latest(callback: (post : CCPost) -> Void) {
-        let request = NSURLRequest(URL: NSURL(string: "http://abletive.com/api/get_posts?page=1&count=1")!)
+        let request = NSURLRequest(URL: NSURL(string: "https://abletive.com/api/get_posts?page=1&count=1")!)
         
         NSURLSession.sharedSession().dataTaskWithRequest(request) { (data : NSData?, response : NSURLResponse?, error : NSError?) -> Void in
             if error == nil {

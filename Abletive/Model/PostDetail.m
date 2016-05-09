@@ -43,8 +43,12 @@
     return [[PostDetail alloc]initWithAttributes:attributes];
 }
 
-+ (NSURLSessionDataTask *)postDetailByID:(NSUInteger)post_id withCookie:(NSString *)cookie andBlock:(void (^)(PostDetail *, NSError *))block {
-    return [[AbletiveAPIClient sharedClient] POST:@"get_post" parameters:@{@"id":[NSString stringWithFormat:@"%ld",(unsigned long)post_id],@"cookie":cookie?cookie:@""} success:^(NSURLSessionDataTask * __unused task, NSDictionary *JSON) {
++ (NSURLSessionDataTask *)postDetailByID:(NSUInteger)post_id withCookie:(NSString *)cookie andOrder:(BOOL)order andBlock:(void (^)(PostDetail *, NSError *))block {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:@{@"id":[NSString stringWithFormat:@"%ld",(unsigned long)post_id],@"cookie":cookie?cookie:@""}];
+    if (order) {
+        [attributes setObject:@"1" forKey:@"order"];
+    }
+    return [[AbletiveAPIClient sharedClient] POST:@"get_post" parameters:attributes success:^(NSURLSessionDataTask * __unused task, NSDictionary *JSON) {
         if ([JSON[@"status"] isEqualToString:@"ok"]) {
             PostDetail *detailPost = [PostDetail postDetailWithAttributes:JSON[@"post"]];
             if (block) {
@@ -64,8 +68,12 @@
     }];
 }
 
-+ (void)pageDetailByID:(NSUInteger)pageID andBlock:(void (^)(PostDetail *, NSError *))block {
-    [[AbletiveAPIClient sharedClient] POST:@"get_page" parameters:@{@"id":[NSNumber numberWithInteger:pageID]} success:^(NSURLSessionDataTask *task, NSDictionary *JSON) {
++ (void)pageDetailByID:(NSUInteger)pageID andOrder:(BOOL)order andBlock:(void (^)(PostDetail *, NSError *))block {
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:@{@"id":[NSNumber numberWithInteger:pageID]}];
+    if (order) {
+        [attributes setObject:@"1" forKey:@"order"];
+    }
+    [[AbletiveAPIClient sharedClient] POST:@"get_page" parameters:attributes success:^(NSURLSessionDataTask *task, NSDictionary *JSON) {
         if ([JSON[@"status"] isEqualToString:@"ok"]) {
             PostDetail *detailPage = [PostDetail postDetailWithAttributes:JSON[@"page"]];
             if (block) {
@@ -83,15 +91,44 @@
     }];
 }
 
-+ (void)getPostDetailBySlug:(NSString *)slug andBlock:(void (^)(PostDetail *, NSError *))block {
++ (void)getPostDetailBySlug:(NSString *)slug andOrder:(BOOL)order andBlock:(void (^)(PostDetail *, NSError *))block {
     if ([slug containsString:@"http://abletive.com/"]) {
         slug = [slug reverse];
         slug = [[slug substringToIndex:[slug rangeOfString:@"/"].location] reverse];
     }
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:@{@"slug":slug}];
+    if (order) {
+        [attributes setObject:@"1" forKey:@"order"];
+    }
     
-    [[AbletiveAPIClient sharedClient] POST:@"get_post" parameters:@{@"slug":slug} success:^(NSURLSessionDataTask *task, NSDictionary *JSON) {
+    [[AbletiveAPIClient sharedClient] POST:@"get_post" parameters:attributes success:^(NSURLSessionDataTask *task, NSDictionary *JSON) {
         if ([JSON[@"status"] isEqualToString:@"ok"]) {
             PostDetail *detailPost = [PostDetail postDetailWithAttributes:JSON[@"post"]];
+            if (block) {
+                block(detailPost,nil);
+            }
+        } else {
+            if (block) {
+                block(nil, [NSError new]);
+            }
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        if (block) {
+            block(nil, error);
+        }
+    }];
+}
+
++ (void)getPageDetailBySlug:(NSString *)slug andBlock:(void (^)(PostDetail *, NSError *))block {
+    if ([slug containsString:@"http://abletive.com/"]) {
+        slug = [slug reverse];
+        slug = [[slug substringToIndex:[slug rangeOfString:@"/"].location] reverse];
+    }
+    NSMutableDictionary *attributes = [NSMutableDictionary dictionaryWithDictionary:@{@"slug":slug}];
+    
+    [[AbletiveAPIClient sharedClient] POST:@"get_page" parameters:attributes success:^(NSURLSessionDataTask *task, NSDictionary *JSON) {
+        if ([JSON[@"status"] isEqualToString:@"ok"]) {
+            PostDetail *detailPost = [PostDetail postDetailWithAttributes:JSON[@"page"]];
             if (block) {
                 block(detailPost,nil);
             }

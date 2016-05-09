@@ -19,9 +19,12 @@ class CCPostRowController: NSObject {
             if let post = post {
                 titleLabel.setText(post.title)
                 authorLabel.setText(post.author)
-                ImageLoader.sharedLoader.imageForUrl(post.thumbnailURL, completionHandler: { (image, url) -> () in
-                    self.thumbnailImage.setImage(image)
-                })
+                
+                if post.thumbnailURL != nil {
+                    ImageLoader.sharedLoader.imageForUrl(post.thumbnailURL!, completionHandler: { (image, url) -> () in
+                        self.thumbnailImage.setImage(image)
+                    })
+                }
             }
         }
     }

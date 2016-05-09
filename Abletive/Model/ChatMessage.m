@@ -31,6 +31,7 @@
             NSMutableArray *messages = [NSMutableArray arrayWithCapacity:rawMessages.count];
             for (NSDictionary *rawMessage in rawMessages) {
                 ChatMessage *message = [ChatMessage chatMessageWithContent:rawMessage[@"content"] andType:ChatMessageTypePlainText andIsSender:[rawMessage[@"is_sender"] boolValue] withUserID:fromUserID];
+                message.date = rawMessage[@"date"];
                 [messages addObject:message];
             }
             

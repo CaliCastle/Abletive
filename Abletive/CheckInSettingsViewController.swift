@@ -35,7 +35,7 @@ class CheckInSettingsViewController: UIViewController {
         setupReminder()
         setupCustomizableTextButton()
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "saveSettings")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(CheckInSettingsViewController.saveSettings))
     }
 
     override func didReceiveMemoryWarning() {
@@ -85,7 +85,7 @@ class CheckInSettingsViewController: UIViewController {
     }
     
     func setupCustomizableTextButton() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: "customizeDidClick")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: #selector(CheckInSettingsViewController.customizeDidClick))
     }
     
     func customizeDidClick() {

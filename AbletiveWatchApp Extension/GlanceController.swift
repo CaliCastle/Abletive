@@ -41,9 +41,12 @@ class GlanceController: WKInterfaceController {
         CCPost.latest { (post) -> Void in
             self.titleLabel.setText(post.title)
             self.authorLabel.setText(post.author)
-            ImageLoader.sharedLoader.imageForUrl(post.thumbnailURL, completionHandler: { (image, url) -> () in
-                self.thumbnailImage.setImage(image)
-            })
+            
+            if post.thumbnailURL != nil {
+                ImageLoader.sharedLoader.imageForUrl(post.thumbnailURL!, completionHandler: { (image, url) -> () in
+                    self.thumbnailImage.setImage(image)
+                })
+            }
         }
     }
 

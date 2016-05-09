@@ -38,12 +38,14 @@
         UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
         _blurEffectView = [[UIVisualEffectView alloc]initWithEffect:blurEffect];
     }
-    _blurEffectView.frame = CGRectMake(0, 0, ScreenWidth, self.view.frame.size.height);
+    _blurEffectView.frame = CGRectMake(0, 0, self.backgroundImageView.frame.size.width, self.backgroundImageView.frame.size.height + 5);
     return _blurEffectView;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.backgroundImageView addSubview:self.blurEffectView];
     
     self.view.clipsToBounds = YES;
     self.iconView.layer.masksToBounds = YES;
@@ -62,7 +64,7 @@
     self.collectionButton.layer.borderWidth = 1.1f;
     
     [self animation];
-    [self.view insertSubview:self.blurEffectView aboveSubview:self.backgroundImageView];
+
     [self setDataWithAttributes:[NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults]dictionaryForKey:@"user"]]];
 }
 

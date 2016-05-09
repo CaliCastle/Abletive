@@ -46,7 +46,7 @@ class Setting3DTouchTableViewController: UITableViewController {
                 if shortcutItem.type == (checkInEnabled ? "Settings" : "CheckIn") {
                     break
                 }
-                index++
+                index += 1
             }
             var item = shortcutItems![index]
             if checkInEnabled {

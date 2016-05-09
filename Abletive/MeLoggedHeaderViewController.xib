@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10115" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10084"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -23,11 +23,16 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="220"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-avatar" translatesAutoresizingMaskIntoConstraints="NO" id="28o-gt-pTX">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-avatar" translatesAutoresizingMaskIntoConstraints="NO" id="28o-gt-pTX">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="220"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="28o-gt-pTX" secondAttribute="height" multiplier="1:1" id="RAq-Xq-Ebs"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="RAq-Xq-Ebs"/>
+                        </mask>
+                    </variation>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default-avatar" translatesAutoresizingMaskIntoConstraints="NO" id="Y87-1l-F5v">
                     <rect key="frame" x="263" y="30" width="75" height="75"/>
@@ -102,6 +107,7 @@
                 <constraint firstItem="49X-nv-Iz8" firstAttribute="top" secondItem="aS5-S7-wI4" secondAttribute="bottom" constant="8" id="Sfm-Kf-gqk"/>
                 <constraint firstItem="28o-gt-pTX" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="SxS-TO-NlQ"/>
                 <constraint firstAttribute="bottom" secondItem="gXu-T2-ldj" secondAttribute="bottom" constant="5" id="Ttu-cZ-r2O"/>
+                <constraint firstAttribute="bottom" secondItem="28o-gt-pTX" secondAttribute="bottom" id="Wky-qB-pjH"/>
                 <constraint firstItem="SiP-Jt-vUs" firstAttribute="top" secondItem="Y87-1l-F5v" secondAttribute="bottom" constant="5" id="c9q-Qr-eNB"/>
                 <constraint firstItem="49X-nv-Iz8" firstAttribute="leading" secondItem="b0s-lh-Kra" secondAttribute="trailing" constant="60" id="dRm-Wt-deO"/>
                 <constraint firstItem="aS5-S7-wI4" firstAttribute="top" secondItem="SiP-Jt-vUs" secondAttribute="bottom" constant="2" id="gIa-11-aZd"/>

@@ -22,4 +22,6 @@
 
 @property (nonatomic,assign) BOOL isPage;
 
+- (void)shared;
+
 @end

@@ -30,7 +30,7 @@ class PersonalCardViewController: UIViewController,PersonalCardSettingsDelegate,
         // Do any additional setup after loading the view.
         title = "我的名片"
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "showActionSheet")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: #selector(PersonalCardViewController.showActionSheet))
         getUserDefaults()
         setupCard()
     }
@@ -96,7 +96,7 @@ class PersonalCardViewController: UIViewController,PersonalCardSettingsDelegate,
         cardView.addShadow()
         cardView.delegate = self
         
-        let longPresser = UILongPressGestureRecognizer(target: self, action: "showActionSheet")
+        let longPresser = UILongPressGestureRecognizer(target: self, action: #selector(PersonalCardViewController.showActionSheet))
         cardView.addGestureRecognizer(longPresser)
         
         if backgroundBlur {

@@ -52,6 +52,7 @@
 - (void)setMessageModel:(ChatMessage *)messageModel {
     _messageModel = messageModel;
     mTimeLable.text = messageModel.content;
+    mTimeLable.textColor = [UIColor colorWithWhite:1 alpha:0.65];
 }
 
 @end

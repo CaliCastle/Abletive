@@ -5,6 +5,7 @@
 //  Created by Cali on 11/27/15.
 //  Copyright © 2015 CaliCastle. All rights reserved.
 //
+#import <AudioToolbox/AudioToolbox.h>
 
 #import "ChatMessageTableViewController.h"
 #import "MessagePlainTableViewCell.h"
@@ -16,6 +17,8 @@
 #import "KINWebBrowser/KINWebBrowserViewController.h"
 #import "PersonalPageTableViewController.h"
 #import "SinglePostTableViewController.h"
+#import "CCDateToString.h"
+#import "UIBarButtonItem+Badge.h"
 
 #define DEFAULT_BAR_HEIGHT 44.0
 
@@ -28,12 +31,16 @@
 @property (nonatomic,assign) BOOL isKeyboardOpen;
 @property (nonatomic,assign) CGPoint lastPoint;
 @property (nonatomic,assign) CGFloat barHeight;
+@property (nonatomic, strong) NSNotification *lastNotification;
 
 @end
 
 @implementation ChatMessageTableViewController {
     BOOL animationLock;
     BOOL messageLoaded;
+    SystemSoundID sentSoundID;
+    SystemSoundID receivedSoundID;
+    NSUInteger newMessageCount;
 }
 
 - (NSMutableArray *)allMessages {
@@ -114,8 +121,16 @@
     }
 }
 
+- (void)setupSound {
+    NSString *soundFile = [[NSBundle mainBundle] pathForResource:@"Message_Sent" ofType:@"wav"];
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:soundFile], &sentSoundID);
+        
+    soundFile = [[NSBundle mainBundle] pathForResource:@"Message_Received" ofType:@"wav"];
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:soundFile], &receivedSoundID);
+}
+
 - (void)setupUser {
-    self.title = self.currentUser.name;
+    self.title = self.currentUser ? self.currentUser.name : @"加载中...";
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"author"] style:UIBarButtonItemStyleDone target:self action:@selector(avatarDidTap)];
 }
 
@@ -124,7 +139,21 @@
     if (chatMessages) {
         messageLoaded = YES;
         if (chatMessages.count) {
-            [self.allMessages addObjectsFromArray:chatMessages];
+            NSInteger i = 1;
+//            NSString *lastDateString = @"";
+            for (ChatMessage *message in chatMessages) {
+                if (i != 1 && chatMessages.count >= 2) {
+                    // If lasted longer than 5 minutes
+                    [self addMessageModel:message];
+                } else {
+                    ChatMessage *time = [ChatMessage chatMessageWithContent:[CCDateToString getStringFromDate:message.date] andType:ChatMessageTypeTime andIsSender:NO withUserID:0];
+                    time.date = message.date;
+                    [self.allMessages addObject:time];
+                    [self.allMessages addObject:message];
+//                    lastDateString = message.date;
+                }
+                i++;
+            }
             [self.tableView reloadData];
             [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
         } else {
@@ -138,13 +167,58 @@
     }
 }
 
+- (BOOL)addMessageModel:(ChatMessage *)message {
+    NSString *lastDateString = @"";
+    
+    for (NSInteger i = self.allMessages.count - 1; i > 0; i--) {
+        ChatMessage *message = self.allMessages[i];
+        if (message.messageType == ChatMessageTypeTime) {
+            lastDateString = message.date;
+            break;
+        }
+    }
+    
+    ChatMessage *lastOne = self.allMessages.lastObject;
+    
+    NSDateFormatter *formatter = [NSDateFormatter new];
+    [formatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    
+    NSDate *lastDate = [formatter dateFromString:lastOne.date];
+    NSDate *lastDate2 = [formatter dateFromString:lastDateString];
+    NSDate *newDate = [formatter dateFromString:message.date];
+    
+    if ([newDate timeIntervalSinceDate:lastDate] > 60 * 5 || [newDate timeIntervalSinceDate:lastDate2] > 60 * 10) {
+        ChatMessage *time = [ChatMessage chatMessageWithContent:[CCDateToString getStringFromDate:message.date] andType:ChatMessageTypeTime andIsSender:NO withUserID:0];
+        time.date = message.date;
+        [self.allMessages addObject:time];
+        [self.allMessages addObject:message];
+        
+        return YES;
+    } else {
+        [self.allMessages addObject:message];
+        
+        return NO;
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self fetchMessages];
     [self setupUser];
+    [self setupSound];
     
     self.lastPoint = CGPointZero;
+    
+    
+    UIImage *buttonImage = [[UIImage imageNamed:@"backbutton"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftButton.frame = CGRectMake(0, 0, buttonImage.size.height, buttonImage.size.height);
+    [leftButton addTarget:self action:@selector(backDidClick) forControlEvents:UIControlEventTouchUpInside];
+    leftButton.tintColor = [AppColor mainYellow];
+    [leftButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
     
     self.view.backgroundColor = [AppColor secondaryBlack];
     self.automaticallyAdjustsScrollViewInsets = YES;
@@ -153,11 +227,61 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(receivedPushNotification:) name:@"NewMessage" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)backDidClick {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+     
+- (void)receivedPushNotification:(NSNotification *)aNotification {
+    if (messageLoaded) {
+        if (self.currentUser) {
+            if ([aNotification.userInfo[@"user_id"] intValue] == self.currentUser.userID) {
+                [self updateMessage:aNotification.userInfo[@"message"]];
+            } else {
+                newMessageCount++;
+                self.navigationItem.leftBarButtonItem.badgeValue = [NSString stringWithFormat:@"%@",[NSNumber numberWithUnsignedInteger:newMessageCount]];
+            }
+        } else {
+            if ([aNotification.userInfo[@"user_id"] intValue] == self.userID) {
+                [self updateMessage:aNotification.userInfo[@"message"]];
+            } else {
+                newMessageCount++;
+                self.navigationItem.leftBarButtonItem.badgeValue = [NSString stringWithFormat:@"%@",[NSNumber numberWithUnsignedInteger:newMessageCount]];
+            }
+        }
+    }
+}
+
+- (void)updateMessage:(NSString *)message {
+    // Play sound
+    AudioServicesPlaySystemSound(receivedSoundID);
+    
+    ChatMessage *newMessage = [ChatMessage chatMessageWithContent:message andType:ChatMessageTypePlainText andIsSender:NO withUserID:self.currentUser.userID];
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    newMessage.date = [dateFormatter stringFromDate:[NSDate new]];
+    newMessage.avatarURL = self.currentUser.avatarPath;
+    
+    BOOL hasTime = [self addMessageModel:newMessage];
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0];
+    [self.tableView beginUpdates];
+    if (hasTime) {
+        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row - 1 inSection:0], indexPath] withRowAnimation:UITableViewRowAnimationRight];
+    } else {
+        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
+    }
+    [self.tableView endUpdates];
+    
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 - (void)keyboardWillShow:(NSNotification *)aNotification {
@@ -180,6 +304,7 @@
         self.lastPoint = self.tableView.frame.origin;
     }
     NSDictionary *userInfo = aNotification.userInfo;
+    
     NSTimeInterval animationDuration = 0;
     UIViewAnimationCurve animationCurve = UIViewAnimationCurveEaseIn;
     CGRect keyboardFrame = CGRectZero;
@@ -191,7 +316,7 @@
     CGFloat contentSizeHeight = self.tableView.contentSize.height + self.navigationController.navigationBar.frame.size.height;
     
     if (self.tableView.frame.size.height - keyboardFrame.size.height >= contentSizeHeight) {
-        
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     } else {
         /**
          *  If we currently have a keyboard (Mostly likely when the user taps on Emoticon button)
@@ -218,12 +343,13 @@
                 self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y + (isOpen ? -1 : 1) * (contentSizeHeight - (self.tableView.frame.size.height - keyboardFrame.size.height)) + ((self.inputBar.frame.size.height - DEFAULT_BAR_HEIGHT) * (isOpen ? -1 : 1)), self.tableView.frame.size.width, self.tableView.frame.size.height);
             }
             
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+//            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
             [UIView commitAnimations];
             if (!isOpen && self.tableView.isDragging) {
                 animationLock = YES;
             }
         }
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     }
     
 }
@@ -237,13 +363,23 @@
     if ([[text stringByReplacingOccurrencesOfString:@" " withString:@""] isEqualToString:@""]) {
         return;
     }
+    
     ChatMessage *newMessage = [ChatMessage chatMessageWithContent:text andType:ChatMessageTypePlainText andIsSender:YES withUserID:self.currentUser.userID];
     newMessage.status = MessageSendStatusSending;
-    [self.allMessages addObject:newMessage];
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDateFormat:@"YYYY-MM-dd HH:mm:ss"];
+    newMessage.date = [dateFormatter stringFromDate:[NSDate new]];
+    
+    BOOL hasTime = [self addMessageModel:newMessage];
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.allMessages.count-1 inSection:0];
+    
     [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:newMessage.isSender?UITableViewRowAnimationRight:UITableViewRowAnimationLeft];
+    if (hasTime) {
+        [self.tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row - 1 inSection:0], indexPath] withRowAnimation:UITableViewRowAnimationRight];
+    } else {
+        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationRight];
+    }
     [self.tableView endUpdates];
     
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
@@ -251,7 +387,9 @@
     [ChatMessage sendChatMessageWithContent:text andToWhom:self.currentUser.userID andBlock:^(BOOL success, ChatMessage *message) {
         self.allMessages[indexPath.row] = message;
         
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView reloadData];
+        // Play sound
+        AudioServicesPlaySystemSound(sentSoundID);
     }];
 }
 
@@ -268,7 +406,24 @@
 }
 
 - (void)linkDidTapAtURL:(NSString *)url {
-    if ([url containsString:@"http://abletive.com/"]) {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"链接操作" message:url preferredStyle:UIAlertControllerStyleActionSheet];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"打开链接" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+        [self openLink:url];
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"拷贝链接" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [UIPasteboard generalPasteboard].string = url;
+        [TAOverlay showOverlayWithSuccessText:@"拷贝成功"];
+    }]];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"在Safari打开" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
+    }]];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)openLink:(NSString *)url {
+    if ([url containsString:@"//abletive.com/"] && ![url containsString:@"//abletive.com/author"]) {
         SinglePostTableViewController *singlePostTVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SinglePostTVC"];
         singlePostTVC.postSlug = url;
         

@@ -13,14 +13,16 @@
 #import "CBStoreHouseRefreshControl.h"
 #import "MozTopAlertView.h"
 #import "ChatMessageTableViewController.h"
+#import "UIBarButtonItem+Badge.h"
 
-#define COUNT_PER_PAGE 20
+#define COUNT_PER_PAGE 45
+#define INBOX_BADGE_KEY @"Inbox_Badge_Key"
 
 static NSString * const identifier = @"NotificationReuse";
 
-@interface ChatTableViewController ()
+static NSString * const saveFilename = @"LoadedMessages.plist";
 
-@property (nonatomic,strong) NSMutableArray *allNotifications;
+@interface ChatTableViewController ()
 
 @property (nonatomic,assign) NSUInteger currentPageIndex;
 
@@ -37,7 +39,7 @@ static NSString * const identifier = @"NotificationReuse";
 
 - (NSMutableArray *)allNotifications {
     if (!_allNotifications) {
-        _allNotifications = [NSMutableArray array];
+        _allNotifications = [NSMutableArray arrayWithArray:[self loadMessageCache]];
     }
     return _allNotifications;
 }
@@ -46,31 +48,82 @@ static NSString * const identifier = @"NotificationReuse";
     [super viewDidLoad];
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@"user_is_logged"]) {
+        self.allNotifications = [NSMutableArray arrayWithArray:[self loadMessageCache]];
+        
         [self resetHeaderControl];
-        [self loadPageData];
+    
+        if (!self.allNotifications.count) {
+            [self loadPageData];
+        }
+        [self setupInboxButton];
     }
     
     self.currentPageIndex = 1;
     
     self.tableView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
     [self.tableView setTableFooterView:[[UIView alloc]initWithFrame:CGRectZero]];
+    
+    
     [self.tableView registerNib:[UINib nibWithNibName:@"NotificationTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:identifier];
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userHasLoggedIn) name:@"User_Login" object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(userHasLoggedOut) name:@"User_Logout" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(newInbox) name:@"New_Comment" object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     if (![[NSUserDefaults standardUserDefaults]boolForKey:@"user_is_logged"]) {
-        self.navigationItem.rightBarButtonItems = @[];
+        self.navigationItem.leftBarButtonItem = nil;
+    } else {
+        [self setupInboxButton];
+    }
+    
+    if ([[NSUserDefaults standardUserDefaults] stringForKey:@"Tabbar_Message_Badge_Key"] && [[NSUserDefaults standardUserDefaults] boolForKey:@"user_is_logged"]) {
+        self.currentPageIndex = 1;
+        [self loadPageData];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    if ([[NSUserDefaults standardUserDefaults]boolForKey:@"user_is_logged"]) {
+        [self saveMessageCache];
     }
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+    [self.allNotifications removeAllObjects];
+}
+
+- (void)setupInboxButton {
+    UIImage *buttonImage = [[UIImage imageNamed:@"alert"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    UIButton *leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    leftButton.frame = CGRectMake(0, 0, buttonImage.size.width, buttonImage.size.height);
+    [leftButton addTarget:self action:@selector(inboxDidClick) forControlEvents:UIControlEventTouchUpInside];
+    leftButton.tintColor = [AppColor mainYellow];
+    [leftButton setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:leftButton];
+    self.navigationItem.leftBarButtonItem.badgeValue = [[NSUserDefaults standardUserDefaults] stringForKey:INBOX_BADGE_KEY] ? [[NSUserDefaults standardUserDefaults] stringForKey:INBOX_BADGE_KEY] : nil;
+}
+
+- (void)inboxDidClick {
+    // Push inbox notifications
+    self.navigationItem.leftBarButtonItem.badgeValue = nil;
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:INBOX_BADGE_KEY];
+    
+    [self.navigationController pushViewController:[self.storyboard instantiateViewControllerWithIdentifier:@"Inbox"] animated:YES];
+}
+
+- (void)newInbox {
+    NSInteger badgeNumber = self.navigationItem.leftBarButtonItem.badgeValue ? ([self.navigationItem.leftBarButtonItem.badgeValue intValue] + 1) : 1;
+    self.navigationItem.leftBarButtonItem.badgeValue = [NSString stringWithFormat:@"%@", [NSNumber numberWithInteger:badgeNumber]];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%@", [NSNumber numberWithInteger:badgeNumber]] forKey:INBOX_BADGE_KEY];
 }
 
 - (void)resetHeaderControl {
@@ -93,20 +146,40 @@ static NSString * const identifier = @"NotificationReuse";
         [self.headerRefreshControl finishingLoading];
         _isLoading = NO;
         if (!error) {
-            if (!notifs.count) {
+            if (!notifs.count || notifs.count < COUNT_PER_PAGE) {
                 _noMore = YES;
                 return;
             }
             if (self.currentPageIndex == 1) {
                 self.allNotifications = [NSMutableArray array];
             }
-            [self.allNotifications addObjectsFromArray:notifs];
+            for (Notification *notif in notifs) {
+                if (![self containsNotification:notif]) {
+                    [self.allNotifications addObject:notif];
+                }
+            }
+            
             self.currentPageIndex++;
             [self.tableView reloadData];
+            [self removeTabbarBadge];
         } else {
             [TAOverlay showOverlayWithLabel:@"加载错误" Options:TAOverlayOptionAutoHide | TAOverlayOptionOverlayTypeError | TAOverlayOptionOverlaySizeRoundedRect];
         }
     }];
+}
+
+- (BOOL)containsNotification:(Notification *)notif {
+    for (Notification *n in self.allNotifications) {
+        if (n.fromUserID == notif.fromUserID) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void)removeTabbarBadge {
+    [self.tabBarController.tabBar.items[1] setBadgeValue:nil];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"Tabbar_Message_Badge_Key"];
 }
 
 - (void)headerRefreshTriggered:(id)sender {
@@ -123,26 +196,48 @@ static NSString * const identifier = @"NotificationReuse";
     
     [self resetHeaderControl];
     [self.tableView reloadData];
+    
+    [self saveMessageCache];
 }
 
 - (void)userHasLoggedIn {
+    [notLoggedLabel removeFromSuperview];
     [self resetHeaderControl];
     [self loadPageData];
 }
 
+- (void)saveMessageCache {
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *filePath = [documentPath stringByAppendingPathComponent:saveFilename];
+    NSData *cacheData = [NSKeyedArchiver archivedDataWithRootObject:self.allNotifications];
+    [cacheData writeToFile:filePath atomically:NO];
+}
+
+- (NSArray *)loadMessageCache {
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *filePath = [documentPath stringByAppendingPathComponent:saveFilename];
+    NSData *cacheData = [NSData dataWithContentsOfFile:filePath];
+    if (!cacheData) {
+        return [NSArray array];
+    }
+    return [NSArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:cacheData]];
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self.headerRefreshControl scrollViewDidScroll];
-    
-    CGFloat offsetY = scrollView.contentOffset.y;
-    if (scrollView.frame.size.height >= scrollView.contentSize.height - offsetY + 50) {
-        if (_isLoading || _noMore) {
-            return;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"user_is_logged"]) {
+        [self.headerRefreshControl scrollViewDidScroll];
+        
+        CGFloat offsetY = scrollView.contentOffset.y;
+        if (scrollView.frame.size.height >= scrollView.contentSize.height - offsetY + 50) {
+            if (_isLoading || _noMore) {
+                return;
+            }
+            //        if (self.allNotifications.count < COUNT_PER_PAGE) {
+            //            return;
+            //        }
+            _isLoading = YES;
+            [self loadPageData];
         }
-        if (self.allNotifications.count < COUNT_PER_PAGE) {
-            return;
-        }
-        _isLoading = YES;
-        [self loadPageData];
     }
 }
 
@@ -218,9 +313,10 @@ static NSString * const identifier = @"NotificationReuse";
     if (self.allNotifications.count && [[NSUserDefaults standardUserDefaults]boolForKey:@"user_is_logged"]) {
         ChatMessageTableViewController *chatMessageVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ChatMessage"];
         Notification *currentNotif = self.allNotifications[indexPath.row];
-        chatMessageVC.currentUser = currentNotif.user;
+        chatMessageVC.userID = currentNotif.user.userID;
         
         [self.navigationController pushViewController:chatMessageVC animated:YES];
+        [self removeTabbarBadge];
     }
 }
 

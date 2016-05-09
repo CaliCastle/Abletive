@@ -44,6 +44,7 @@
             
             for (NSDictionary *attribute in messages) {
                 Notification *notif = [Notification notificationWithAttributes:attribute];
+                notif.rawRepresentation = attribute;
                 [notifications addObject:notif];
             }
             if (block) {
@@ -59,4 +60,17 @@
         }
     }];
 }
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    if (self = [super init]) {
+        self = [self initWithAttributes:[coder decodeObjectForKey:@"raw"]];
+    }
+    
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)coder {
+    [coder encodeObject:self.rawRepresentation forKey:@"raw"];
+}
+
 @end

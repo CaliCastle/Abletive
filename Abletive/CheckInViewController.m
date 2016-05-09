@@ -92,14 +92,14 @@
         self.remindButton.tintColor = self.chromoplast.firstHighlight;
         
         self.closeButton.tintColor = self.chromoplast.firstHighlight;
-        self.closeButton.imageView.tintColor = self.chromoplast.firstHighlight;
+        self.closeButton.backgroundColor = [AppColor transparent];
         
         self.checkInTitleLabel.textColor = self.chromoplast.firstHighlight;
         self.checkInDescriptionLabel.textColor = self.chromoplast.secondHighlight;
         
         self.materialButton = [[ZMaterialButton alloc]initWithFrame:CGRectMake(ScreenWidth/2 - CHECKIN_BUTTON_SIZE/2, self.checkInDescriptionLabel.frame.origin.y + CHECKIN_BUTTON_SIZE + 10, CHECKIN_BUTTON_SIZE, CHECKIN_BUTTON_SIZE)];
         [self.materialButton setBackgroundColor:self.chromoplast.firstHighlight];
-        [self.materialButton setBackgroundImage:[[UIImage imageNamed:@"checkin"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
+        [self.materialButton setBackgroundImage:[[UIImage imageNamed:@"checkin-icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
         [self.materialButton setBackgroundImage:[UIImage new] forState:UIControlStateDisabled];
         [self.materialButton setEndAnimationPoint:CGPointMake(ScreenWidth/2 - CHECKIN_BUTTON_SIZE/2, self.materialButton.frame.origin.y + CHECKIN_BUTTON_SIZE)];
         self.materialButton.tintColor = self.chromoplast.dominantColor;

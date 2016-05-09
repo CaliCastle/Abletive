@@ -32,11 +32,20 @@
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *categoryLabel;
 
+@property (nonatomic, strong) NSMutableArray *labels;
+
 @property (nonatomic,assign) CGFloat fullHeight;
 
 @end
 
 @implementation SinglePostHeaderViewController
+
+- (NSMutableArray *)labels {
+    if (!_labels) {
+        _labels = [NSMutableArray array];
+    }
+    return _labels;
+}
 
 - (NSMutableArray *)images {
     if (!_images) {
@@ -90,8 +99,35 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
+    [self setupViews];
+}
+
+- (void)setupViews {
     // Initialize
+    for (UIView *view in self.videoViews) {
+        [view removeFromSuperview];
+    }
+    for (UIView *view in self.imageViews) {
+        [view removeFromSuperview];
+    }
+    for (UIView *view in self.labels) {
+        [view removeFromSuperview];
+    }
+    for (UIView *view in self.linkLabels) {
+        [view removeFromSuperview];
+    }
+    
+    // Init
+    self.videoViews = [NSMutableArray array];
+    self.imageViews = [NSMutableArray array];
+    self.labels = [NSMutableArray array];
+    self.linkLabels = [NSMutableArray array];
+    
+    self.links = [NSMutableArray array];
+    self.videos = [NSMutableArray array];
+    self.images = [NSMutableArray array];
+    self.imagesWithAttribute = [NSMutableArray array];
+    
     self.fullHeight = self.dateLabel.frame.origin.y + self.dateLabel.bounds.size.height;
     
     // Setup
@@ -276,9 +312,11 @@
         if ([text containsString:@"`IMG"] || [text containsString:@"`VIDEO"] || [text containsString:@"fa fa-"]) {
             continue;
         }
-        [self.links addObject:text];
-        // Replace string
-        html = [html stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@</a>",text] withString:@"`LINK"];
+        if (text) {
+            [self.links addObject:text];
+            // Replace string
+            html = [html stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"%@</a>",text] withString:@"`LINK"];
+        }
     }
     return html;
 }
@@ -410,7 +448,9 @@
                 [self.videoViews addObject:videoThumb];
                 
                 NSString *videoLink = [self getLinkURL:self.links[linkIndex]];
-                videoLink = [videoLink substringToIndex:[videoLink rangeOfString:@"\""].location];
+                if ([videoLink containsString:@"\""]) {
+                    videoLink = [videoLink substringToIndex:[videoLink rangeOfString:@"\""].location];
+                }
                 
                 [self.videos insertObject:videoLink atIndex:videoIndex];
                 [self.links removeObjectAtIndex:linkIndex];
@@ -433,6 +473,7 @@
             }
         } else {
             textLabel.textColor = [UIColor whiteColor];
+            [self.labels addObject:textLabel];
         }
         [self.view addSubview:textLabel];
         currentYOffset+=(lines * LabelHeight + ScreenPadding);

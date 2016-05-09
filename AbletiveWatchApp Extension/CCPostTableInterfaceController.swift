@@ -38,7 +38,9 @@ class CCPostTableInterfaceController: WKInterfaceController {
     func fetchPosts() {
         loadingLabel.setHidden(false)
         loadMoreButton.setHidden(true)
-        CCPost.fetchPosts(CCPostTableInterfaceController.page++, count: CCPostTableInterfaceController.count) { (posts) -> Void in
+        CCPost.fetchPosts(CCPostTableInterfaceController.page, count: CCPostTableInterfaceController.count) { (posts) -> Void in
+            CCPostTableInterfaceController.page += 1
+            
             if posts.count > 0 {
                 self.loadingLabel.setHidden(true)
                 self.loadMoreButton.setHidden(false)

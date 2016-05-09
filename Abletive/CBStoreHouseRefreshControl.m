@@ -132,6 +132,10 @@ NSString *const yKey = @"y";
     return refreshControl;
 }
 
++ (CBStoreHouseRefreshControl *)abletiveControl:(UIScrollView *)scrollView target:(id)target refreshAction:(SEL)refreshAction {
+    return [CBStoreHouseRefreshControl attachToScrollView:scrollView target:target refreshAction:refreshAction plist:@"abletive-logo" color:[UIColor colorWithWhite:1 alpha:0.6] lineWidth:1.5 dropHeight:100 scale:0.75 horizontalRandomness:400 reverseLoadingAnimation:YES internalAnimationFactor:0.7];
+}
+
 #pragma mark UIScrollViewDelegate
 
 - (void)scrollViewDidScroll

@@ -10,5 +10,6 @@
 #define CCDeviceDetecter_h
 
 #define IOS_VERSION_9_OR_ABOVE (([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)? (YES): (NO))
+#define IPHONE_DEVICE (([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) ? (YES) : (NO))
 
 #endif /* CCDeviceDetecter_h */

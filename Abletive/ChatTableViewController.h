@@ -10,4 +10,6 @@
 
 @interface ChatTableViewController : UITableViewController
 
+@property (nonatomic,strong) NSMutableArray *allNotifications;
+
 @end

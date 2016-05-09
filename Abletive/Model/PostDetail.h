@@ -111,7 +111,7 @@
  *
  *  @return NSURLSessionDataTask
  */
-+ (NSURLSessionDataTask *)postDetailByID:(NSUInteger)id withCookie:(NSString *)cookie andBlock:(void (^)(PostDetail *,NSError *))block;
++ (NSURLSessionDataTask *)postDetailByID:(NSUInteger)id withCookie:(NSString *)cookie andOrder:(BOOL)order andBlock:(void (^)(PostDetail *,NSError *))block;
 
 /**
  *  Get page detail by the given page ID
@@ -119,7 +119,7 @@
  *  @param pageID pageID
  *  @param block  Callback block
  */
-+ (void)pageDetailByID:(NSUInteger)pageID andBlock:(void (^)(PostDetail *, NSError *))block;
++ (void)pageDetailByID:(NSUInteger)pageID andOrder:(BOOL)order andBlock:(void (^)(PostDetail *, NSError *))block;
 
 /**
  *  Get post detail by the given page slug
@@ -127,7 +127,15 @@
  *  @param slug  Slug string
  *  @param block Callback block
  */
-+ (void)getPostDetailBySlug:(NSString *)slug andBlock:(void (^)(PostDetail *, NSError *))block;
++ (void)getPostDetailBySlug:(NSString *)slug andOrder:(BOOL)order andBlock:(void (^)(PostDetail *, NSError *))block;
+
+/**
+ *  Get page detail by the given page slug
+ *
+ *  @param slug  Slug string
+ *  @param block Callback block
+ */
++ (void)getPageDetailBySlug:(NSString *)slug andBlock:(void (^)(PostDetail *, NSError *))block;
 
 /**
  *  Init with coder

@@ -35,6 +35,7 @@
 #import "PushNotification.h"
 #import "CCQRCodeImage.h"
 
+#import "AbletiveAPIClient.h"
 #import "Abletive-Swift.h"
 
 #import <WatchConnectivity/WatchConnectivity.h>
@@ -47,6 +48,8 @@
 
 #define IOS_VERSION_9_OR_ABOVE (([[[UIDevice currentDevice] systemVersion] floatValue] >= 9.0)? (YES): (NO))
 
+#define TABBAR_MESSAGE_BADGE_KEY @"Tabbar_Message_Badge_Key"
+
 static NSString * const todayActionPrefix = @"abletive://today_click/";
 static NSString * const userPagePrefix = @"abletive://user/";
 
@@ -58,6 +61,8 @@ typedef NS_ENUM(NSUInteger, ThemeType){
 @interface AppDelegate () <WCSessionDelegate>
 
 @property UIApplicationShortcutItem *launchedShortcutItem;
+
+@property (nonatomic, strong) UIVisualEffectView *blurEffectView;
 
 @end
 
@@ -115,7 +120,7 @@ typedef NS_ENUM(NSUInteger, ThemeType){
         }
         
         UIMutableApplicationShortcutItem *shortcutItemCommunity = [[UIMutableApplicationShortcutItem alloc]initWithType:@"ScanQRCode" localizedTitle:@"扫二维码" localizedSubtitle:nil icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"scan-qrcode"] userInfo:nil];
-        UIMutableApplicationShortcutItem *shortcutItemMe = [[UIMutableApplicationShortcutItem alloc]initWithType:@"Me" localizedTitle:@"个人主页" localizedSubtitle:userInfo?[NSString stringWithFormat:@"%@的主页",userInfo[@"displayname"]]:@"登录后查看" icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"me"] userInfo:nil];
+        UIMutableApplicationShortcutItem *shortcutItemMe = [[UIMutableApplicationShortcutItem alloc]initWithType:@"Me" localizedTitle:@"个人主页" localizedSubtitle:userInfo?[NSString stringWithFormat:@"%@的主页",userInfo[@"displayname"]]:@"登录后查看" icon:[UIApplicationShortcutIcon iconWithTemplateImageName:@"v-me-selected"] userInfo:nil];
         application.shortcutItems = @[shortcutItemDynamic,shortcutItemCommunity,shortcutItemMe];
     }
     
@@ -158,10 +163,15 @@ typedef NS_ENUM(NSUInteger, ThemeType){
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setupTheme) name:@"themeChanged" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoggedIn) name:@"User_Login" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userLoggedOut) name:@"User_Logout" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(newVersionAvailable) name:@"NewVersionAvailable" object:nil];
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"NoAppVersionReminder"]) {
+        [AbletiveAPIClient checkAppVersion];
+    }
     
     // If WatchConnectivity Session supported, turn it on for message receiving
     if (IOS_VERSION_9_OR_ABOVE) {
-        if ([WCSession isSupported] && [WCSession defaultSession].isPaired && [WCSession defaultSession].isWatchAppInstalled) {
+        if ([WCSession isSupported]) {
             WCSession *session = [WCSession defaultSession];
             session.delegate = self;
             [session activateSession];
@@ -223,6 +233,20 @@ typedef NS_ENUM(NSUInteger, ThemeType){
           }];
     
     return YES;
+}
+
+- (void)newVersionAvailable {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"NoAppVersionReminder"]) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"检测更新" message:@"App有新版本啦，赶快前往更新吧！" preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction: [UIAlertAction actionWithTitle:@"知道了" style:UIAlertActionStyleDefault handler:nil]];
+        [alertController addAction: [UIAlertAction actionWithTitle:@"不再提醒" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"NoAppVersionReminder"];
+        }]];
+        
+        UITabBarController *baseController = (UITabBarController *)self.window.rootViewController;
+        
+        [baseController.selectedViewController presentViewController:alertController animated:YES completion:nil];
+    }
 }
 
 /*
@@ -342,6 +366,7 @@ typedef NS_ENUM(NSUInteger, ThemeType){
     [[UINavigationBar appearance]setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:frontColor,NSForegroundColorAttributeName, nil]];
     // Set the tab bar background to black
     [[UITabBar appearance]setBarTintColor:backColor];
+    [[UIToolbar appearance] setBarTintColor:backColor];
     // Set the tab bar item to yellow
     [[UITabBarItem appearance]setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:tintColor,NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     [[UITabBar appearance]setTintColor:tintColor];
@@ -399,6 +424,8 @@ typedef NS_ENUM(NSUInteger, ThemeType){
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@"user_is_logged"]) {
         [PushNotification updateUserID:[[[NSUserDefaults standardUserDefaults]dictionaryForKey:@"user"][@"id"]intValue] withToken:newToken];
     }
+    
+    NSLog(@"Token:%@", newToken);
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
@@ -415,27 +442,63 @@ typedef NS_ENUM(NSUInteger, ThemeType){
     }
 }
 
+/**
+ *  Handle Push Notification
+ *
+ *  @param application UIApplication
+ *  @param userInfo    userInformation
+ */
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     NSLog(@"Received notification: %@", userInfo);
     NSDictionary *notification = userInfo[@"aps"];
     UITabBarController *baseController = (UITabBarController *)self.window.rootViewController;
-    if (notification[@"new_post"]) {
-        SinglePostTableViewController *singlePostTVC = [baseController.storyboard instantiateViewControllerWithIdentifier:@"SinglePostTVC"];
-        singlePostTVC.postID = [notification[@"new_post"] intValue];
-        [baseController.selectedViewController pushViewController:singlePostTVC animated:YES];
-        return;
-    }
-    if (notification[@"new_comment"]) {
-        SinglePostTableViewController *singlePostTVC = [baseController.storyboard instantiateViewControllerWithIdentifier:@"SinglePostTVC"];
-        singlePostTVC.postID = [notification[@"new_comment"] intValue];
-        [baseController.selectedViewController pushViewController:singlePostTVC animated:YES];
-        return;
-    }
-    if (notification[@"message_from"]) {
-        ChatMessageTableViewController *chatMessageTVC = [baseController.storyboard instantiateViewControllerWithIdentifier:@"ChatMessage"];
-        chatMessageTVC.userID = [notification[@"message_from"] intValue];
+    
+    if (application.applicationState != UIApplicationStateActive) {
+        if (notification[@"new_post"]) {
+            // Post updated, clear out the cache
+            NSMutableDictionary *cachedPosts = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"posts"]];
+            [cachedPosts removeObjectForKey:[NSString stringWithFormat:@"post_%@", [NSNumber numberWithInt:[notification[@"new_post"] intValue]]]];
+            [[NSUserDefaults standardUserDefaults] setObject:cachedPosts forKey:@"posts"];
+            
+            SinglePostTableViewController *singlePostTVC = [baseController.storyboard instantiateViewControllerWithIdentifier:@"SinglePostTVC"];
+            singlePostTVC.postID = [notification[@"new_post"] intValue];
+            [baseController.selectedViewController pushViewController:singlePostTVC animated:YES];
+        }
+        if (notification[@"new_comment"]) {
+            // Post updated, clear out the cache
+            NSMutableDictionary *cachedPosts = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"posts"]];
+            [cachedPosts removeObjectForKey:[NSString stringWithFormat:@"post_%@", [NSNumber numberWithInt:[notification[@"new_comment"] intValue]]]];
+            [[NSUserDefaults standardUserDefaults] setObject:cachedPosts forKey:@"posts"];
+            
+            SinglePostTableViewController *singlePostTVC = [baseController.storyboard instantiateViewControllerWithIdentifier:@"SinglePostTVC"];
+            singlePostTVC.postID = [notification[@"new_comment"] intValue];
+            [baseController.selectedViewController pushViewController:singlePostTVC animated:YES];
+        }
+        if (notification[@"message_from"]) {
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:@"user_is_logged"]) {
+                ChatMessageTableViewController *chatMessageTVC = [baseController.storyboard instantiateViewControllerWithIdentifier:@"ChatMessage"];
+                chatMessageTVC.userID = [notification[@"message_from"] intValue];
+                
+                [self incrementMessageBadge];
+                [baseController.selectedViewController pushViewController:chatMessageTVC animated:YES];
+            }
+        }
+    } else {
+        if (notification[@"new_post"] || notification[@"new_comment"]) {
+            // Post updated, clear out the cache
+            NSMutableDictionary *cachedPosts = [NSMutableDictionary dictionaryWithDictionary:[[NSUserDefaults standardUserDefaults] dictionaryForKey:@"posts"]];
+            [cachedPosts removeObjectForKey:[NSString stringWithFormat:@"post_%@", [NSNumber numberWithInt:[notification[@"new_post"] intValue]]]];
+            [[NSUserDefaults standardUserDefaults] setObject:cachedPosts forKey:@"posts"];
+        }
         
-        [baseController.selectedViewController pushViewController:chatMessageTVC animated:YES];
+        if (notification[@"new_comment"]) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"New_Comment" object:nil];
+        }
+        
+        if (notification[@"message_from"] && [[NSUserDefaults standardUserDefaults] boolForKey:@"user_is_logged"]) {
+            [self incrementMessageBadge];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"NewMessage" object:nil userInfo:@{@"user_id":notification[@"message_from"],@"message":notification[@"message"]}];
+        }
     }
 }
 
@@ -446,6 +509,20 @@ typedef NS_ENUM(NSUInteger, ThemeType){
         [baseController.selectedViewController presentViewController:[[UINavigationController alloc] initWithRootViewController:[baseController.storyboard instantiateViewControllerWithIdentifier:@"CheckIn"]] animated:YES completion:nil];
     }
     completionHandler();
+}
+
+// Increase the message badge number
+- (void)incrementMessageBadge {
+    UITabBarController *baseController = (UITabBarController *)self.window.rootViewController;
+    if (![baseController.tabBar.items[1].badgeValue isEqualToString:@""]) {
+        NSString *badge = [NSString stringWithFormat:@"%@", [NSNumber numberWithInt:baseController.tabBar.items[1].badgeValue.intValue + 1]];
+        [baseController.tabBar.items[1] setBadgeValue:badge];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:badge forKey:TABBAR_MESSAGE_BADGE_KEY];
+    } else {
+        [baseController.tabBar.items[1] setBadgeValue:@"1"];
+        [[NSUserDefaults standardUserDefaults] setObject:@"1" forKey:TABBAR_MESSAGE_BADGE_KEY];
+    }
 }
 
 // Available only in iOS 9 or above
@@ -499,11 +576,19 @@ typedef NS_ENUM(NSUInteger, ThemeType){
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Background_Blur"]) {
+        self.blurEffectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+        self.blurEffectView.frame = self.window.frame;
+        [self.window.rootViewController.view addSubview:self.blurEffectView];
+    }
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     [[UIApplication sharedApplication]setApplicationIconBadgeNumber:0];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"Background_Blur"]) {
+        [self.blurEffectView removeFromSuperview];
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -524,7 +609,6 @@ typedef NS_ENUM(NSUInteger, ThemeType){
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    
     return  YES;
 }
 

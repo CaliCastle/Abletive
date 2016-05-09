@@ -57,7 +57,11 @@
 }
 
 - (void)loadUI{
-    self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
+    self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.25];
+    // Add blur effect
+    UIVisualEffectView *blurView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleDark]];
+    blurView.frame = self.frame;
+    [self insertSubview:blurView atIndex:0];
     
     _keyboard = [STEmojiKeyboard keyboard];
     
@@ -74,7 +78,7 @@
     self.textView.returnKeyType = UIReturnKeySend;
     self.textView.keyboardAppearance = UIKeyboardAppearanceDark;
     self.textView.delegate = self;
-    self.textView.tintColor = [UIColor whiteColor];
+    self.textView.tintColor = [AppColor mainYellow];
     self.textView.scrollEnabled = NO;
     self.textView.showsVerticalScrollIndicator = YES;
     self.textView.indicatorStyle = UIScrollViewIndicatorStyleWhite;

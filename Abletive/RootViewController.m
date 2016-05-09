@@ -6,14 +6,22 @@
 //  Copyright © 2015 CaliCastle. All rights reserved.
 //
 
+#import <AudioToolbox/AudioToolbox.h>
+
 #import "RootViewController.h"
 #import "SKSplashIcon.h"
 #import "SKSplashView.h"
 #import "TAOverlay.h"
 #import "Personal Page/PersonalPageTableViewController.h"
 #import "AppColor.h"
+#import "ChatTableViewController.h"
 #import "PostTableViewController.h"
+
+#import "CCDeviceDetecter.h"
+
 #import "Abletive-Swift.h"
+
+#define TABBAR_MESSAGE_BADGE_KEY @"Tabbar_Message_Badge_Key"
 
 @interface RootViewController ()<UITabBarControllerDelegate>
 
@@ -23,6 +31,8 @@
 
 @implementation RootViewController {
     BOOL _doubleTapped;
+    SystemSoundID tapSoundID;
+    NSInteger lastIndex;
 }
 
 - (void)viewDidLoad {
@@ -39,6 +49,14 @@
     [self.tabBar.items objectAtIndex:3].image = [[UIImage imageNamed:@"me"]imageWithRenderingMode:UIImageRenderingModeAutomatic];
     [self.tabBar.items objectAtIndex:3].selectedImage = [[UIImage imageNamed:@"me-selected"]imageWithRenderingMode:UIImageRenderingModeAutomatic];
     
+    if (!IPHONE_DEVICE) {
+//        UINavigationController *navi = (UINavigationController *)self.tabBarController.selectedViewController;
+//        UISplitViewController *splitter = [self.storyboard instantiateViewControllerWithIdentifier:@"Split"];
+//        navi.viewControllers = @[splitter];
+//        
+//        [self.tabBarController setSelectedViewController:navi];
+    }
+    
     SKSplashIcon *abletiveSplashIcon = [[SKSplashIcon alloc] initWithImage:[UIImage imageNamed:@"LaunchLOGO.png"] animationType:SKIconAnimationTypeBounce];
     UIColor *bgColor = [AppColor secondaryBlack];
     _splashView = [[SKSplashView alloc] initWithSplashIcon:abletiveSplashIcon backgroundColor:bgColor animationType:SKSplashAnimationTypeNone];
@@ -47,6 +65,9 @@
     [_splashView startAnimation];
     
     [self registerNotifications];
+    [self setupTapSound];
+    
+    [self.tabBar.items[1] setBadgeValue:[[NSUserDefaults standardUserDefaults] stringForKey:TABBAR_MESSAGE_BADGE_KEY] ? [[NSUserDefaults standardUserDefaults] stringForKey:TABBAR_MESSAGE_BADGE_KEY] : nil];
 }
 
 - (void)registerNotifications {
@@ -58,16 +79,39 @@
     [self.navigationController pushViewController:personalPageTVC animated:YES];
 }
 
+- (void)setupTapSound {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSString *soundFile = [[NSBundle mainBundle] pathForResource:@"Pull Cancelled" ofType:@"wav"];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:soundFile], &tapSoundID);
+    });
+}
+
 //
 // ======= Double Tap on the Tab Bar Item, Scrolls to Top =========
 //
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+    // Play sound
+    if (lastIndex != tabBarController.tabBar.selectedItem.tag) {
+        AudioServicesPlaySystemSound(tapSoundID);
+    }
+    lastIndex = tabBarController.tabBar.selectedItem.tag;
     if (tabBarController.tabBar.selectedItem.tag == 0) {
         if (_doubleTapped) {
             _doubleTapped = NO;
             UINavigationController *navi = (UINavigationController *)tabBarController.selectedViewController;
             PostTableViewController *postTVC = [navi.viewControllers firstObject];
-            [postTVC.tableView setContentOffset:CGPointMake(0, -30) animated:YES];
+            [postTVC.tableView setContentOffset:CGPointMake(0, -50) animated:YES];
+            return;
+        }
+        _doubleTapped = YES;
+        return;
+    } else if (tabBarController.tabBar.selectedItem.tag == 1) {
+        if (_doubleTapped) {
+            _doubleTapped = NO;
+            UINavigationController *navi = (UINavigationController *)tabBarController.selectedViewController;
+            ChatTableViewController *chatTVC = [navi.viewControllers firstObject];
+            [chatTVC.tableView setContentOffset:CGPointMake(0, -50) animated:YES];
             return;
         }
         _doubleTapped = YES;
