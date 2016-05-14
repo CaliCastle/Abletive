@@ -63,6 +63,9 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
 @end
 
 @implementation PersonalPageTableViewController {
+    UIImageView* _backgroundView;
+    UIVisualEffectView* _blurEffectView;
+    UIBlurEffect* _blurEffect;
     BOOL _isLoading;
 }
 
@@ -237,6 +240,20 @@ static NSString * const followReuseIdentifier = @"FollowReuse";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)setUpBackgroundView {
+    _backgroundView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ScreenWidth, ScreenHeight)];
+    _backgroundView.center = self.view.center;
+    _backgroundView.contentMode = UIViewContentModeScaleAspectFill;
+    [_backgroundView sd_setImageWithURL:[NSURL URLWithString:self.currentUser.avatarPath] placeholderImage:[UIImage imageNamed:@"default-avatar"]];
+    
+    _blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+    _blurEffectView = [[UIVisualEffectView alloc]initWithEffect:_blurEffect];
+    _blurEffectView.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight);
+    
+    [_backgroundView addSubview:_blurEffectView];
+    [self.tableView setBackgroundView:_backgroundView];
 }
 
 - (BOOL)userLoggedIn {

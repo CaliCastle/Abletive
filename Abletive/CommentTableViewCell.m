@@ -97,7 +97,14 @@
     
     // User agent
     self.userAgentLabel.font = [UIFont fontAwesomeFontOfSize:11];
-    self.userAgentLabel.text = [_currentComment.agent isEqualToString:@"iOS APP"] ? [NSString stringWithFormat:@"%@ %@",[NSString fontAwesomeIconStringForEnum:FAApple],@"iOS客户端"] : [NSString stringWithFormat:@"%@ %@",[NSString fontAwesomeIconStringForEnum:FAGlobe],@"网页版"] ;
+
+    if ([_currentComment.agent isEqualToString:@"iOS APP"]) {
+        self.userAgentLabel.text = [NSString stringWithFormat:@"%@ %@",[NSString fontAwesomeIconStringForEnum:FAApple],@"iOS客户端"];
+    } else if ([_currentComment.agent isEqualToString:@"Android App"]) {
+        self.userAgentLabel.text = [NSString stringWithFormat:@"%@ %@",[NSString fontAwesomeIconStringForEnum:FAAndroid],@"安卓客户端"];
+    } else {
+        self.userAgentLabel.text = [NSString stringWithFormat:@"%@ %@",[NSString fontAwesomeIconStringForEnum:FAGlobe],@"网页版"];
+    }
     
     // Avatar circle
     self.avatarView.layer.masksToBounds = YES;
