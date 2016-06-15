@@ -9,18 +9,18 @@
 import UIKit
 
 class CCFilterImageTag: NSObject {
-    static func filter(html : NSString) -> NSString? {
+    static func filter(_ html : NSString) -> NSString? {
         var fullAvatarPath = html;
         // Get the img src
     
-        if fullAvatarPath.containsString("img src") {
-            var range = fullAvatarPath.rangeOfString("\"")
-            fullAvatarPath = fullAvatarPath.substringFromIndex(range.location+1)
-            range = fullAvatarPath.rangeOfString("\"")
-            fullAvatarPath = fullAvatarPath.substringToIndex(range.location)
+        if fullAvatarPath.contains("img src") {
+            var range = fullAvatarPath.range(of: "\"")
+            fullAvatarPath = fullAvatarPath.substring(from: range.location+1)
+            range = fullAvatarPath.range(of: "\"")
+            fullAvatarPath = fullAvatarPath.substring(to: range.location)
         }
         // Decode the string to url standard
-        let characterSet = NSCharacterSet(charactersInString: fullAvatarPath as String);
-        return fullAvatarPath.stringByAddingPercentEncodingWithAllowedCharacters(characterSet)!;
+        let characterSet = CharacterSet(charactersIn: fullAvatarPath as String);
+        return fullAvatarPath.addingPercentEncoding(withAllowedCharacters: characterSet)!;
     }
 }

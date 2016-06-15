@@ -9,7 +9,7 @@
 import UIKit
 
 protocol SideBarTableViewDelegate : NSObjectProtocol {
-    func sideBarDidSelectOnRow(indexPath:NSIndexPath)
+    func sideBarDidSelectOnRow(_ indexPath:IndexPath)
 }
 
 class SideBarTableViewController: UITableViewController {
@@ -20,45 +20,45 @@ class SideBarTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func viewDidLoad() {
-        tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "SideBarCell")
-        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
+        tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: "SideBarCell")
+        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
         tableView.backgroundView = blurView
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableData.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell : UITableViewCell? = tableView.dequeueReusableCellWithIdentifier("SideBarCell")! as UITableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell : UITableViewCell? = tableView.dequeueReusableCell(withIdentifier: "SideBarCell")! as UITableViewCell
 
         if cell == nil {
-            cell = UITableViewCell(style: .Default, reuseIdentifier: "SideBarCell")
+            cell = UITableViewCell(style: .default, reuseIdentifier: "SideBarCell")
             // Configure the cell...
             cell?.backgroundColor = AppColor.transparent()
-            cell?.textLabel?.textColor = UIColor.darkTextColor()
+            cell?.textLabel?.textColor = UIColor.darkText()
             
             let selectedView:UIView = UIView(frame: CGRect(x: 0, y: 0, width: cell!.frame.size.width, height: cell!.frame.size.height))
-            selectedView.backgroundColor = AppColor.mainBlack().colorWithAlphaComponent(0.3)
+            selectedView.backgroundColor = AppColor.mainBlack().withAlphaComponent(0.3)
             
             cell?.selectedBackgroundView = selectedView
             
         }
         
-        cell?.textLabel?.text = tableData[indexPath.row]
+        cell?.textLabel?.text = tableData[(indexPath as NSIndexPath).row]
 
         return cell!
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         delegate?.sideBarDidSelectOnRow(indexPath)
     }
 

@@ -30,24 +30,24 @@ class SettingAppleWatchTableViewController: UITableViewController {
         tableView.tableFooterView = UIView()
         
         if #available(iOS 9.0, *) {
-            if WCSession.isSupported() && WCSession.defaultSession().watchAppInstalled {
-                WCSession.defaultSession().activateSession()
+            if WCSession.isSupported() && WCSession.default().isWatchAppInstalled {
+                WCSession.default().activate()
                 
-                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Save, target: self, action: Selector(saveSettings()))
+                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: Selector(saveSettings()))
                 
                 watchSupported = true
                 
-                checkInSwitch.on = NSUserDefaults.standardUserDefaults().objectForKey(kCheckInKey) == nil ? true : NSUserDefaults.standardUserDefaults().boolForKey(kCheckInKey)
-                postCountLabel.text = NSUserDefaults.standardUserDefaults().objectForKey(kPostCountKey) == nil ? "5" : NSUserDefaults.standardUserDefaults().stringForKey(kPostCountKey)
+                checkInSwitch.isOn = UserDefaults.standard().object(forKey: kCheckInKey) == nil ? true : UserDefaults.standard().bool(forKey: kCheckInKey)
+                postCountLabel.text = UserDefaults.standard().object(forKey: kPostCountKey) == nil ? "5" : UserDefaults.standard().string(forKey: kPostCountKey)
                 postCountStepper.value = Double(postCountLabel.text!)!
             } else {
-                navigationController?.popViewControllerAnimated(true)
-                TAOverlay.showOverlayWithErrorText("您的Watch目前无法连接到，请确保已安装并打开")
+                navigationController?.popViewController(animated: true)
+                TAOverlay.showWithErrorText("您的Watch目前无法连接到，请确保已安装并打开")
             }
         } else {
             // Fallback on earlier versions
-            navigationController?.popViewControllerAnimated(true)
-            TAOverlay.showOverlayWithErrorText("请升级到iOS 9.0以上")
+            navigationController?.popViewController(animated: true)
+            TAOverlay.showWithErrorText("请升级到iOS 9.0以上")
         }
     }
 
@@ -58,27 +58,27 @@ class SettingAppleWatchTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return watchSupported ? 3 : 0
     }
 
-    @IBAction func checkInSwitchDidChange(sender: UISwitch) {
+    @IBAction func checkInSwitchDidChange(_ sender: UISwitch) {
         if #available(iOS 9.0, *) {
-            NSUserDefaults.standardUserDefaults().setBool(sender.on, forKey: kCheckInKey)
+            UserDefaults.standard().set(sender.isOn, forKey: kCheckInKey)
         } else {
             // Fallback on earlier versions
         }
         
     }
     
-    @IBAction func postCountStepperDidChange(sender: UIStepper) {
+    @IBAction func postCountStepperDidChange(_ sender: UIStepper) {
         if #available(iOS 9.0, *) {
             postCountLabel.text = String(Int(sender.value))
-            NSUserDefaults.standardUserDefaults().setObject(String(Int(sender.value)), forKey: kPostCountKey)
+            UserDefaults.standard().set(String(Int(sender.value)), forKey: kPostCountKey)
             
         } else {
             // Fallback on earlier versions
@@ -92,29 +92,29 @@ class SettingAppleWatchTableViewController: UITableViewController {
         
         if #available(iOS 9.0, *) {
             if WCSession.isSupported() {
-                let session = WCSession.defaultSession()
+                let session = WCSession.default()
                 
                 isSaving = true
             
-                session.sendMessage(["Settings_Changed":"1","CheckIn":NSUserDefaults.standardUserDefaults().boolForKey(kCheckInKey),"PostCount":NSUserDefaults.standardUserDefaults().objectForKey(kPostCountKey) == nil ? 5 : NSUserDefaults.standardUserDefaults().objectForKey(kPostCountKey)!], replyHandler: { (replies : Dictionary?) -> Void in
+                session.sendMessage(["Settings_Changed":"1","CheckIn":UserDefaults.standard().bool(forKey: kCheckInKey),"PostCount":UserDefaults.standard().object(forKey: kPostCountKey) == nil ? 5 : UserDefaults.standard().object(forKey: kPostCountKey)!], replyHandler: { (replies : Dictionary?) -> Void in
                     
                     self.isSaving = false
                     
                     if replies != nil {
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            self.navigationController?.popViewControllerAnimated(true)
-                            TAOverlay.showOverlayWithSuccessText("设置成功!")
+                        DispatchQueue.main.async(execute: { () -> Void in
+                            self.navigationController?.popViewController(animated: true)
+                            TAOverlay.show(successText: "设置成功!")
                         })
                     } else {
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            TAOverlay.showOverlayWithErrorText("设置失败! 确保已在Watch上打开应用")
+                        DispatchQueue.main.async(execute: { () -> Void in
+                            TAOverlay.showWithErrorText("设置失败! 确保已在Watch上打开应用")
                         })
                     }
                     
                     }, errorHandler: { (error) -> Void in
                         self.isSaving = false
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            TAOverlay.showOverlayWithErrorText("设置失败! 确保已在Watch上打开应用")
+                        DispatchQueue.main.async(execute: { () -> Void in
+                            TAOverlay.showWithErrorText("设置失败! 确保已在Watch上打开应用")
                         })
                 })
             }

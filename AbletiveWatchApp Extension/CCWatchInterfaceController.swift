@@ -35,8 +35,8 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
     let kCheckInKey = "CheckIn"
     let kPostCountKey = "PostCount"
     
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    override func awake(withContext context: AnyObject?) {
+        super.awake(withContext: context)
         
         // Configure interface objects here.
         initSetup()
@@ -50,8 +50,8 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
     }
     
     func initSetup() {
-        if let defaults = NSUserDefaults.standardUserDefaults().objectForKey("userInformation") as? NSDictionary {
-            userID = NSUserDefaults.standardUserDefaults().stringForKey("userID")
+        if let defaults = UserDefaults.standard().object(forKey: "userInformation") as? NSDictionary {
+            userID = UserDefaults.standard().string(forKey: "userID")
             currentUser = CCUser(attributes: defaults)
             loggedIn = true
         } else {
@@ -63,15 +63,15 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         print(WCSession.isSupported())
         
         if WCSession.isSupported() {
-            let session = WCSession.defaultSession()
+            let session = WCSession.default()
             session.delegate = self
-            session.activateSession()
+            session.activate()
             
             fetchUserFromiPhone(session)
         }
     }
     
-    func fetchUserFromiPhone(session : WCSession = WCSession.defaultSession()) {
+    func fetchUserFromiPhone(_ session : WCSession = WCSession.default()) {
         // Send a message to the iOS container app, if we don't have any defaults
         session.sendMessage(["fetchUserDefaults":"1"], replyHandler: { (replies:Dictionary?) -> Void in
             // If the user is logged in
@@ -96,32 +96,32 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         })
     }
     
-    func getUserInformation(userID : String?){
+    func getUserInformation(_ userID : String?){
         
         if userID == nil || userID == "0" {
             showErrorOverlay("用户不存在", retryable: false)
             return
         }
         
-        NSUserDefaults.standardUserDefaults().setObject(userID!, forKey: "userID")
+        UserDefaults.standard().set(userID!, forKey: "userID")
         
-        let request = NSURLRequest(URL: NSURL(string: "https://abletive.com/api/user/get_personal_page_detail/?user_id=\(userID!)")!)
+        let request = URLRequest(url: URL(string: "https://abletive.com/api/user/get_personal_page_detail/?user_id=\(userID!)")!)
         
-        NSURLSession.sharedSession().dataTaskWithRequest(request) { (data:NSData?, response:NSURLResponse?, error:NSError?) -> Void in
+        URLSession.shared().dataTask(with: request) { (data:Data?, response:URLResponse?, error:NSError?) -> Void in
             if error == nil {
                 // Request succeeded
                 do {
-                    var JSON = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+                    var JSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
                     JSON = NSMutableDictionary(dictionary: JSON as! [NSObject : AnyObject])
                     
                     let userMembershipInfo = NSMutableDictionary(dictionary: JSON["membership"] as! [NSObject : AnyObject])
                     
-                    userMembershipInfo.removeObjectForKey("id")
+                    userMembershipInfo.removeObject(forKey: "id")
                     
-                    JSON.removeObjectForKey("membership")
-                    JSON.setObject(userMembershipInfo, forKey: "membership")
+                    JSON.removeObject(forKey: "membership")
+                    JSON.set(userMembershipInfo, forKey: "membership")
                     
-                    NSUserDefaults.standardUserDefaults().setObject(JSON, forKey: "userInformation")
+                    UserDefaults.standard().set(JSON, forKey: "userInformation")
 
                     self.currentUser = CCUser(attributes: JSON as! NSDictionary)
 
@@ -140,9 +140,9 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
     }
     
     func updateViews() {
-        if NSUserDefaults.standardUserDefaults().objectForKey(kCheckInKey) != nil {
+        if UserDefaults.standard().object(forKey: kCheckInKey) != nil {
             if loggedIn {
-                checkInButton.setHidden(!NSUserDefaults.standardUserDefaults().boolForKey(kCheckInKey))
+                checkInButton.setHidden(!UserDefaults.standard().bool(forKey: kCheckInKey))
             } else {
                 checkInButton.setHidden(true)
             }
@@ -181,17 +181,17 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         }
     }
     
-    func showErrorOverlay(text : String = "请求出错，请重试", retryable : Bool = true) {
-        let okAction = WKAlertAction(title: "知道了", style: .Default) { () -> Void in
+    func showErrorOverlay(_ text : String = "请求出错，请重试", retryable : Bool = true) {
+        let okAction = WKAlertAction(title: "知道了", style: .default) { () -> Void in
             
         }
         if (retryable) {
-            let retryAction = WKAlertAction(title: "重试", style: .Destructive) { () -> Void in
+            let retryAction = WKAlertAction(title: "重试", style: .destructive) { () -> Void in
                 self.getUserInformation(self.userID!)
             }
-            presentAlertControllerWithTitle("出错啦", message: text, preferredStyle: .SideBySideButtonsAlert, actions: [okAction,retryAction])
+            presentAlert(withTitle: "出错啦", message: text, preferredStyle: .sideBySideButtonsAlert, actions: [okAction,retryAction])
         }
-        presentAlertControllerWithTitle("出错啦", message: text, preferredStyle: .Alert, actions: [okAction])
+        presentAlert(withTitle: "出错啦", message: text, preferredStyle: .alert, actions: [okAction])
 //        WKInterfaceDevice.currentDevice().playHaptic(.Retry)
     }
 
@@ -205,32 +205,32 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         if WCSession.isSupported() && loggedIn {
             checkInButton.setEnabled(false)
             checkInButton.setTitle("签到中...")
-            WKInterfaceDevice.currentDevice().playHaptic(.Start)
+            WKInterfaceDevice.current().play(.start)
             
-            let session = WCSession.defaultSession()
+            let session = WCSession.default()
             
             session.sendMessage(["checkIn" : "1"], replyHandler: { (replies : Dictionary?) -> Void in
                 let message = replies!["message"] as! String
                 
-                let action = WKAlertAction(title: "OK", style: .Default, handler: { () -> Void in
+                let action = WKAlertAction(title: "OK", style: .default, handler: { () -> Void in
                     
                 })
                 
                 let checkedIn : Bool = (replies!["status"] as! String == "ok")
-                self.presentAlertControllerWithTitle(checkedIn ? "签到成功" : "签到失败" , message: message, preferredStyle: .Alert, actions: [action])
+                self.presentAlert(withTitle: checkedIn ? "签到成功" : "签到失败" , message: message, preferredStyle: .alert, actions: [action])
                 
                 self.checkInButton.setEnabled(!checkedIn)
                 self.checkInButton.setTitle("已签到")
-                WKInterfaceDevice.currentDevice().playHaptic(.Success)
+                WKInterfaceDevice.current().play(.success)
                 
                 }, errorHandler: { (error) -> Void in
                     self.checkInButton.setEnabled(true)
                     self.checkInButton.setTitle("签到")
-                    WKInterfaceDevice.currentDevice().playHaptic(.Failure)
+                    WKInterfaceDevice.current().play(.failure)
             })
         } else {
             showErrorOverlay("请先在iPhone上登录", retryable: false)
-            WKInterfaceDevice.currentDevice().playHaptic(.Failure)
+            WKInterfaceDevice.current().play(.failure)
         }
     }
     
@@ -238,12 +238,12 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         // Load QRCode
         // Send check in message
         if WCSession.isSupported() && loggedIn {
-            let session = WCSession.defaultSession()
-            WKInterfaceDevice.currentDevice().playHaptic(.Success)
+            let session = WCSession.default()
+            WKInterfaceDevice.current().play(.success)
             session.sendMessage(["fetchQRCode":"1"], replyHandler: { (replies : Dictionary?) -> Void in
-                let qrImageData = replies!["image"] as! NSData
+                let qrImageData = replies!["image"] as! Data
                 
-                self.presentControllerWithName("QRCode", context: qrImageData)
+                self.presentController(withName: "QRCode", context: qrImageData)
                 
                 }, errorHandler: { (error) -> Void in
                     self.showErrorOverlay("请在iPhone上打开应用", retryable: true)
@@ -255,12 +255,12 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
     
     @IBAction func refreshDidTap() {
         // Refresh everything we got here
-        WKInterfaceDevice.currentDevice().playHaptic(.Start)
+        WKInterfaceDevice.current().play(.start)
         ImageLoader.sharedLoader.cache.removeAllObjects()
         fetchUserFromiPhone()
     }
     
-    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+    func session(_ session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
         if message["userLoggedIn"] != nil {
             // User has logged in
             currentUser = CCUser()
@@ -277,12 +277,12 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         } else if message["userLoggedOut"] != nil {
             // User has logged out
             loggedIn = false
-            NSUserDefaults.standardUserDefaults().removeObjectForKey("userInformation")
-            NSUserDefaults.standardUserDefaults().removeObjectForKey("userID")
+            UserDefaults.standard().removeObject(forKey: "userInformation")
+            UserDefaults.standard().removeObject(forKey: "userID")
             updateViews()
         } else if message[kSettingKey] != nil {
-            NSUserDefaults.standardUserDefaults().setInteger(Int(message[kPostCountKey] as! String)!, forKey: kPostCountKey)
-            NSUserDefaults.standardUserDefaults().setBool((message[kCheckInKey] as! Int) == 1, forKey: kCheckInKey)
+            UserDefaults.standard().set(Int(message[kPostCountKey] as! String)!, forKey: kPostCountKey)
+            UserDefaults.standard().set((message[kCheckInKey] as! Int) == 1, forKey: kCheckInKey)
             
             updateViews()
             

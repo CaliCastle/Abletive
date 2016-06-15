@@ -20,7 +20,7 @@ class PaymentOrderPriceTableViewCell: UITableViewCell {
 //        priceLabel.text = price == nil ? "￥0.00" : "￥\(price)"
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

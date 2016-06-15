@@ -13,7 +13,7 @@ class CheckInCustomizeTableViewController: UITableViewController {
     @IBOutlet weak var customizeTextField: UITextField!
     
     override func awakeFromNib() {
-        contentSizeInPopup = CGSize(width: UIScreen.mainScreen().bounds.size.width - 45, height: UIScreen.mainScreen().bounds.size.height * 0.35)
+        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 45, height: UIScreen.main().bounds.size.height * 0.35)
     }
     
     override func viewDidLoad() {
@@ -23,7 +23,7 @@ class CheckInCustomizeTableViewController: UITableViewController {
         
         tableView.tableFooterView = UIView()
         customizeTextField.backgroundColor = AppColor.transparent()
-        customizeTextField.text = NSUserDefaults.standardUserDefaults().stringForKey("CheckInText")
+        customizeTextField.text = UserDefaults.standard().string(forKey: "CheckInText")
         
         customizeTextField.becomeFirstResponder()
     }
@@ -35,25 +35,25 @@ class CheckInCustomizeTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return 1
     }
     
-    @IBAction func customizeTextFieldDidEndOnExit(sender: UITextField) {
+    @IBAction func customizeTextFieldDidEndOnExit(_ sender: UITextField) {
         if sender.text?.characters.count >= 35 {
-            MozTopAlertView.showWithType(MozAlertTypeError, text: "长度不能超过20", parentView: popupController?.navigationBar)
+            MozTopAlertView.show(MozAlertTypeError, text: "长度不能超过20", parentView: popupController?.navigationBar)
         } else {
             sender.resignFirstResponder()
             
-            NSUserDefaults.standardUserDefaults().setObject(sender.text, forKey: "CheckInText")
+            UserDefaults.standard().set(sender.text, forKey: "CheckInText")
             
-            popupController?.popViewControllerAnimated(true)
+            popupController?.popViewController(animated: true)
         }
     }
 

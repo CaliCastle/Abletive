@@ -9,9 +9,9 @@
 import UIKit
 
 @objc protocol SideBarDelegate : NSObjectProtocol {
-    func sideBarDidSelectOnIndex(index:Int)
-    optional func sideBarWillClose()
-    optional func sideBarWillOpen()
+    func sideBarDidSelectOnIndex(_ index:Int)
+    @objc optional func sideBarWillClose()
+    @objc optional func sideBarWillOpen()
 }
 
 public class SideBar: NSObject,SideBarTableViewDelegate {
@@ -49,7 +49,7 @@ public class SideBar: NSObject,SideBarTableViewDelegate {
     }
     
     func setupSideBar() {
-        sideBarContainerView.frame = CGRectMake(-barWidth - 1, originView.frame.origin.y, barWidth, originView.frame.size.height)
+        sideBarContainerView.frame = CGRect(x: -barWidth - 1, y: originView.frame.origin.y, width: barWidth, height: originView.frame.size.height)
         sideBarContainerView.backgroundColor = AppColor.transparent()
         sideBarContainerView.clipsToBounds = false
         
@@ -62,7 +62,7 @@ public class SideBar: NSObject,SideBarTableViewDelegate {
         sideBarTableViewController.delegate = self
         sideBarTableViewController.tableView.frame = sideBarContainerView.bounds
         sideBarTableViewController.tableView.clipsToBounds = false
-        sideBarTableViewController.tableView.separatorStyle = .None
+        sideBarTableViewController.tableView.separatorStyle = .none
         sideBarTableViewController.tableView.backgroundColor = AppColor.transparent()
         sideBarTableViewController.tableView.scrollsToTop = false
         sideBarTableViewController.tableView.contentInset = UIEdgeInsetsMake(sideBarTableViewTopInset, 0, 0, 0)
@@ -72,8 +72,8 @@ public class SideBar: NSObject,SideBarTableViewDelegate {
         sideBarContainerView.addSubview(sideBarTableViewController.tableView)
     }
     
-    func handleSwipe(gestureRecognizer:UISwipeGestureRecognizer) {
-        if gestureRecognizer.direction == .Left {
+    func handleSwipe(_ gestureRecognizer:UISwipeGestureRecognizer) {
+        if gestureRecognizer.direction == .left {
             showSideBar(false)
             delegate?.sideBarWillClose?()
         } else {
@@ -82,7 +82,7 @@ public class SideBar: NSObject,SideBarTableViewDelegate {
         }
     }
     
-    func showSideBar(shouldOpen:Bool) {
+    func showSideBar(_ shouldOpen:Bool) {
         animator.removeAllBehaviors()
         isSideBarOpen = shouldOpen
         
@@ -91,14 +91,14 @@ public class SideBar: NSObject,SideBarTableViewDelegate {
         let boundaryX : CGFloat = (shouldOpen) ? barWidth : -barWidth - 1
         
         let gravityBehavior : UIGravityBehavior = UIGravityBehavior(items: [sideBarContainerView])
-        gravityBehavior.gravityDirection = CGVectorMake(gravityX, 0)
+        gravityBehavior.gravityDirection = CGVector(dx: gravityX, dy: 0)
         animator.addBehavior(gravityBehavior)
         
         let collisionBehavior : UICollisionBehavior = UICollisionBehavior(items: [sideBarContainerView])
-        collisionBehavior.addBoundaryWithIdentifier("sideBarBoundary", fromPoint: CGPointMake(boundaryX, 20), toPoint: CGPointMake(boundaryX, originView.frame.size.height))
+        collisionBehavior.addBoundary(withIdentifier: "sideBarBoundary", from: CGPoint(x: boundaryX, y: 20), to: CGPoint(x: boundaryX, y: originView.frame.size.height))
         animator.addBehavior(collisionBehavior)
         
-        let pushBehavior : UIPushBehavior = UIPushBehavior(items: [sideBarContainerView], mode: .Instantaneous)
+        let pushBehavior : UIPushBehavior = UIPushBehavior(items: [sideBarContainerView], mode: .instantaneous)
         pushBehavior.magnitude = magnitude
         animator.addBehavior(pushBehavior)
         
@@ -108,7 +108,7 @@ public class SideBar: NSObject,SideBarTableViewDelegate {
         
     }
     
-    func sideBarDidSelectOnRow(indexPath: NSIndexPath) {
-        delegate?.sideBarDidSelectOnIndex(indexPath.row)
+    func sideBarDidSelectOnRow(_ indexPath: IndexPath) {
+        delegate?.sideBarDidSelectOnIndex((indexPath as NSIndexPath).row)
     }
 }

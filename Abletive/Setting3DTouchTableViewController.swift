@@ -19,27 +19,27 @@ class Setting3DTouchTableViewController: UITableViewController {
         
         tableView.tableFooterView = UIView()
         
-        checkInSwitch.on = NSUserDefaults.standardUserDefaults().objectForKey(kCheckInItemKey) == nil ? false : NSUserDefaults.standardUserDefaults().boolForKey(kCheckInItemKey)
+        checkInSwitch.isOn = UserDefaults.standard().object(forKey: kCheckInItemKey) == nil ? false : UserDefaults.standard().bool(forKey: kCheckInItemKey)
         
         if #available(iOS 9.0, *) {
             
 
         } else {
             // Fallback on earlier versions
-            navigationController?.popViewControllerAnimated(true)
-            TAOverlay.showOverlayWithErrorText("您的iOS不支持3D Touch功能")
+            navigationController?.popViewController(animated: true)
+            TAOverlay.showWithErrorText("您的iOS不支持3D Touch功能")
         }
         
     }
 
-    @IBAction func checkInSwitchDidChange(sender: UISwitch) {
-        changeShortcutItem(sender.on)
-        NSUserDefaults.standardUserDefaults().setBool(sender.on, forKey: kCheckInItemKey)
+    @IBAction func checkInSwitchDidChange(_ sender: UISwitch) {
+        changeShortcutItem(sender.isOn)
+        UserDefaults.standard().set(sender.isOn, forKey: kCheckInItemKey)
     }
     
-    func changeShortcutItem(checkInEnabled : Bool) {
+    func changeShortcutItem(_ checkInEnabled : Bool) {
         if #available(iOS 9.0, *) {
-            var shortcutItems = UIApplication.sharedApplication().shortcutItems
+            var shortcutItems = UIApplication.shared().shortcutItems
             
             var index = 0
             for shortcutItem : UIApplicationShortcutItem in shortcutItems! {
@@ -55,10 +55,10 @@ class Setting3DTouchTableViewController: UITableViewController {
                 item = UIApplicationShortcutItem(type: "Settings", localizedTitle: "设置", localizedSubtitle: nil, icon: UIApplicationShortcutIcon(templateImageName: "setting"), userInfo: nil)
             }
             
-            shortcutItems?.removeAtIndex(index)
-            shortcutItems?.insert(item, atIndex: index)
+            shortcutItems?.remove(at: index)
+            shortcutItems?.insert(item, at: index)
             
-            UIApplication.sharedApplication().shortcutItems = shortcutItems
+            UIApplication.shared().shortcutItems = shortcutItems
             
         } else {
             // Fallback on earlier versions

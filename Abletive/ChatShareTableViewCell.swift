@@ -14,12 +14,12 @@ class ChatShareTableViewCell: UITableViewCell {
     
     @IBOutlet weak var nameLabel: UILabel!
     
-    var notification : Notification? {
+    var notification : __ObjC.Notification? {
         didSet {
             avatarView.layer.masksToBounds = true
             avatarView.layer.cornerRadius = avatarView.bounds.size.width / 2
             
-            avatarView.sd_setImageWithURL(NSURL(string: (notification?.avatar)!), placeholderImage: UIImage(named: "default-avatar"))
+            avatarView.sd_setImage(with: URL(string: (notification?.avatar)!), placeholderImage: UIImage(named: "default-avatar"))
             
             nameLabel.text = notification?.user.name
         }
@@ -30,7 +30,7 @@ class ChatShareTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

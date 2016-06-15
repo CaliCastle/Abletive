@@ -10,19 +10,19 @@ import UIKit
 
 class WelcomeViewController: UIViewController,UIScrollViewDelegate {
 
-    var screenWidth : Int = Int(UIScreen.mainScreen().bounds.size.width)
-    var screenHeight : Int = Int(UIScreen.mainScreen().bounds.size.height)
+    var screenWidth : Int = Int(UIScreen.main().bounds.size.width)
+    var screenHeight : Int = Int(UIScreen.main().bounds.size.height)
     
-    let pageControl = UIPageControl(frame: CGRect(origin: CGPointZero, size: CGSize(width: 100, height: 30)))
+    let pageControl = UIPageControl(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 100, height: 30)))
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        UIApplication.sharedApplication().setStatusBarHidden(true, withAnimation: .Slide)
+        UIApplication.shared().setStatusBarHidden(true, with: .slide)
         // Do any additional setup after loading the view.
-        let scrollView = UIScrollView(frame: UIScreen.mainScreen().bounds)
-        scrollView.contentSize = CGSize(width: UIScreen.mainScreen().bounds.size.width * 5, height: UIScreen.mainScreen().bounds.size.height)
-        scrollView.pagingEnabled = true
+        let scrollView = UIScrollView(frame: UIScreen.main().bounds)
+        scrollView.contentSize = CGSize(width: UIScreen.main().bounds.size.width * 5, height: UIScreen.main().bounds.size.height)
+        scrollView.isPagingEnabled = true
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.bounces = false
         scrollView.delegate = self
@@ -41,31 +41,31 @@ class WelcomeViewController: UIViewController,UIScrollViewDelegate {
             }
             
             let imageView = UIImageView(image: screenShot)
-            imageView.frame = CGRect(origin: CGPoint(x:  CGFloat(screenWidth * index), y: 0), size: UIScreen.mainScreen().bounds.size)
+            imageView.frame = CGRect(origin: CGPoint(x:  CGFloat(screenWidth * index), y: 0), size: UIScreen.main().bounds.size)
             
             if index == 4 {
                 let tapper = UITapGestureRecognizer(target: self, action: #selector(WelcomeViewController.lastOneTapped))
-                imageView.userInteractionEnabled = true
+                imageView.isUserInteractionEnabled = true
                 imageView.addGestureRecognizer(tapper)
             }
-            imageView.contentMode = .ScaleToFill
+            imageView.contentMode = .scaleToFill
             scrollView.addSubview(imageView)
         }
         view.addSubview(scrollView)
         view.addSubview(pageControl)
     }
     
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        UIApplication.sharedApplication().setStatusBarHidden(false, withAnimation: .Slide)
+        UIApplication.shared().setStatusBarHidden(false, with: .slide)
     }
     
     func lastOneTapped() {
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         pageControl.currentPage = Int(scrollView.contentOffset.x) / screenWidth
     }
     

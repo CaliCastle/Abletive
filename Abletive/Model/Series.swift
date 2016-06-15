@@ -56,8 +56,8 @@ class Series: NSObject {
         
     }
     
-    static func getIndexSeries(callback: ([Series]!, NSError!) -> Void) {
-        AbletiveAPIClient.sharedScreenCastClient().GET("index", parameters: ["_passphrase" : AbletivePassphrase], success: { (dataTask, response) -> Void in
+    static func getIndexSeries(_ callback: ([Series]?, NSError?) -> Void) {
+        AbletiveAPIClient.sharedScreenCast().get("index", parameters: ["_passphrase" : AbletivePassphrase], success: { (dataTask, response) -> Void in
             let JSON = response as! NSDictionary
             print(JSON)
             }) { (dataTask, error) -> Void in

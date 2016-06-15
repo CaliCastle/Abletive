@@ -16,7 +16,7 @@ class SettingTodayWidgetTableViewController: UITableViewController {
     let kGroupName = "group.abletive"
     let kTodayCountKey = "todayCount"
     
-    let defaults = NSUserDefaults(suiteName: "group.abletive")
+    let defaults = UserDefaults(suiteName: "group.abletive")
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,7 +25,7 @@ class SettingTodayWidgetTableViewController: UITableViewController {
         
         tableView.tableFooterView = UIView()
         
-        postCountStepper.value = defaults!.objectForKey(kTodayCountKey) == nil ? 3.0 : Double((defaults?.integerForKey(kTodayCountKey))!)
+        postCountStepper.value = defaults!.object(forKey: kTodayCountKey) == nil ? 3.0 : Double((defaults?.integer(forKey: kTodayCountKey))!)
         postCountLabel.text = "\(Int(postCountStepper.value))"
     }
 
@@ -34,9 +34,9 @@ class SettingTodayWidgetTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func countStepperDidChange(sender: UIStepper) {
+    @IBAction func countStepperDidChange(_ sender: UIStepper) {
         postCountLabel.text = "\(Int(sender.value))"
-        defaults?.setObject(Int(sender.value), forKey: kTodayCountKey)
+        defaults?.set(Int(sender.value), forKey: kTodayCountKey)
         defaults?.synchronize()
     }
 

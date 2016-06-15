@@ -16,11 +16,11 @@ class GlanceController: WKInterfaceController {
     @IBOutlet var authorLabel: WKInterfaceLabel!
     @IBOutlet var thumbnailImage: WKInterfaceImage!
     
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    override func awake(withContext context: AnyObject?) {
+        super.awake(withContext: context)
         
         // Configure interface objects here.
-        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+        DispatchQueue.main.async { () -> Void in
             self.updatePost()
         }
     }

@@ -25,15 +25,15 @@ class SettingNotificationTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath {
-        case NSIndexPath(forRow: 0, inSection: 0):
+        case IndexPath(row: 0, section: 0):
             
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                let popup = STPopupController(rootViewController: self.storyboard?.instantiateViewControllerWithIdentifier("CheckInSettings"))
-                popup.cornerRadius = 12
-                popup.backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .Dark))
-                popup.presentInViewController(self)
+            DispatchQueue.main.async(execute: { () -> Void in
+                let popup = STPopupController(rootViewController: self.storyboard?.instantiateViewController(withIdentifier: "CheckInSettings"))
+                popup?.cornerRadius = 12
+                popup?.backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+                popup?.present(in: self)
             })
             
             break

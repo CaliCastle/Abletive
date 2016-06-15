@@ -12,7 +12,7 @@ class SettingsTableViewController: UITableViewController {
 
     var threeDTouchAvailable = false
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         if #available(iOS 9.0, *) {
@@ -36,7 +36,7 @@ class SettingsTableViewController: UITableViewController {
 //        return 0
 //    }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
             return 3

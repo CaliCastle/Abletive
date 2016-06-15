@@ -20,8 +20,8 @@ class CCPostTableInterfaceController: WKInterfaceController {
     static var count : UInt = 5
     var posts : Array<CCPost> = CCPost.allPosts()
     
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    override func awake(withContext context: AnyObject?) {
+        super.awake(withContext: context)
         
         // Configure interface objects here.
     }
@@ -30,7 +30,7 @@ class CCPostTableInterfaceController: WKInterfaceController {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
         
-        CCPostTableInterfaceController.count = NSUserDefaults.standardUserDefaults().objectForKey("PostCount") == nil ? 5 : UInt(NSUserDefaults.standardUserDefaults().integerForKey("PostCount"))
+        CCPostTableInterfaceController.count = UserDefaults.standard().object(forKey: "PostCount") == nil ? 5 : UInt(UserDefaults.standard().integer(forKey: "PostCount"))
         
         fetchPosts()
     }
@@ -57,7 +57,7 @@ class CCPostTableInterfaceController: WKInterfaceController {
         postTable.setNumberOfRows(posts.count, withRowType: "PostRow")
         
         for index in 0..<postTable.numberOfRows {
-            if let controller = postTable.rowControllerAtIndex(index) as? CCPostRowController {
+            if let controller = postTable.rowController(at: index) as? CCPostRowController {
                 controller.post = CCPost.allPosts()[index]
             }
             
@@ -66,7 +66,7 @@ class CCPostTableInterfaceController: WKInterfaceController {
 
     @IBAction func loadMoreDidTap() {
         fetchPosts()
-        WKInterfaceDevice.currentDevice().playHaptic(.Start)
+        WKInterfaceDevice.current().play(.start)
     }
     
     override func didDeactivate() {

@@ -17,8 +17,8 @@ class SettingPrivacyTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        blurSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey("Background_Blur")
-        authSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey("Authentication_Profile")
+        blurSwitch.isOn = UserDefaults.standard().bool(forKey: "Background_Blur")
+        authSwitch.isOn = UserDefaults.standard().bool(forKey: "Authentication_Profile")
     }
 
     override func didReceiveMemoryWarning() {
@@ -26,27 +26,27 @@ class SettingPrivacyTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func blurSwitchDidChange(sender: UISwitch) {
-        NSUserDefaults.standardUserDefaults().setBool(sender.on, forKey: "Background_Blur")
+    @IBAction func blurSwitchDidChange(_ sender: UISwitch) {
+        UserDefaults.standard().set(sender.isOn, forKey: "Background_Blur")
     }
     
-    @IBAction func authSwitchDidChange(sender: UISwitch) {
-        authenticateUser(sender.on)
+    @IBAction func authSwitchDidChange(_ sender: UISwitch) {
+        authenticateUser(sender.isOn)
     }
 
-    func authenticateUser(on : Bool) -> Void {
+    func authenticateUser(_ on : Bool) -> Void {
         let context = LAContext()
         var error : NSError?
         
         if #available(iOS 9.0, *) {
-            if context.canEvaluatePolicy(.DeviceOwnerAuthentication, error: &error) {
-                context.evaluatePolicy(.DeviceOwnerAuthentication, localizedReason: "用来验证身份，保护资料信息", reply: { (success, error) in
+            if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
+                context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "用来验证身份，保护资料信息", reply: { (success, error) in
                     if success {
-                        dispatch_async(dispatch_get_main_queue(), {
-                            NSUserDefaults.standardUserDefaults().setBool(on, forKey: "Authentication_Profile")
+                        DispatchQueue.main.async(execute: {
+                            UserDefaults.standard().set(on, forKey: "Authentication_Profile")
                         })
                     } else {
-                        dispatch_async(dispatch_get_main_queue(), { 
+                        DispatchQueue.main.async(execute: { 
                             self.authSwitch.setOn(!on, animated: true)
                         })
                     }
@@ -54,14 +54,14 @@ class SettingPrivacyTableViewController: UITableViewController {
             }
         } else {
             // Fallback on earlier versions
-            if context.canEvaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, error: &error) {
-                context.evaluatePolicy(.DeviceOwnerAuthenticationWithBiometrics, localizedReason: "用来验证身份，保护资料信息", reply: { (success, error) in
+            if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+                context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "用来验证身份，保护资料信息", reply: { (success, error) in
                     if success {
-                        dispatch_async(dispatch_get_main_queue(), {
-                            NSUserDefaults.standardUserDefaults().setBool(on, forKey: "Authentication_Profile")
+                        DispatchQueue.main.async(execute: {
+                            UserDefaults.standard().set(on, forKey: "Authentication_Profile")
                         })
                     } else {
-                        dispatch_async(dispatch_get_main_queue(), {
+                        DispatchQueue.main.async(execute: {
                             self.authSwitch.setOn(!on, animated: true)
                         })
                     }

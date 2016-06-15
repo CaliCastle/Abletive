@@ -12,7 +12,7 @@ class ChatShareTableViewController: UITableViewController {
 
     var chatTVC : ChatTableViewController? {
         get {
-            let rootVC = UIApplication.sharedApplication().windows.first?.rootViewController as! UITabBarController
+            let rootVC = UIApplication.shared().windows.first?.rootViewController as! UITabBarController
             
             let naviController = rootVC.viewControllers![1] as! UINavigationController
             
@@ -32,8 +32,8 @@ class ChatShareTableViewController: UITableViewController {
 
         title = "分享好友"
         
-        contentSizeInPopup = CGSizeMake(UIScreen.mainScreen().bounds.size.width - 50, UIScreen.mainScreen().bounds.size.height - 150)
-        landscapeContentSizeInPopup = CGSizeMake(UIScreen.mainScreen().bounds.size.width - 150, 100)
+        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 50, height: UIScreen.main().bounds.size.height - 150)
+        landscapeContentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 150, height: 100)
         
         tableView.tableFooterView = UIView()
     }
@@ -45,31 +45,31 @@ class ChatShareTableViewController: UITableViewController {
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return chatTVC!.allNotifications.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ShareReuse", forIndexPath: indexPath) as! ChatShareTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ShareReuse", for: indexPath) as! ChatShareTableViewCell
 
         // Configure the cell...
-        cell.notification = chatTVC!.allNotifications[indexPath.row] as? Notification
+        cell.notification = chatTVC!.allNotifications[(indexPath as NSIndexPath).row] as? __ObjC.Notification
 
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let notif = chatTVC!.allNotifications[indexPath.row] as? Notification
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let notif = chatTVC!.allNotifications[(indexPath as NSIndexPath).row] as? __ObjC.Notification
         
-        TAOverlay.showOverlayWithLogoAndLabel("正在分享中...")
+        TAOverlay.show(logoAndLabel: "正在分享中...")
       
-        ChatMessage.sendChatMessageWithContent("\(sharePrefix) \(linkAddress)", andToWhom: (notif?.user.userID)!) { (success, newMessage) -> Void in
-            TAOverlay.hideOverlay()
-            self.dismissViewControllerAnimated(true, completion: { () -> Void in
+        ChatMessage.send(content: "\(sharePrefix) \(linkAddress)", andToWhom: (notif?.user.userID)!) { (success, newMessage) -> Void in
+            TAOverlay.hide()
+            self.dismiss(animated: true, completion: { () -> Void in
                 self.delegate!.shared()
             })
         }

@@ -18,7 +18,7 @@ class ScreenCastSeriesCollectionViewCell: UICollectionViewCell {
     
     var series : Series? {
         didSet {
-            thumbnailView.sd_setImageWithURL(NSURL(string: series!.thumbnail), placeholderImage: UIImage(named: "series_placeholder"))
+            thumbnailView.sd_setImage(with: URL(string: series!.thumbnail), placeholderImage: UIImage(named: "series_placeholder"))
             titleLabel.text = "\(series!.title)"
             episodeLabel.text = "\(series!.episodes)集"
             difficultyLabel.text = "\(series!.difficulty)"
@@ -28,7 +28,7 @@ class ScreenCastSeriesCollectionViewCell: UICollectionViewCell {
             } else if series!.recentlyUpdated {
                 statusLabel.text = "更新"
             } else {
-                statusLabel.hidden = true
+                statusLabel.isHidden = true
             }
             
             // Setup color

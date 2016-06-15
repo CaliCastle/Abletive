@@ -9,7 +9,7 @@
 import UIKit
 
 public protocol PersonalCardSettingsDelegate : NSObjectProtocol {
-    func settingsChanged(userInfo:NSDictionary)
+    func settingsChanged(_ userInfo:NSDictionary)
 }
 
 class PersonalCardSettingsTableViewController: UITableViewController,PersonalCardWallpaperDelegate {
@@ -22,7 +22,7 @@ class PersonalCardSettingsTableViewController: UITableViewController,PersonalCar
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentSizeInPopup = CGSize(width: UIScreen.mainScreen().bounds.size.width - 50, height: UIScreen.mainScreen().bounds.height - 250)
+        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 50, height: UIScreen.main().bounds.height - 250)
     }
     
     override func viewDidLoad() {
@@ -31,10 +31,10 @@ class PersonalCardSettingsTableViewController: UITableViewController,PersonalCar
         title = "更改名片样式"
         
         view.backgroundColor = AppColor.secondaryBlack()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(PersonalCardSettingsTableViewController.saveSettings))
-        backgroundIndex = NSUserDefaults.standardUserDefaults().integerForKey("card-backgroundIndex")
-        backgroundBlurSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey("card-blur")
-        qrCodeStyleSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey("card-qrCodeStyle")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(PersonalCardSettingsTableViewController.saveSettings))
+        backgroundIndex = UserDefaults.standard().integer(forKey: "card-backgroundIndex")
+        backgroundBlurSwitch.isOn = UserDefaults.standard().bool(forKey: "card-blur")
+        qrCodeStyleSwitch.isOn = UserDefaults.standard().bool(forKey: "card-qrCodeStyle")
     }
 
     override func didReceiveMemoryWarning() {
@@ -42,34 +42,34 @@ class PersonalCardSettingsTableViewController: UITableViewController,PersonalCar
         // Dispose of any resources that can be recreated.
     }
 
-    @IBAction func backgroundBlurDidChange(sender: UISwitch) {
-        NSUserDefaults.standardUserDefaults().setBool(sender.on, forKey: "card-blur")
+    @IBAction func backgroundBlurDidChange(_ sender: UISwitch) {
+        UserDefaults.standard().set(sender.isOn, forKey: "card-blur")
     }
     
-    @IBAction func qrCodeStyleDidChange(sender: UISwitch) {
-        NSUserDefaults.standardUserDefaults().setBool(sender.on, forKey: "card-qrCodeStyle")
+    @IBAction func qrCodeStyleDidChange(_ sender: UISwitch) {
+        UserDefaults.standard().set(sender.isOn, forKey: "card-qrCodeStyle")
     }
     
     func saveSettings() {
-        let userInfo = NSDictionary(objects: [self.backgroundBlurSwitch.on,self.qrCodeStyleSwitch.on,self.backgroundIndex], forKeys: ["blur","qrcode","bgindex"])
-        dismissViewControllerAnimated(true, completion: nil)
+        let userInfo = NSDictionary(objects: [self.backgroundBlurSwitch.isOn,self.qrCodeStyleSwitch.isOn,self.backgroundIndex], forKeys: ["blur","qrcode","bgindex"])
+        dismiss(animated: true, completion: nil)
         
         delegate?.settingsChanged(userInfo)
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.section == 1 && indexPath.row == 0 {
-            let wallpaperChooser = storyboard?.instantiateViewControllerWithIdentifier("PersonalCardWallpaper") as! PersonalCardWallpaperCollectionViewController
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if (indexPath as NSIndexPath).section == 1 && (indexPath as NSIndexPath).row == 0 {
+            let wallpaperChooser = storyboard?.instantiateViewController(withIdentifier: "PersonalCardWallpaper") as! PersonalCardWallpaperCollectionViewController
             wallpaperChooser.delegate = self
-            popupController?.pushViewController(wallpaperChooser, animated: true)
+            popupController?.push(wallpaperChooser, animated: true)
         }
     }
     
     // MARK: - Personal Card Wallpaper Delegate
     
-    func didSelectWallpaperAtIndex(index: Int) {
+    func didSelectWallpaperAtIndex(_ index: Int) {
         backgroundIndex = index
-        NSUserDefaults.standardUserDefaults().setInteger(backgroundIndex, forKey: "card-backgroundIndex")
+        UserDefaults.standard().set(backgroundIndex, forKey: "card-backgroundIndex")
     }
 
     /*

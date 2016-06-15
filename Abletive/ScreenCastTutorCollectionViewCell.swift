@@ -15,7 +15,7 @@ class ScreenCastTutorCollectionViewCell: UICollectionViewCell {
     var tutor : CCUser? {
         didSet {
             nameLabel.text = tutor?.display_name
-            avatarView.sd_setImageWithURL(NSURL(string: (tutor?.avatar)!), placeholderImage: UIImage(named: "default-avatar"))
+            avatarView.sd_setImage(with: URL(string: (tutor?.avatar)!), placeholderImage: UIImage(named: "default-avatar"))
             
             avatarView.layer.masksToBounds = true
             avatarView.layer.cornerRadius = avatarView.bounds.size.width / 2

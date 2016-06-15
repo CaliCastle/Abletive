@@ -13,7 +13,7 @@ class SettingThemeTableViewController: UITableViewController {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        contentSizeInPopup = CGSize(width: UIScreen.mainScreen().bounds.size.width - 50, height: UIScreen.mainScreen().bounds.size.height - 250)
+        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 50, height: UIScreen.main().bounds.size.height - 250)
     }
     
     override func viewDidLoad() {
@@ -28,31 +28,31 @@ class SettingThemeTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 2
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        NSUserDefaults.standardUserDefaults().setInteger(indexPath.row, forKey: "theme")
-        NSNotificationCenter.defaultCenter().postNotificationName("themeChanged", object: nil)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        UserDefaults.standard().set((indexPath as NSIndexPath).row, forKey: "theme")
+        NotificationCenter.default().post(name: Notification.Name(rawValue: "themeChanged"), object: nil)
         tableView.reloadData()
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("SettingThemeCell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SettingThemeCell", for: indexPath)
 
         // Configure the cell...
-        if NSUserDefaults.standardUserDefaults().integerForKey("theme") == indexPath.row {
-            cell.accessoryType = .Checkmark
+        if UserDefaults.standard().integer(forKey: "theme") == (indexPath as NSIndexPath).row {
+            cell.accessoryType = .checkmark
         } else {
-            cell.accessoryType = .None
+            cell.accessoryType = .none
         }
         
-        switch indexPath.row {
+        switch (indexPath as NSIndexPath).row {
             case 0:
                 cell.textLabel?.text = "默认主题(黄黑)"
                 break;

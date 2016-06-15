@@ -16,22 +16,22 @@ class CommunityCreditRankTableViewController: UITableViewController {
         super.viewDidLoad()
 
         tableView.tableFooterView = UIView()
-        tableView.indicatorStyle = .White
+        tableView.indicatorStyle = .white
         
         fetchData()
     }
 
     func fetchData() {
-        TAOverlay.showOverlayWithLogo()
+        TAOverlay.showWithLogo()
         
-        CreditRank.getCreditRankWithLimit(50) { (rankList : Array?) -> Void in
-            TAOverlay.hideOverlay()
+        CreditRank.getWithLimit(50) { (rankList : Array?) -> Void in
+            TAOverlay.hide()
             
             if rankList != nil {
                 self.rankList = rankList as! Array<CreditRank>
                 self.tableView.reloadData()
             } else {
-                TAOverlay.showOverlayWithError()
+                TAOverlay.showWithError()
             }
             
         }
@@ -44,26 +44,26 @@ class CommunityCreditRankTableViewController: UITableViewController {
 
     // MARK: - Table view data source
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 65
     }
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return rankList.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("CreditRankReuse", forIndexPath: indexPath) as! CommunityCreditTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CreditRankReuse", for: indexPath) as! CommunityCreditTableViewCell
 
         // Configure the cell...
-        cell.rankLabel.text = "#\(indexPath.row+1)"
-        cell.creditRank = rankList[indexPath.row]
+        cell.rankLabel.text = "#\((indexPath as NSIndexPath).row+1)"
+        cell.creditRank = rankList[(indexPath as NSIndexPath).row]
         
-        switch indexPath.row {
+        switch (indexPath as NSIndexPath).row {
         case 0:
             cell.rankLabel.textColor = AppColor.loginButtonColor()
             break
@@ -81,15 +81,15 @@ class CommunityCreditRankTableViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let creditRank = rankList[indexPath.row]
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let creditRank = rankList[(indexPath as NSIndexPath).row]
         let user : User = User()
         
         user.name = creditRank.name
         user.avatarPath = creditRank.avatarURL
         user.userID = creditRank.userID
         
-        let personalPageTVC = storyboard?.instantiateViewControllerWithIdentifier("PersonalPage") as! PersonalPageTableViewController
+        let personalPageTVC = storyboard?.instantiateViewController(withIdentifier: "PersonalPage") as! PersonalPageTableViewController
         personalPageTVC.currentUser = user
         
         navigationController?.pushViewController(personalPageTVC, animated: true)

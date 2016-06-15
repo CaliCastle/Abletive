@@ -16,7 +16,7 @@ class FriendshipRequestTableViewCell: UITableViewCell {
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var actionButton: UIButton!
     
-    @IBAction func actionButtonDidClick(sender: AnyObject) {
+    @IBAction func actionButtonDidClick(_ sender: AnyObject) {
         
     }
     
@@ -25,7 +25,7 @@ class FriendshipRequestTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

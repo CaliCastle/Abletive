@@ -20,7 +20,7 @@ class CommunityCreditTableViewCell: UITableViewCell {
             nameLabel.text = creditRank?.name
             creditLabel.text = "积分：\((creditRank?.credit)! as String)"
             creditLabel.textColor = AppColor.mainYellow()
-            avatarImageView.sd_setImageWithURL(NSURL(string: (creditRank?.avatarURL)!), placeholderImage: UIImage(named: "watch-avatar"))
+            avatarImageView.sd_setImage(with: URL(string: (creditRank?.avatarURL)!), placeholderImage: UIImage(named: "watch-avatar"))
         }
     }
     
@@ -31,7 +31,7 @@ class CommunityCreditTableViewCell: UITableViewCell {
         avatarImageView.layer.masksToBounds = true
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state

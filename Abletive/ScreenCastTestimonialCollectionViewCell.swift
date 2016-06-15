@@ -19,7 +19,7 @@ class ScreenCastTestimonialCollectionViewCell: UICollectionViewCell {
     var testimonial : Testimonial? {
         didSet {
             // Data binding
-            avatarImageView.sd_setImageWithURL(NSURL(string: testimonial!.avatar), placeholderImage: UIImage(named: "default_avatar"))
+            avatarImageView.sd_setImage(with: URL(string: testimonial!.avatar), placeholderImage: UIImage(named: "default_avatar"))
             nameLabel.text = testimonial!.name
             captionLabel.text = testimonial!.caption
             messageLabel.text = testimonial!.message
@@ -27,14 +27,14 @@ class ScreenCastTestimonialCollectionViewCell: UICollectionViewCell {
             // Customize
             avatarImageView.layer.masksToBounds = true
             avatarImageView.layer.cornerRadius = avatarImageView.bounds.size.width / 2
-            avatarImageView.layer.borderColor = UIColor(white: 1, alpha: 0.1).CGColor
+            avatarImageView.layer.borderColor = UIColor(white: 1, alpha: 0.1).cgColor
             avatarImageView.layer.borderWidth = 3
             
             captionLabel.textColor = AppColor.lightTranslucent()
             
             content.layer.masksToBounds = true
             content.layer.cornerRadius = 8
-            content.layer.borderColor = UIColor(white: 1, alpha: 0.1).CGColor
+            content.layer.borderColor = UIColor(white: 1, alpha: 0.1).cgColor
             content.layer.borderWidth = 5
         }
     }

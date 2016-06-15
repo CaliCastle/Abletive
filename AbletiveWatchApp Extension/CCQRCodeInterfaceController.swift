@@ -14,12 +14,12 @@ class CCQRCodeInterfaceController: WKInterfaceController,WCSessionDelegate {
 
     @IBOutlet var qrCodeImage: WKInterfaceImage!
     
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    override func awake(withContext context: AnyObject?) {
+        super.awake(withContext: context)
         
         // Configure interface objects here.
         
-        qrCodeImage.setImageData(context as? NSData)
+        qrCodeImage.setImageData(context as? Data)
     }
 
     override func willActivate() {

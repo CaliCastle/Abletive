@@ -32,7 +32,7 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
     
     let membershipInfo = [0:"12",1:"30",2:"88",3:"298"]
     let membershipNames = ["月费会员", "季费会员", "年费会员", "终身会员"]
-    let productIds = NSArray(contentsOfURL: NSBundle.mainBundle().URLForResource("product_ids", withExtension: "plist")!)
+    let productIds = NSArray(contentsOf: Bundle.main().urlForResource("product_ids", withExtension: "plist")!)
     
     let kInAppPurchaseFailedNotification = "kInAppPurchaseFailedNotification"
     let kInAppPurchaseSucceededNotification = "kInAppPurchaseSucceededNotification"
@@ -44,12 +44,12 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
         
         setupViews()
 
-        avatarImageView.sd_setImageWithURL(NSURL(string: NSUserDefaults.standardUserDefaults().stringForKey("user_avatar_path")!), placeholderImage: UIImage(named: "default-avatar")) { (image, error, type, url) -> Void in
+        avatarImageView.sd_setImage(with: URL(string: UserDefaults.standard().string(forKey: "user_avatar_path")!), placeholderImage: UIImage(named: "default-avatar")) { (image, error, type, url) -> Void in
             let backgroundImageView = UIImageView(frame: self.view.frame)
-            backgroundImageView.contentMode = .ScaleAspectFill
+            backgroundImageView.contentMode = .scaleAspectFill
             backgroundImageView.image = (error == nil) ? self.avatarImageView.image : UIImage(named: "default-avatar")
             
-            let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .Dark))
+            let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
             blurEffectView.frame = backgroundImageView.frame
             backgroundImageView.addSubview(blurEffectView)
             self.tableView.backgroundView = backgroundImageView
@@ -57,31 +57,31 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
         view.backgroundColor = AppColor.transparent()
         tableView.backgroundColor = AppColor.darkTranslucent()
         tableView.separatorColor = AppColor.transparent()
-        tableView.indicatorStyle = .White
+        tableView.indicatorStyle = .white
         
         fetchData()
         loadFromStore()
     }
     
     func loadFromStore() {
-        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+        SKPaymentQueue.default().add(self)
     }
     
-    func fetchData(fromNotification:Bool = false) {
+    func fetchData(_ fromNotification:Bool = false) {
         if !fromNotification {
-            TAOverlay.showOverlayWithLogo()
+            TAOverlay.showWithLogo()
         }
         Membership.getCurrentMembership { (membership) -> Void in
             if !fromNotification {
-                TAOverlay.hideOverlay()
+                TAOverlay.hide()
             }
             if membership != nil {
                 self.currentMembership = membership!
                 self.updateViews()
                 self.updatePrice()
             } else {
-                TAOverlay.showOverlayWithError()
-                self.navigationController?.popViewControllerAnimated(true)
+                TAOverlay.showWithError()
+                self.navigationController?.popViewController(animated: true)
             }
         }
     }
@@ -89,14 +89,14 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
     func setupViews(){
         avatarImageView.layer.masksToBounds = true
         avatarImageView.layer.cornerRadius = 8
-        avatarImageView.layer.borderColor = AppColor.lightSeparator().CGColor
+        avatarImageView.layer.borderColor = AppColor.lightSeparator().cgColor
         avatarImageView.layer.borderWidth = 1
     }
 
     func updateViews(){
-        startTimeLabel.text = currentMembership?.startTime == "N/A" ? currentMembership?.startTime : CCDateToString.getStringFromDate(currentMembership?.startTime)
+        startTimeLabel.text = currentMembership?.startTime == "N/A" ? currentMembership?.startTime : CCDateToString.getFromDate(currentMembership?.startTime)
         startTimeLabel.textColor = AppColor.lightTranslucent()
-        endTimeLabel.text = currentMembership?.endTime == "N/A" ? currentMembership?.endTime : CCDateToString.getStringFromDate(currentMembership?.endTime)
+        endTimeLabel.text = currentMembership?.endTime == "N/A" ? currentMembership?.endTime : CCDateToString.getFromDate(currentMembership?.endTime)
         endTimeLabel.textColor = AppColor.lightTranslucent()
         membershipTypeLabel.text = currentMembership?.type
         membershipTypeLabel.textColor = AppColor.mainYellow()
@@ -105,20 +105,20 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
         
         switch currentMembership?.type {
             case "过期会员"?:
-                memberBadgeImageView.image = UIImage(named: "membership-expired")?.imageWithRenderingMode(.AlwaysTemplate)
+                memberBadgeImageView.image = UIImage(named: "membership-expired")?.withRenderingMode(.alwaysTemplate)
                 break;
             case "月费会员"?:
-                memberBadgeImageView.image = UIImage(named: "monthly-membership")?.imageWithRenderingMode(.AlwaysTemplate)
+                memberBadgeImageView.image = UIImage(named: "monthly-membership")?.withRenderingMode(.alwaysTemplate)
                 break;
             case "季费会员"?:
-                memberBadgeImageView.image = UIImage(named: "seasonly-membership")?.imageWithRenderingMode(.AlwaysTemplate)
+                memberBadgeImageView.image = UIImage(named: "seasonly-membership")?.withRenderingMode(.alwaysTemplate)
                 break;
             case "年费会员"?:
-                memberBadgeImageView.image = UIImage(named: "yearly-membership")?.imageWithRenderingMode(.AlwaysTemplate)
+                memberBadgeImageView.image = UIImage(named: "yearly-membership")?.withRenderingMode(.alwaysTemplate)
                 break;
             case "终身会员"?:
                 canRenew = false
-                memberBadgeImageView.image = UIImage(named: "eternal-membership")?.imageWithRenderingMode(.AlwaysTemplate)
+                memberBadgeImageView.image = UIImage(named: "eternal-membership")?.withRenderingMode(.alwaysTemplate)
                 break;
             default:
                 break;
@@ -129,30 +129,30 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
         renewButton.layer.cornerRadius = 8
         renewButton.backgroundColor = AppColor.loginButtonColor()
         renewButton.tintColor = AppColor.mainWhite()
-        renewButton.layer.shadowColor = AppColor.darkOverlay().CGColor
+        renewButton.layer.shadowColor = AppColor.darkOverlay().cgColor
         renewButton.layer.shadowRadius = 5
-        renewButton.enabled = canRenew
+        renewButton.isEnabled = canRenew
     }
     
-    @IBAction func membershipSelectionDidChange(sender: UISegmentedControl) {
+    @IBAction func membershipSelectionDidChange(_ sender: UISegmentedControl) {
         currentMembershipSelection = sender.selectedSegmentIndex
         updatePrice()
     }
     
-    @IBAction func renewDidClick(sender: UIButton) {
+    @IBAction func renewDidClick(_ sender: UIButton) {
         vipType = UInt(currentMembershipSelection + 1)
         
-        let alertController = UIAlertController(title: "确认您的购买选择", message: "确定要购买价值￥\(totalPrice)的\(membershipNames[currentMembershipSelection])吗?", preferredStyle: .Alert)
-        let cancelAction = UIAlertAction(title: "取消", style: .Cancel) { (action) -> Void in
+        let alertController = UIAlertController(title: "确认您的购买选择", message: "确定要购买价值￥\(totalPrice)的\(membershipNames[currentMembershipSelection])吗?", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel) { (action) -> Void in
             
         }
-        let confirmAction = UIAlertAction(title: "确定", style: .Destructive) { (action) -> Void in
+        let confirmAction = UIAlertAction(title: "确定", style: .destructive) { (action) -> Void in
             self.validateProductIdentifiers(self.productIds!)
         }
         alertController.addAction(cancelAction)
         alertController.addAction(confirmAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
     func updatePrice() {
@@ -169,57 +169,57 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
                 }
             }
             let payment = SKPayment(product: product!)
-            SKPaymentQueue.defaultQueue().addPayment(payment)
+            SKPaymentQueue.default().add(payment)
         }
     }
     
     func paid() {
-        TAOverlay.showOverlayWithLogoAndLabel("正在处理中...请稍候")
+        TAOverlay.show(logoAndLabel: "正在处理中...请稍候")
         
-        Membership.payMembershipWithType(vipType) { (newMembership) -> Void in
+        Membership.pay(withType: vipType) { (newMembership) -> Void in
             
             if newMembership != nil {
-                TAOverlay.hideOverlay()
+                TAOverlay.hide()
                 
                 self.currentMembership = newMembership
                 self.updateViews()
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), { () -> Void in
-                    TAOverlay.showOverlayWithSuccessText("充值成功！感谢支持")
+                DispatchQueue.main.after(when: DispatchTime.now() + Double(Int64(3 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC), block: { () -> Void in
+                    TAOverlay.show(successText: "充值成功！感谢支持")
                 })
             } else {
-                TAOverlay.hideOverlay()
-                TAOverlay.showOverlayWithError()
+                TAOverlay.hide()
+                TAOverlay.showWithError()
             }
         }
         
-        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "IsVIP")
+        UserDefaults.standard().set(true, forKey: "IsVIP")
     }
     
     // MARK: Transaction helper methods
-    func transactionFinished(transaction : SKPaymentTransaction, wasSuccessful : Bool) {
-        SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+    func transactionFinished(_ transaction : SKPaymentTransaction, wasSuccessful : Bool) {
+        SKPaymentQueue.default().finishTransaction(transaction)
         
         let userInfo = NSDictionary(dictionary: ["transaction" : transaction])
         
         if wasSuccessful {
             // Send out a notification that we've finished the transaction
-            NSNotificationCenter.defaultCenter().postNotificationName(kInAppPurchaseSucceededNotification, object: self, userInfo: userInfo as [NSObject : AnyObject])
+            NotificationCenter.default().post(name: Notification.Name(rawValue: kInAppPurchaseSucceededNotification), object: self, userInfo: userInfo as [NSObject : AnyObject])
         } else {
-            NSNotificationCenter.defaultCenter().postNotificationName(kInAppPurchaseFailedNotification, object: self, userInfo: userInfo as [NSObject : AnyObject])
+            NotificationCenter.default().post(name: Notification.Name(rawValue: kInAppPurchaseFailedNotification), object: self, userInfo: userInfo as [NSObject : AnyObject])
         }
     }
     
-    func transactionCompleted(transaction : SKPaymentTransaction) {
+    func transactionCompleted(_ transaction : SKPaymentTransaction) {
         transactionFinished(transaction, wasSuccessful: true)
         paid()
     }
     
-    func transactionFailed(transaction : SKPaymentTransaction) {
+    func transactionFailed(_ transaction : SKPaymentTransaction) {
         transactionFinished(transaction, wasSuccessful: false)
     }
     
-    func transactionRestored(transaction : SKPaymentTransaction) {
+    func transactionRestored(_ transaction : SKPaymentTransaction) {
         transactionFinished(transaction, wasSuccessful: true)
         paid()
     }
@@ -234,8 +234,8 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
      
      - parameter productIdentifiers: productIdentifiers
      */
-    func validateProductIdentifiers(productIdentifiers : NSArray) {
-        TAOverlay.showOverlayWithLoading()
+    func validateProductIdentifiers(_ productIdentifiers : NSArray) {
+        TAOverlay.showWithLoading()
         
         if request == nil {
             let productsRequest = SKProductsRequest(productIdentifiers: NSSet(array: productIdentifiers as [AnyObject]) as! Set<String>)
@@ -243,33 +243,33 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
             productsRequest.delegate = self
             productsRequest.start()
         } else {
-            TAOverlay.hideOverlay()
+            TAOverlay.hide()
             displayStoreUI()
         }
     }
     
     // MARK: SKProductsRequestDelegate methods
-    func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
+    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         products = response.products
         
         for invalidIdentifier in response.invalidProductIdentifiers {
             print("Invalid identifier: \(invalidIdentifier)")
         }
-        TAOverlay.hideOverlay()
+        TAOverlay.hide()
         displayStoreUI()
     }
     
     // MARK: SKPaymentTransactionObserver methods
-    func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
             switch transaction.transactionState {
-            case .Purchased:
+            case .purchased:
                 transactionCompleted(transaction)
                 break;
-            case .Failed:
+            case .failed:
                 transactionFailed(transaction)
                 break;
-            case .Restored:
+            case .restored:
                 transactionRestored(transaction)
                 break;
             default:

@@ -16,7 +16,7 @@ class CheckInSettingsViewController: UIViewController {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentSizeInPopup = CGSize(width: UIScreen.mainScreen().bounds.size.width - 50, height: UIScreen.mainScreen().bounds.height * 0.56)
+        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 50, height: UIScreen.main().bounds.height * 0.56)
         view.backgroundColor = AppColor.mainWhite()
     }
     
@@ -28,14 +28,14 @@ class CheckInSettingsViewController: UIViewController {
         reminderLabel.textColor = AppColor.mainBlack()
         reminderSwitch.tintColor = AppColor.secondaryBlack()
         
-        datePicker.datePickerMode = .Time
-        datePicker.timeZone = NSTimeZone.systemTimeZone()
-        datePicker.date = NSDate()
+        datePicker.datePickerMode = .time
+        datePicker.timeZone = TimeZone.system()
+        datePicker.date = Date()
         
         setupReminder()
         setupCustomizableTextButton()
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(CheckInSettingsViewController.saveSettings))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(CheckInSettingsViewController.saveSettings))
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,93 +43,93 @@ class CheckInSettingsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @IBAction func reminderSwitchDidChange(sender: UISwitch) {
-        NSUserDefaults.standardUserDefaults().setBool(sender.on, forKey: "checkin_reminder_on")
-        contentSizeInPopup = CGSize(width: contentSizeInPopup.width, height: contentSizeInPopup.height + (datePicker.frame.size.height) * (sender.on ? 1 : -1))
-        if sender.on {
-            datePicker.hidden = false
+    @IBAction func reminderSwitchDidChange(_ sender: UISwitch) {
+        UserDefaults.standard().set(sender.isOn, forKey: "checkin_reminder_on")
+        contentSizeInPopup = CGSize(width: contentSizeInPopup.width, height: contentSizeInPopup.height + (datePicker.frame.size.height) * (sender.isOn ? 1 : -1))
+        if sender.isOn {
+            datePicker.isHidden = false
             
-            let formatter = NSDateFormatter()
-            formatter.timeZone = NSTimeZone.systemTimeZone()
+            let formatter = DateFormatter()
+            formatter.timeZone = TimeZone.system()
             formatter.dateFormat = "HH"
             
-            let hour = formatter.stringFromDate(datePicker.date) as NSString
+            let hour = formatter.string(from: datePicker.date) as NSString
             
             formatter.dateFormat = "mm"
             
-            let minute = formatter.stringFromDate(datePicker.date) as NSString
+            let minute = formatter.string(from: datePicker.date) as NSString
             
-            NSUserDefaults.standardUserDefaults().setObject("\(hour):\(minute)", forKey: "checkin_reminder")
+            UserDefaults.standard().set("\(hour):\(minute)", forKey: "checkin_reminder")
             
             setReminderNotification(hour.integerValue, minute: minute.integerValue)
         } else {
-            UIApplication.sharedApplication().cancelAllLocalNotifications()
-            datePicker.hidden = true
+            UIApplication.shared().cancelAllLocalNotifications()
+            datePicker.isHidden = true
         }
         
     }
     
     func setupReminder() {
-        reminderSwitch.on = NSUserDefaults.standardUserDefaults().boolForKey("checkin_reminder_on")
-        if !reminderSwitch.on {
-            datePicker.hidden = true
+        reminderSwitch.isOn = UserDefaults.standard().bool(forKey: "checkin_reminder_on")
+        if !reminderSwitch.isOn {
+            datePicker.isHidden = true
             contentSizeInPopup = CGSize(width: contentSizeInPopup.width, height: contentSizeInPopup.height - datePicker.frame.size.height)
         }
         
-        if let date = NSUserDefaults.standardUserDefaults().stringForKey("checkin_reminder") {
-            let formatter = NSDateFormatter()
-            formatter.timeZone = NSTimeZone.systemTimeZone()
+        if let date = UserDefaults.standard().string(forKey: "checkin_reminder") {
+            let formatter = DateFormatter()
+            formatter.timeZone = TimeZone.system()
             formatter.dateFormat = "HH:mm"
-            self.datePicker.date = formatter.dateFromString(date)!
+            self.datePicker.date = formatter.date(from: date)!
         }
     }
     
     func setupCustomizableTextButton() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: #selector(CheckInSettingsViewController.customizeDidClick))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(CheckInSettingsViewController.customizeDidClick))
     }
     
     func customizeDidClick() {
-        let customizeVC = storyboard?.instantiateViewControllerWithIdentifier("CheckInCustomize") as! CheckInCustomizeTableViewController
-        popupController?.pushViewController(customizeVC, animated: true)
+        let customizeVC = storyboard?.instantiateViewController(withIdentifier: "CheckInCustomize") as! CheckInCustomizeTableViewController
+        popupController?.push(customizeVC, animated: true)
     }
     
     func saveSettings() {
-        let formatter = NSDateFormatter()
-        formatter.timeZone = NSTimeZone.systemTimeZone()
+        let formatter = DateFormatter()
+        formatter.timeZone = TimeZone.system()
         formatter.dateFormat = "HH"
         
-        let hour = formatter.stringFromDate(datePicker.date) as NSString
+        let hour = formatter.string(from: datePicker.date) as NSString
         
         formatter.dateFormat = "mm"
         
-        let minute = formatter.stringFromDate(datePicker.date) as NSString
+        let minute = formatter.string(from: datePicker.date) as NSString
         
-        NSUserDefaults.standardUserDefaults().setObject("\(hour):\(minute)", forKey: "checkin_reminder")
+        UserDefaults.standard().set("\(hour):\(minute)", forKey: "checkin_reminder")
         
-        if reminderSwitch.on {
+        if reminderSwitch.isOn {
             setReminderNotification(hour.integerValue, minute: minute.integerValue)
         }
         
-        dismissViewControllerAnimated(true, completion: {
+        dismiss(animated: true, completion: {
             () -> Void in
             
         })
     }
     
-    func setReminderNotification(hour:Int, minute:Int) {
-        UIApplication.sharedApplication().cancelAllLocalNotifications()
+    func setReminderNotification(_ hour:Int, minute:Int) {
+        UIApplication.shared().cancelAllLocalNotifications()
         
-        let dateComp = NSDateComponents()
+        var dateComp = DateComponents()
 
-        let today = NSDate()
+        let today = Date()
         
-        let formatter = NSDateFormatter()
+        let formatter = DateFormatter()
         formatter.dateFormat = "YYYY"
-        let year = formatter.stringFromDate(today) as NSString
+        let year = formatter.string(from: today) as NSString
         formatter.dateFormat = "MM"
-        let month = formatter.stringFromDate(today) as NSString
+        let month = formatter.string(from: today) as NSString
         formatter.dateFormat = "dd"
-        let day = formatter.stringFromDate(today) as NSString
+        let day = formatter.string(from: today) as NSString
         
         dateComp.year = year.integerValue
         dateComp.month = month.integerValue
@@ -138,21 +138,21 @@ class CheckInSettingsViewController: UIViewController {
         dateComp.hour = hour
         dateComp.minute = minute
         
-        dateComp.timeZone = NSTimeZone.systemTimeZone()
+        (dateComp as NSDateComponents).timeZone = TimeZone.system()
         
-        let calendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)
-        let date = calendar?.dateFromComponents(dateComp)
+        let calendar = Calendar(calendarIdentifier: Calendar.Identifier.gregorian)
+        let date = calendar?.date(from: dateComp)
         
         let notification = UILocalNotification()
         notification.category = "CHECKIN_CATEGORY"
-        notification.alertBody = NSUserDefaults.standardUserDefaults().objectForKey("CheckInText") == nil ? "😳今天签到了吗？我来喊你签到啦~😉" : NSUserDefaults.standardUserDefaults().stringForKey("CheckInText") == "" ? "签到啦" : NSUserDefaults.standardUserDefaults().stringForKey("CheckInText")
+        notification.alertBody = UserDefaults.standard().object(forKey: "CheckInText") == nil ? "😳今天签到了吗？我来喊你签到啦~😉" : UserDefaults.standard().string(forKey: "CheckInText") == "" ? "签到啦" : UserDefaults.standard().string(forKey: "CheckInText")
         notification.fireDate = date
-        notification.repeatInterval = .Day
+        notification.repeatInterval = .day
 //        notification.applicationIconBadgeNumber = 1
         notification.soundName = "Push Notification.wav"
         notification.userInfo = ["identifier":"checkin"]
         
-        UIApplication.sharedApplication().scheduleLocalNotification(notification)
+        UIApplication.shared().scheduleLocalNotification(notification)
     }
     
     /*

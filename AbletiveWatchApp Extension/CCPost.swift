@@ -31,14 +31,14 @@ public class CCPost : NSObject {
         return posts
     }
     
-    class func fetchPosts(page : UInt = 1, count : UInt = 5, callback: (posts : Array<CCPost>) -> Void) {
-        let request = NSURLRequest(URL: NSURL(string: "https://abletive.com/api/get_posts?page=\(page)&count=\(count)")!)
+    class func fetchPosts(_ page : UInt = 1, count : UInt = 5, callback: (posts : Array<CCPost>) -> Void) {
+        let request = URLRequest(url: URL(string: "https://abletive.com/api/get_posts?page=\(page)&count=\(count)")!)
         
-        NSURLSession.sharedSession().dataTaskWithRequest(request) { (data : NSData?, response : NSURLResponse?, error : NSError?) -> Void in
+        URLSession.shared().dataTask(with: request) { (data : Data?, response : URLResponse?, error : NSError?) -> Void in
             if error == nil {
                 // Request succeeded
                 do {
-                    let JSON = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+                    let JSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
                     let postsJSON = JSON["posts"] as! NSArray
                     for postJSON in postsJSON {
                         let post = CCPost(attributes: postJSON as! NSDictionary)
@@ -54,13 +54,13 @@ public class CCPost : NSObject {
             }.resume()
     }
     
-    class func latest(callback: (post : CCPost) -> Void) {
-        let request = NSURLRequest(URL: NSURL(string: "https://abletive.com/api/get_posts?page=1&count=1")!)
+    class func latest(_ callback: (post : CCPost) -> Void) {
+        let request = URLRequest(url: URL(string: "https://abletive.com/api/get_posts?page=1&count=1")!)
         
-        NSURLSession.sharedSession().dataTaskWithRequest(request) { (data : NSData?, response : NSURLResponse?, error : NSError?) -> Void in
+        URLSession.shared().dataTask(with: request) { (data : Data?, response : URLResponse?, error : NSError?) -> Void in
             if error == nil {
                 do {
-                    let JSON = try NSJSONSerialization.JSONObjectWithData(data!, options: .AllowFragments)
+                    let JSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
                     let postJSON = JSON["posts"] as! NSArray
                     
                     let post = CCPost(attributes: postJSON.firstObject as! NSDictionary)

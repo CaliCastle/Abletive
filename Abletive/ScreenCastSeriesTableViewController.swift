@@ -46,33 +46,33 @@ class ScreenCastSeriesTableViewController: UITableViewController {
     }
     
     func customizeViews() {
-        experienceIcon.image = UIImage(named: "experience")?.imageWithRenderingMode(.AlwaysTemplate)
+        experienceIcon.image = UIImage(named: "experience")?.withRenderingMode(.alwaysTemplate)
         experienceIcon.tintColor = AppColor.mainYellow()
     }
     
     func setupBackground() {
         tableView.tableFooterView = UIView()
         // Change the proper background and apply blur filter
-        let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .Dark))
+        let backgroundView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         backgroundView.bounds = view.bounds
         
         let backgroundImageView = UIImageView(frame: backgroundView.bounds)
-        backgroundImageView.sd_setImageWithURL(NSURL(string: series!.thumbnail)) { (image, error, cacheType, url) -> Void in
+        backgroundImageView.sd_setImage(with: URL(string: series!.thumbnail)) { (image, error, cacheType, url) -> Void in
             if error == nil {
                 backgroundImageView.image = image
             }
         }
         
-        backgroundImageView.contentMode = .ScaleAspectFill
+        backgroundImageView.contentMode = .scaleAspectFill
         
-        backgroundView.insertSubview(backgroundImageView, atIndex: 0)
+        backgroundView.insertSubview(backgroundImageView, at: 0)
         
         tableView.backgroundView = backgroundView
     }
     
     func bindModelToView() {
-        thumbnailImageView.sd_setImageWithURL(NSURL(string: series!.thumbnail), placeholderImage: UIImage(named: "series_placeholder"))
-        thumbnailImageView.userInteractionEnabled = true
+        thumbnailImageView.sd_setImage(with: URL(string: series!.thumbnail), placeholderImage: UIImage(named: "series_placeholder"))
+        thumbnailImageView.isUserInteractionEnabled = true
         let tapper = UITapGestureRecognizer(target: self, action: Selector(thumbnailDidTap()))
         thumbnailImageView.addGestureRecognizer(tapper)
         
@@ -82,17 +82,17 @@ class ScreenCastSeriesTableViewController: UITableViewController {
     
     func setupToolbar() {
         setToolbarPosition(tableView)
-        toolBar.setBackgroundImage(UIImage(named: "toolbar-bg"), forToolbarPosition: .Any, barMetrics: .Default)
+        toolBar.setBackgroundImage(UIImage(named: "toolbar-bg"), forToolbarPosition: .any, barMetrics: .default)
         
         view.addSubview(toolBar)
     }
     
-    func setToolbarPosition(scrollView : UIScrollView) {
+    func setToolbarPosition(_ scrollView : UIScrollView) {
         toolBar.frame = CGRect(origin: CGPoint(x: 0, y: scrollView.contentOffset.y + view.frame.size.height - toolbarHeight), size: CGSize(width: view.frame.size.width, height: toolbarHeight))
-        tableView.bringSubviewToFront(toolBar)
+        tableView.bringSubview(toFront: toolBar)
     }
     
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         setToolbarPosition(scrollView)
     }
     
@@ -103,34 +103,34 @@ class ScreenCastSeriesTableViewController: UITableViewController {
         photo.photoImage = thumbnailImageView.image
         
         photoVC.photos = [photo]
-        photoVC.editing = false
+        photoVC.isEditing = false
         
         photoVC.showPickerVc(self)
     }
 
-    @IBAction func laterDidTap(sender: UIBarButtonItem) {
+    @IBAction func laterDidTap(_ sender: UIBarButtonItem) {
         print("Tapped later")
     }
     
-    @IBAction func favoriteDidTap(sender: UIBarButtonItem) {
+    @IBAction func favoriteDidTap(_ sender: UIBarButtonItem) {
         print("Tapped favorite")
     }
     
-    @IBAction func notifyDidTap(sender: UIBarButtonItem) {
+    @IBAction func notifyDidTap(_ sender: UIBarButtonItem) {
         print("Tapped notify")
     }
     
-    @IBAction func shareDidTap(sender: UIBarButtonItem) {
+    @IBAction func shareDidTap(_ sender: UIBarButtonItem) {
         print("Tapped share")
     }
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
 
