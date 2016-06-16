@@ -44,16 +44,26 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
         
         setupViews()
 
-        avatarImageView.sd_setImage(with: URL(string: UserDefaults.standard().string(forKey: "user_avatar_path")!), placeholderImage: UIImage(named: "default-avatar")) { (image, error, type, url) -> Void in
-            let backgroundImageView = UIImageView(frame: self.view.frame)
-            backgroundImageView.contentMode = .scaleAspectFill
-            backgroundImageView.image = (error == nil) ? self.avatarImageView.image : UIImage(named: "default-avatar")
-            
-            let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-            blurEffectView.frame = backgroundImageView.frame
-            backgroundImageView.addSubview(blurEffectView)
-            self.tableView.backgroundView = backgroundImageView
-        }
+//        avatarImageView.sd_setImage(with: URL(string: UserDefaults.standard().string(forKey: "user_avatar_path")!), placeholderImage: UIImage(named: "default-avatar")) { (image, error, type, url) -> Void in
+//            let backgroundImageView = UIImageView(frame: self.view.frame)
+//            backgroundImageView.contentMode = .scaleAspectFill
+//            backgroundImageView.image = (error == nil) ? self.avatarImageView.image : UIImage(named: "default-avatar")
+//            
+//            let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+//            blurEffectView.frame = backgroundImageView.frame
+//            backgroundImageView.addSubview(blurEffectView)
+//            self.tableView.backgroundView = backgroundImageView
+//        }
+        avatarImageView.sd_setImage(with: URL(string: UserDefaults.standard().string(forKey: "user_avatar_path")!), placeholderImage: UIImage(named: "default-avatar"))
+        let backgroundImageView = UIImageView(frame: self.view.frame)
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.image = self.avatarImageView.image
+        
+        let blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        blurEffectView.frame = backgroundImageView.frame
+        backgroundImageView.addSubview(blurEffectView)
+        self.tableView.backgroundView = backgroundImageView
+        
         view.backgroundColor = AppColor.transparent()
         tableView.backgroundColor = AppColor.darkTranslucent()
         tableView.separatorColor = AppColor.transparent()
@@ -174,7 +184,7 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
     }
     
     func paid() {
-        TAOverlay.show(logoAndLabel: "正在处理中...请稍候")
+        TAOverlay.show(withLogoAndLabel: "正在处理中...请稍候")
         
         Membership.pay(withType: vipType) { (newMembership) -> Void in
             
@@ -184,9 +194,10 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
                 self.currentMembership = newMembership
                 self.updateViews()
                 
-                DispatchQueue.main.after(when: DispatchTime.now() + Double(Int64(3 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC), block: { () -> Void in
-                    TAOverlay.show(successText: "充值成功！感谢支持")
+                DispatchQueue.main.after(when: DispatchTime.now() + Double(Int64(3 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: { () -> Void in
+                    TAOverlay.show(withSuccessText: "充值成功！感谢支持")
                 })
+                
             } else {
                 TAOverlay.hide()
                 TAOverlay.showWithError()

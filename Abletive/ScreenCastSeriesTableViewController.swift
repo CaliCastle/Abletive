@@ -73,7 +73,7 @@ class ScreenCastSeriesTableViewController: UITableViewController {
     func bindModelToView() {
         thumbnailImageView.sd_setImage(with: URL(string: series!.thumbnail), placeholderImage: UIImage(named: "series_placeholder"))
         thumbnailImageView.isUserInteractionEnabled = true
-        let tapper = UITapGestureRecognizer(target: self, action: Selector(thumbnailDidTap()))
+        let tapper = UITapGestureRecognizer(target: self, action: #selector(ScreenCastSeriesTableViewController.thumbnailDidTap))
         thumbnailImageView.addGestureRecognizer(tapper)
         
         titleLabel.text = series!.title

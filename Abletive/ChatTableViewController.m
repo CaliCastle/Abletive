@@ -8,12 +8,13 @@
 
 #import "ChatTableViewController.h"
 #import "NotificationTableViewCell.h"
-#import "Notification.h"
+#import "CCNotification.h"
 #import "TAOverlay.h"
 #import "CBStoreHouseRefreshControl.h"
 #import "MozTopAlertView.h"
 #import "ChatMessageTableViewController.h"
 #import "UIBarButtonItem+Badge.h"
+#import "Abletive-Swift.h"
 
 #define COUNT_PER_PAGE 45
 #define INBOX_BADGE_KEY @"Inbox_Badge_Key"
@@ -48,7 +49,12 @@ static NSString * const saveFilename = @"LoadedMessages.plist";
     [super viewDidLoad];
     
     if ([[NSUserDefaults standardUserDefaults]boolForKey:@"user_is_logged"]) {
-        self.allNotifications = [NSMutableArray arrayWithArray:[self loadMessageCache]];
+        if ([[AppConfiguration buildNumber] intValue] >= 2000 && ![[NSUserDefaults standardUserDefaults] boolForKey:@"chat_cache_cleared"]) {
+            self.allNotifications = [NSMutableArray array];
+            [[NSUserDefaults standardUserDefaults] setBool:true forKey:@"chat_cache_cleared"];
+        } else {
+            self.allNotifications = [NSMutableArray arrayWithArray:[self loadMessageCache]];
+        }
         
         [self resetHeaderControl];
     
@@ -141,7 +147,7 @@ static NSString * const saveFilename = @"LoadedMessages.plist";
     } else {
         self.currentPageIndex = 1;
     }
-    [Notification getNotificationsWithPage:self.currentPageIndex andCount:COUNT_PER_PAGE andBlock:^(NSArray * _Nullable notifs, NSError * _Nullable error) {
+    [CCNotification getNotificationsWithPage:self.currentPageIndex andCount:COUNT_PER_PAGE andBlock:^(NSArray * _Nullable notifs, NSError * _Nullable error) {
         [TAOverlay hideOverlay];
         [self.headerRefreshControl finishingLoading];
         _isLoading = NO;
@@ -153,7 +159,7 @@ static NSString * const saveFilename = @"LoadedMessages.plist";
             if (self.currentPageIndex == 1) {
                 self.allNotifications = [NSMutableArray array];
             }
-            for (Notification *notif in notifs) {
+            for (CCNotification *notif in notifs) {
                 if (![self containsNotification:notif]) {
                     [self.allNotifications addObject:notif];
                 }
@@ -168,8 +174,8 @@ static NSString * const saveFilename = @"LoadedMessages.plist";
     }];
 }
 
-- (BOOL)containsNotification:(Notification *)notif {
-    for (Notification *n in self.allNotifications) {
+- (BOOL)containsNotification:(CCNotification *)notif {
+    for (CCNotification *n in self.allNotifications) {
         if (n.fromUserID == notif.fromUserID) {
             return YES;
         }
@@ -300,7 +306,7 @@ static NSString * const saveFilename = @"LoadedMessages.plist";
         [noResultImageView removeFromSuperview];
         NotificationTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
         
-        Notification *currentNotification = self.allNotifications[indexPath.row];
+        CCNotification *currentNotification = self.allNotifications[indexPath.row];
         // Configure the cell...
         cell.notifcation = currentNotification;
         return cell;
@@ -312,7 +318,7 @@ static NSString * const saveFilename = @"LoadedMessages.plist";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.allNotifications.count && [[NSUserDefaults standardUserDefaults]boolForKey:@"user_is_logged"]) {
         ChatMessageTableViewController *chatMessageVC = [self.storyboard instantiateViewControllerWithIdentifier:@"ChatMessage"];
-        Notification *currentNotif = self.allNotifications[indexPath.row];
+        CCNotification *currentNotif = self.allNotifications[indexPath.row];
         chatMessageVC.userID = currentNotif.user.userID;
         
         [self.navigationController pushViewController:chatMessageVC animated:YES];

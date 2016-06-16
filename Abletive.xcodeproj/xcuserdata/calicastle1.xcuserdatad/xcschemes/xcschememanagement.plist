@@ -4,6 +4,16 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Abletive Message.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>8</integer>
+		</dict>
+		<key>Abletive Sticker.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>7</integer>
+		</dict>
 		<key>Abletive.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
@@ -58,6 +68,16 @@
 			<true/>
 		</dict>
 		<key>F12033151C463A5600A84A70</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F12E93811D117D51002A001F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>F12E93901D117D8C002A001F</key>
 		<dict>
 			<key>primary</key>
 			<true/>

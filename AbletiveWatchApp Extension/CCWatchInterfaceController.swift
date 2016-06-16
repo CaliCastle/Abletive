@@ -10,7 +10,7 @@ import WatchKit
 import Foundation
 import WatchConnectivity
 
-class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
+class CCWatchInterfaceController: WKInterfaceController, WCSessionDelegate {
     
     @IBOutlet var checkInButton: WKInterfaceButton!
     @IBOutlet var followingLabel: WKInterfaceLabel!
@@ -258,6 +258,11 @@ class CCWatchInterfaceController: WKInterfaceController,WCSessionDelegate {
         WKInterfaceDevice.current().play(.start)
         ImageLoader.sharedLoader.cache.removeAllObjects()
         fetchUserFromiPhone()
+    }
+    
+    @available(watchOSApplicationExtension 2.2, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: NSError?) {
+        
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {

@@ -33,7 +33,7 @@ class SettingAppleWatchTableViewController: UITableViewController {
             if WCSession.isSupported() && WCSession.default().isWatchAppInstalled {
                 WCSession.default().activate()
                 
-                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: Selector(saveSettings()))
+                navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(SettingAppleWatchTableViewController.saveSettings))
                 
                 watchSupported = true
                 
@@ -103,7 +103,7 @@ class SettingAppleWatchTableViewController: UITableViewController {
                     if replies != nil {
                         DispatchQueue.main.async(execute: { () -> Void in
                             self.navigationController?.popViewController(animated: true)
-                            TAOverlay.show(successText: "设置成功!")
+                            TAOverlay.show(withSuccessText: "设置成功!")
                         })
                     } else {
                         DispatchQueue.main.async(execute: { () -> Void in

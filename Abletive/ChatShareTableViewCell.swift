@@ -14,7 +14,7 @@ class ChatShareTableViewCell: UITableViewCell {
     
     @IBOutlet weak var nameLabel: UILabel!
     
-    var notification : __ObjC.Notification? {
+    var notification : CCNotification? {
         didSet {
             avatarView.layer.masksToBounds = true
             avatarView.layer.cornerRadius = avatarView.bounds.size.width / 2

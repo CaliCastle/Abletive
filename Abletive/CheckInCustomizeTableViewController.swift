@@ -47,7 +47,7 @@ class CheckInCustomizeTableViewController: UITableViewController {
     
     @IBAction func customizeTextFieldDidEndOnExit(_ sender: UITextField) {
         if sender.text?.characters.count >= 35 {
-            MozTopAlertView.show(MozAlertTypeError, text: "长度不能超过20", parentView: popupController?.navigationBar)
+            MozTopAlertView.show(with: MozAlertTypeError, text: "长度不能超过20", parentView: popupController?.navigationBar)
         } else {
             sender.resignFirstResponder()
             

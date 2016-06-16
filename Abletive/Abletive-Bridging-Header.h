@@ -27,5 +27,5 @@
 #import "NSString+CCNSStringReverse.h"
 #import "UIBarButtonItem+Badge.h"
 #import "ChatTableViewController.h"
-#import "Notification.h"
+#import "CCNotification.h"
 #import "ChatMessage.h"

@@ -10,7 +10,7 @@ import WatchKit
 import Foundation
 import WatchConnectivity
 
-class CCQRCodeInterfaceController: WKInterfaceController,WCSessionDelegate {
+class CCQRCodeInterfaceController: WKInterfaceController, WCSessionDelegate {
 
     @IBOutlet var qrCodeImage: WKInterfaceImage!
     
@@ -20,6 +20,11 @@ class CCQRCodeInterfaceController: WKInterfaceController,WCSessionDelegate {
         // Configure interface objects here.
         
         qrCodeImage.setImageData(context as? Data)
+    }
+    
+    @available(watchOSApplicationExtension 2.2, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: NSError?) {
+        
     }
 
     override func willActivate() {

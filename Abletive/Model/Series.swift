@@ -33,7 +33,7 @@ class Series: NSObject {
         slug = attributes["slug"] as! String
         completed = attributes["completed"] as! UInt == 1
         published = attributes["published"] as! UInt == 1
-        skill = Skill.map[attributes["skill_id"] as! Int]!
+//        skill = Skill.map[attributes["skill_id"] as! Int]!
         descrip = attributes["description"] as! String
         created_at = attributes["created_at"] as! String
         updated_at = attributes["updated_at"] as! String

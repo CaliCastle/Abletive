@@ -34,7 +34,7 @@ typedef NS_ENUM(NSUInteger,NotificationType) {
 /**
  *  Notification model
  */
-@interface Notification : NSObject
+@interface CCNotification : NSObject
 
 #pragma mark Properties
 

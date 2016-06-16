@@ -9,7 +9,7 @@
 import UIKit
 import NotificationCenter
 
-class TodayTableViewController: UITableViewController,NCWidgetProviding {
+class TodayTableViewController: UITableViewController, NCWidgetProviding {
 
     var postCount = 3
     
@@ -79,12 +79,12 @@ class TodayTableViewController: UITableViewController,NCWidgetProviding {
         cell.thumbnailView.addSubview(indicator)
         indicator.startAnimating()
         
-        Post.globalTimelinePosts(withPage: (indexPath as NSIndexPath).row + 1) { (post : Post!, error : NSError!) -> Void in
+        Post.globalTimelinePosts(withPage: (indexPath as NSIndexPath).row + 1) { (post : Post?, error : NSError?) -> Void in
             if error == nil {
                 cell.currentPost = post
             
-                if post.imageMediumPath != nil && post.imageMediumPath != "" {
-                    self.getDataFromUrl(URL(string: post.imageMediumPath)!, completion: { (data, response, error) -> Void in
+                if post?.imageMediumPath != nil && post?.imageMediumPath != "" {
+                    self.getDataFromUrl(URL(string: (post?.imageMediumPath)!)!, completion: { (data, response, error) -> Void in
                         if error == nil {
                             DispatchQueue.main.async(execute: { () -> Void in
                                 indicator.removeFromSuperview()
@@ -99,8 +99,8 @@ class TodayTableViewController: UITableViewController,NCWidgetProviding {
                     cell.thumbnailView.image = UIImage(named: "placeholder")
                     cell.thumbnailView.contentMode = .scaleAspectFit
                 }
-                cell.titleLabel.text = post.title
-                cell.authorLabel.text = post.author.name
+                cell.titleLabel.text = post?.title
+                cell.authorLabel.text = post?.author.name
             }
         }
         

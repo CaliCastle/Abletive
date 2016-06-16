@@ -88,7 +88,7 @@
 		9D2B1DF31BCE86F0006FA807 /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D2B1DEC1BCE86F0006FA807 /* NSString+FontAwesome.m */; };
 		9D2B1DF41BCE86F0006FA807 /* UIFont+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D2B1DEE1BCE86F0006FA807 /* UIFont+FontAwesome.m */; };
 		9D2B1DF51BCE86F0006FA807 /* MozTopAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D2B1DF01BCE86F0006FA807 /* MozTopAlertView.m */; };
-		9D2B1E001BCEB297006FA807 /* Notification.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D2B1DFF1BCEB297006FA807 /* Notification.m */; };
+		9D2B1E001BCEB297006FA807 /* CCNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D2B1DFF1BCEB297006FA807 /* CCNotification.m */; };
 		9D2B1E051BCEBB99006FA807 /* NotificationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D2B1E031BCEBB99006FA807 /* NotificationTableViewCell.m */; };
 		9D2B1E061BCEBB99006FA807 /* NotificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D2B1E041BCEBB99006FA807 /* NotificationTableViewCell.xib */; };
 		9D315A101B2BEA7200A258CA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D315A0F1B2BEA7200A258CA /* main.m */; };
@@ -551,6 +551,13 @@
 		F12BA3391C254660004746F5 /* Membership.m in Sources */ = {isa = PBXBuildFile; fileRef = F12BA3381C254660004746F5 /* Membership.m */; };
 		F12BA33E1C258101004746F5 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12BA33D1C258101004746F5 /* AppConfiguration.swift */; };
 		F12CBC3A1C463F3400A1D7F8 /* CCWatchInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12CBC391C463F3400A1D7F8 /* CCWatchInterfaceController.swift */; };
+		F12E93851D117D51002A001F /* Stickers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F12E93841D117D51002A001F /* Stickers.xcassets */; };
+		F12E93891D117D51002A001F /* Abletive Sticker.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F12E93821D117D51002A001F /* Abletive Sticker.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		F12E93931D117D8C002A001F /* Messages.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F12E93921D117D8C002A001F /* Messages.framework */; };
+		F12E93961D117D8C002A001F /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12E93951D117D8C002A001F /* MessagesViewController.swift */; };
+		F12E93991D117D8C002A001F /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F12E93971D117D8C002A001F /* MainInterface.storyboard */; };
+		F12E939B1D117D8C002A001F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F12E939A1D117D8C002A001F /* Assets.xcassets */; };
+		F12E939F1D117D8C002A001F /* Abletive Message.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = F12E93911D117D8C002A001F /* Abletive Message.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		F12F64CC1C4B92EC009A2E8F /* Features.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F12F64CB1C4B92EC009A2E8F /* Features.xcassets */; };
 		F12F64CF1C4BB60D009A2E8F /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12F64CE1C4BB60D009A2E8F /* WelcomeViewController.swift */; };
 		F148CB271C9AE1790097C184 /* UIBarButtonItem+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = F148CB241C9AE1790097C184 /* UIBarButtonItem+Badge.m */; };
@@ -570,6 +577,8 @@
 		F1619DEF1C4A8BBE007F9B01 /* SettingTeamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F1619DEE1C4A8BBE007F9B01 /* SettingTeamViewController.m */; };
 		F1619DF31C4A98C2007F9B01 /* Team.m in Sources */ = {isa = PBXBuildFile; fileRef = F1619DF21C4A98C2007F9B01 /* Team.m */; };
 		F1619DF71C4A9CB5007F9B01 /* SettingTeamCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F1619DF61C4A9CB5007F9B01 /* SettingTeamCollectionViewCell.m */; };
+		F1665E091D1142D600250F4A /* CCTodayCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1665E081D1142D500250F4A /* CCTodayCollectionViewCell.swift */; };
+		F1665E0B1D1144D900250F4A /* CCTodayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1665E0A1D1144D900250F4A /* CCTodayViewController.swift */; };
 		F16A7F951C895C7600E698E1 /* CCFilterImageTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16A7F941C895C7600E698E1 /* CCFilterImageTag.swift */; };
 		F16FD4921C873C000092744F /* CCUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16FD4911C873C000092744F /* CCUser.swift */; };
 		F17655D11C22ADAC0091D106 /* Finish Loading.wav in Resources */ = {isa = PBXBuildFile; fileRef = F17655CB1C22ADAC0091D106 /* Finish Loading.wav */; };
@@ -643,6 +652,20 @@
 			remoteGlobalIDString = F12033151C463A5600A84A70;
 			remoteInfo = AbletiveWatchApp;
 		};
+		F12E93871D117D51002A001F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D315A031B2BEA7200A258CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F12E93811D117D51002A001F;
+			remoteInfo = "Abletive Sticker";
+		};
+		F12E939D1D117D8C002A001F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D315A031B2BEA7200A258CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F12E93901D117D8C002A001F;
+			remoteInfo = "Abletive Message";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -664,6 +687,8 @@
 			dstSubfolderSpec = 13;
 			files = (
 				9D6652651BFB4D18001DBAE4 /* AbletiveToday.appex in Embed App Extensions */,
+				F12E93891D117D51002A001F /* Abletive Sticker.appex in Embed App Extensions */,
+				F12E939F1D117D8C002A001F /* Abletive Message.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -843,8 +868,8 @@
 		9D2B1DEE1BCE86F0006FA807 /* UIFont+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+FontAwesome.m"; sourceTree = "<group>"; };
 		9D2B1DEF1BCE86F0006FA807 /* MozTopAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MozTopAlertView.h; sourceTree = "<group>"; };
 		9D2B1DF01BCE86F0006FA807 /* MozTopAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MozTopAlertView.m; sourceTree = "<group>"; };
-		9D2B1DFE1BCEB297006FA807 /* Notification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Notification.h; path = Model/Notification.h; sourceTree = "<group>"; };
-		9D2B1DFF1BCEB297006FA807 /* Notification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Notification.m; path = Model/Notification.m; sourceTree = "<group>"; };
+		9D2B1DFE1BCEB297006FA807 /* CCNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCNotification.h; path = Model/CCNotification.h; sourceTree = "<group>"; };
+		9D2B1DFF1BCEB297006FA807 /* CCNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCNotification.m; path = Model/CCNotification.m; sourceTree = "<group>"; };
 		9D2B1E021BCEBB99006FA807 /* NotificationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotificationTableViewCell.h; sourceTree = "<group>"; };
 		9D2B1E031BCEBB99006FA807 /* NotificationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotificationTableViewCell.m; sourceTree = "<group>"; };
 		9D2B1E041BCEBB99006FA807 /* NotificationTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotificationTableViewCell.xib; sourceTree = "<group>"; };
@@ -1695,6 +1720,15 @@
 		F12BA3381C254660004746F5 /* Membership.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Membership.m; path = Model/Membership.m; sourceTree = "<group>"; };
 		F12BA33D1C258101004746F5 /* AppConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
 		F12CBC391C463F3400A1D7F8 /* CCWatchInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CCWatchInterfaceController.swift; sourceTree = "<group>"; };
+		F12E93821D117D51002A001F /* Abletive Sticker.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Abletive Sticker.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F12E93841D117D51002A001F /* Stickers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Stickers.xcassets; sourceTree = "<group>"; };
+		F12E93861D117D51002A001F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F12E93911D117D8C002A001F /* Abletive Message.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Abletive Message.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F12E93921D117D8C002A001F /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
+		F12E93951D117D8C002A001F /* MessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewController.swift; sourceTree = "<group>"; };
+		F12E93981D117D8C002A001F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		F12E939A1D117D8C002A001F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F12E939C1D117D8C002A001F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F12F64CB1C4B92EC009A2E8F /* Features.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Features.xcassets; sourceTree = "<group>"; };
 		F12F64CE1C4BB60D009A2E8F /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		F148CB231C9AE1790097C184 /* UIBarButtonItem+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+Badge.h"; sourceTree = "<group>"; };
@@ -1723,6 +1757,8 @@
 		F1619DF21C4A98C2007F9B01 /* Team.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Team.m; path = Model/Team.m; sourceTree = "<group>"; };
 		F1619DF51C4A9CB5007F9B01 /* SettingTeamCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingTeamCollectionViewCell.h; sourceTree = "<group>"; };
 		F1619DF61C4A9CB5007F9B01 /* SettingTeamCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingTeamCollectionViewCell.m; sourceTree = "<group>"; };
+		F1665E081D1142D500250F4A /* CCTodayCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CCTodayCollectionViewCell.swift; sourceTree = "<group>"; };
+		F1665E0A1D1144D900250F4A /* CCTodayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CCTodayViewController.swift; sourceTree = "<group>"; };
 		F16A7F941C895C7600E698E1 /* CCFilterImageTag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CCFilterImageTag.swift; path = Model/CCFilterImageTag.swift; sourceTree = "<group>"; };
 		F16FD4911C873C000092744F /* CCUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CCUser.swift; path = Model/CCUser.swift; sourceTree = "<group>"; };
 		F17655CB1C22ADAC0091D106 /* Finish Loading.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Finish Loading.wav"; sourceTree = "<group>"; };
@@ -1830,6 +1866,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1FE063C1C48098F00681712 /* UIKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F12E938E1D117D8C002A001F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F12E93931D117D8C002A001F /* Messages.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2300,8 +2344,8 @@
 		9D2B1DFD1BCEB27F006FA807 /* Notification */ = {
 			isa = PBXGroup;
 			children = (
-				9D2B1DFE1BCEB297006FA807 /* Notification.h */,
-				9D2B1DFF1BCEB297006FA807 /* Notification.m */,
+				9D2B1DFE1BCEB297006FA807 /* CCNotification.h */,
+				9D2B1DFF1BCEB297006FA807 /* CCNotification.m */,
 				F148CB2E1C9B1A7F0097C184 /* Inbox.swift */,
 			);
 			name = Notification;
@@ -2328,6 +2372,8 @@
 				9D66525C1BFB4D18001DBAE4 /* AbletiveToday */,
 				F12033171C463A5600A84A70 /* AbletiveWatchApp */,
 				F12033261C463A5700A84A70 /* AbletiveWatchApp Extension */,
+				F12E93831D117D51002A001F /* Abletive Sticker */,
+				F12E93941D117D8C002A001F /* Abletive Message */,
 				9DA7DA431BDFDA5000CAF12E /* Frameworks */,
 				9D315A0C1B2BEA7200A258CA /* Products */,
 				F0298E91B3943FA471AAD8EC /* Pods */,
@@ -2343,6 +2389,8 @@
 				9D66525A1BFB4D18001DBAE4 /* AbletiveToday.appex */,
 				F12033161C463A5600A84A70 /* AbletiveWatchApp.app */,
 				F12033221C463A5700A84A70 /* AbletiveWatchApp Extension.appex */,
+				F12E93821D117D51002A001F /* Abletive Sticker.appex */,
+				F12E93911D117D8C002A001F /* Abletive Message.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2619,6 +2667,7 @@
 				9D66526A1BFB4D58001DBAE4 /* TodayTableViewController.swift */,
 				9D6652691BFB4D57001DBAE4 /* AbletiveToday-Bridging-Header.h */,
 				F1D9419F1C86B56D00AECCF6 /* Media.xcassets */,
+				F1665E0A1D1144D900250F4A /* CCTodayViewController.swift */,
 			);
 			path = AbletiveToday;
 			sourceTree = "<group>";
@@ -2669,6 +2718,7 @@
 			isa = PBXGroup;
 			children = (
 				9D6652961BFB5D17001DBAE4 /* TodayTableViewCell.swift */,
+				F1665E081D1142D500250F4A /* CCTodayCollectionViewCell.swift */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -3577,6 +3627,7 @@
 				9DC004C81BF9612800624D95 /* Foundation.framework */,
 				9DA7DA441BDFDA5000CAF12E /* NotificationCenter.framework */,
 				0E7DE38902577F97ECEC5860 /* Pods.framework */,
+				F12E93921D117D8C002A001F /* Messages.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -4275,6 +4326,26 @@
 			name = Payment;
 			sourceTree = "<group>";
 		};
+		F12E93831D117D51002A001F /* Abletive Sticker */ = {
+			isa = PBXGroup;
+			children = (
+				F12E93841D117D51002A001F /* Stickers.xcassets */,
+				F12E93861D117D51002A001F /* Info.plist */,
+			);
+			path = "Abletive Sticker";
+			sourceTree = "<group>";
+		};
+		F12E93941D117D8C002A001F /* Abletive Message */ = {
+			isa = PBXGroup;
+			children = (
+				F12E93951D117D8C002A001F /* MessagesViewController.swift */,
+				F12E93971D117D8C002A001F /* MainInterface.storyboard */,
+				F12E939A1D117D8C002A001F /* Assets.xcassets */,
+				F12E939C1D117D8C002A001F /* Info.plist */,
+			);
+			path = "Abletive Message";
+			sourceTree = "<group>";
+		};
 		F12F64CD1C4BB5CE009A2E8F /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
@@ -4574,6 +4645,8 @@
 			dependencies = (
 				9D6652641BFB4D18001DBAE4 /* PBXTargetDependency */,
 				F12033351C463A5700A84A70 /* PBXTargetDependency */,
+				F12E93881D117D51002A001F /* PBXTargetDependency */,
+				F12E939E1D117D8C002A001F /* PBXTargetDependency */,
 			);
 			name = Abletive;
 			productName = Abletive;
@@ -4667,6 +4740,38 @@
 			productReference = F12033221C463A5700A84A70 /* AbletiveWatchApp Extension.appex */;
 			productType = "com.apple.product-type.watchkit2-extension";
 		};
+		F12E93811D117D51002A001F /* Abletive Sticker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F12E938C1D117D52002A001F /* Build configuration list for PBXNativeTarget "Abletive Sticker" */;
+			buildPhases = (
+				F12E93801D117D51002A001F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Abletive Sticker";
+			productName = "Abletive Sticker";
+			productReference = F12E93821D117D51002A001F /* Abletive Sticker.appex */;
+			productType = "com.apple.product-type.app-extension.messages-sticker-pack";
+		};
+		F12E93901D117D8C002A001F /* Abletive Message */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F12E93A01D117D8E002A001F /* Build configuration list for PBXNativeTarget "Abletive Message" */;
+			buildPhases = (
+				F12E938D1D117D8C002A001F /* Sources */,
+				F12E938E1D117D8C002A001F /* Frameworks */,
+				F12E938F1D117D8C002A001F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Abletive Message";
+			productName = "Abletive Message";
+			productReference = F12E93911D117D8C002A001F /* Abletive Message.appex */;
+			productType = "com.apple.product-type.app-extension.messages";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -4674,8 +4779,8 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = CC;
-				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0710;
+				LastSwiftUpdateCheck = 0800;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = CaliCastle;
 				TargetAttributes = {
 					9D315A0A1B2BEA7200A258CA = {
@@ -4735,6 +4840,18 @@
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
+					F12E93811D117D51002A001F = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = LAAKXKAVC9;
+						DevelopmentTeamName = "Xiaonan Guo";
+						ProvisioningStyle = Automatic;
+					};
+					F12E93901D117D8C002A001F = {
+						CreatedOnToolsVersion = 8.0;
+						DevelopmentTeam = LAAKXKAVC9;
+						DevelopmentTeamName = "Xiaonan Guo";
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = 9D315A061B2BEA7200A258CA /* Build configuration list for PBXProject "Abletive" */;
@@ -4755,6 +4872,8 @@
 				9D6652591BFB4D18001DBAE4 /* AbletiveToday */,
 				F12033151C463A5600A84A70 /* AbletiveWatchApp */,
 				F12033211C463A5700A84A70 /* AbletiveWatchApp Extension */,
+				F12E93811D117D51002A001F /* Abletive Sticker */,
+				F12E93901D117D8C002A001F /* Abletive Message */,
 			);
 		};
 /* End PBXProject section */
@@ -4878,6 +4997,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				F12033321C463A5700A84A70 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F12E93801D117D51002A001F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F12E93851D117D51002A001F /* Stickers.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F12E938F1D117D8C002A001F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F12E939B1D117D8C002A001F /* Assets.xcassets in Resources */,
+				F12E93991D117D8C002A001F /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5242,7 +5378,7 @@
 				9D9FCCFA1BF8EFAF00064DCF /* ZXEncoder.m in Sources */,
 				9D8D617B1B2FDF6200205B15 /* PostTableViewCell.m in Sources */,
 				9D2B1DD91BCE7676006FA807 /* MLPhotoBrowserCustomToolBarView.m in Sources */,
-				9D2B1E001BCEB297006FA807 /* Notification.m in Sources */,
+				9D2B1E001BCEB297006FA807 /* CCNotification.m in Sources */,
 				9D9FCCED1BF8EFAF00064DCF /* ZXQRCodeBitMatrixParser.m in Sources */,
 				9DE9497B1BC81CD900C380BC /* UIImage+SOZOResize.m in Sources */,
 				9D4170A11B40554000B6E5C1 /* SKSplashView.m in Sources */,
@@ -5417,9 +5553,11 @@
 				9D6652831BFB4F35001DBAE4 /* AFHTTPRequestOperation.m in Sources */,
 				9D6652971BFB5D17001DBAE4 /* TodayTableViewCell.swift in Sources */,
 				9D66526B1BFB4D58001DBAE4 /* TodayTableViewController.swift in Sources */,
+				F1665E0B1D1144D900250F4A /* CCTodayViewController.swift in Sources */,
 				9D6652861BFB4F35001DBAE4 /* AFNetworkReachabilityManager.m in Sources */,
 				9D66528B1BFB4F35001DBAE4 /* AFURLSessionManager.m in Sources */,
 				9D6652841BFB4F35001DBAE4 /* AFHTTPRequestOperationManager.m in Sources */,
+				F1665E091D1142D600250F4A /* CCTodayCollectionViewCell.swift in Sources */,
 				9D6652871BFB4F35001DBAE4 /* AFSecurityPolicy.m in Sources */,
 				9D6652911BFB4F66001DBAE4 /* User.m in Sources */,
 				9D6652941BFB4FA9001DBAE4 /* AbletiveAPIClient.m in Sources */,
@@ -5445,6 +5583,14 @@
 				F1FE062F1C47CC7E00681712 /* CCPostTableInterfaceController.swift in Sources */,
 				F16A7F951C895C7600E698E1 /* CCFilterImageTag.swift in Sources */,
 				F12033301C463A5700A84A70 /* GlanceController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F12E938D1D117D8C002A001F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F12E93961D117D8C002A001F /* MessagesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5475,6 +5621,16 @@
 			isa = PBXTargetDependency;
 			target = F12033151C463A5600A84A70 /* AbletiveWatchApp */;
 			targetProxy = F12033341C463A5700A84A70 /* PBXContainerItemProxy */;
+		};
+		F12E93881D117D51002A001F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F12E93811D117D51002A001F /* Abletive Sticker */;
+			targetProxy = F12E93871D117D51002A001F /* PBXContainerItemProxy */;
+		};
+		F12E939E1D117D8C002A001F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F12E93901D117D8C002A001F /* Abletive Message */;
+			targetProxy = F12E939D1D117D8C002A001F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -5509,6 +5665,14 @@
 				F12033191C463A5700A84A70 /* Base */,
 			);
 			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
+		F12E93971D117D8C002A001F /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F12E93981D117D8C002A001F /* Base */,
+			);
+			name = MainInterface.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -5612,14 +5776,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D8CC18A61A74853DCE28E3B4 /* Pods.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Abletive/Abletive.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5658,14 +5822,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F0928D43222BDA9AA910A316 /* Pods.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "compiler-default";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Abletive/Abletive.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5693,6 +5857,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				SWIFT_OBJC_BRIDGING_HEADER = "Abletive/Abletive-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "armv7s arm64 armv7";
@@ -5795,6 +5960,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "AbletiveToday/AbletiveToday-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
@@ -5843,6 +6009,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
@@ -5852,11 +6019,11 @@
 		F120333C1C463A5700A84A70 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				IBSC_MODULE = AbletiveWatchApp_Extension;
 				INFOPLIST_FILE = AbletiveWatchApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
@@ -5875,12 +6042,12 @@
 		F120333D1C463A5700A84A70 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Xiaonan Guo (LAAKXKAVC9)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Xiaonan Guo (LAAKXKAVC9)";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				IBSC_MODULE = AbletiveWatchApp_Extension;
 				INFOPLIST_FILE = AbletiveWatchApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
@@ -5892,6 +6059,79 @@
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+			};
+			name = Release;
+		};
+		F12E938A1D117D52002A001F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Abletive Sticker/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.calicastle.Abletive.Abletive-Sticker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		F12E938B1D117D52002A001F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				INFOPLIST_FILE = "Abletive Sticker/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.calicastle.Abletive.Abletive-Sticker";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		F12E93A11D117D8E002A001F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = "Abletive Message/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.calicastle.Abletive.Abletive-Message";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		F12E93A21D117D8E002A001F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "iMessage App Icon";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				INFOPLIST_FILE = "Abletive Message/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.calicastle.Abletive.Abletive-Message";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -5960,6 +6200,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
+		};
+		F12E938C1D117D52002A001F /* Build configuration list for PBXNativeTarget "Abletive Sticker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F12E938A1D117D52002A001F /* Debug */,
+				F12E938B1D117D52002A001F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		F12E93A01D117D8E002A001F /* Build configuration list for PBXNativeTarget "Abletive Message" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F12E93A11D117D8E002A001F /* Debug */,
+				F12E93A21D117D8E002A001F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 

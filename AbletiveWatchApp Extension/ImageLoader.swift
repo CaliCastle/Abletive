@@ -10,7 +10,7 @@ import Foundation
 
 class ImageLoader {
     
-    let cache = Cache()
+    let cache = Cache<NSString, UIImage>()
     
     class var sharedLoader : ImageLoader {
         struct Static {
@@ -21,12 +21,12 @@ class ImageLoader {
     
     func imageForUrl(_ urlString: String, completionHandler:(image: UIImage?, url: String) -> ()) {
         DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosBackground).async(execute: {()in
-            let data: Data? = self.cache.object(forKey: urlString) as? Data
+            let data = self.cache.object(forKey: NSString(string: urlString))
             
-            if let goodData = data {
-                let image = UIImage(data: goodData)
+            if data != nil {
+                
                 DispatchQueue.main.async(execute: {() in
-                    completionHandler(image: image, url: urlString)
+                    completionHandler(image: data, url: urlString)
                 })
                 return
             }
@@ -39,7 +39,7 @@ class ImageLoader {
                 
                 if let data = data {
                     let image = UIImage(data: data)
-                    self.cache.setObject(data, forKey: urlString)
+                    self.cache.setObject(image!, forKey: urlString)
                     DispatchQueue.main.async(execute: {() in
                         completionHandler(image: image, url: urlString)
                     })

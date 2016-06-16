@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "Notification.h"
+#import "CCNotification.h"
 
 @interface NotificationTableViewCell : UITableViewCell
 
-@property (nonatomic,strong) Notification *notifcation;
+@property (nonatomic,strong) CCNotification *notifcation;
 
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;

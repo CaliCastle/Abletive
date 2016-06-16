@@ -66,7 +66,7 @@ class PersonalCardViewController: UIViewController,PersonalCardSettingsDelegate,
         let screenshot = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         UIImageWriteToSavedPhotosAlbum(screenshot, self, nil, nil)
-        MozTopAlertView.show(MozAlertTypeSuccess, text: "保存成功", parentView: navigationController?.navigationBar)
+        MozTopAlertView.show(with: MozAlertTypeSuccess, text: "保存成功", parentView: navigationController?.navigationBar)
     }
     
     private func changeSettings() {

@@ -13,7 +13,7 @@
 
 @implementation NotificationTableViewCell
 
-- (void)setNotifcation:(Notification *)notifcation {
+- (void)setNotifcation:(CCNotification *)notifcation {
     _notifcation = notifcation;
 //    if (_notifcation.notificationType == NotificationTypeUnreadMessage || _notifcation.notificationType == NotificationTypeUnreadReply) {
 //        self.readLabel.textColor = [AppColor loginButtonColor];

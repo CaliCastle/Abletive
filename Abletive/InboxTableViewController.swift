@@ -39,11 +39,11 @@ class InboxTableViewController: UITableViewController {
             self.fetching = false
             if error == nil {
                 self.page += 1
-                if inboxes.count == 0 || inboxes.count < self.count {
+                if inboxes?.count == 0 || inboxes?.count < self.count {
                     self.noMore = true
                 }
-                for i in 0..<inboxes.count {
-                    self.allInboxes.append(inboxes[i])
+                for i in 0..<(inboxes?.count)! {
+                    self.allInboxes.append((inboxes?[i])!)
                 }
                 self.tableView.reloadData()
             } else {

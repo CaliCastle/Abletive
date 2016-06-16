@@ -6,11 +6,11 @@
 //  Copyright © 2015 CaliCastle. All rights reserved.
 //
 
-#import "Notification.h"
+#import "CCNotification.h"
 #import "AbletiveAPIClient.h"
 #import "NSString+FilterHTML.h"
 
-@implementation Notification
+@implementation CCNotification
 
 - (instancetype)initWithAttributes:(NSDictionary *)attributes {
     if (self = [super init]) {
@@ -33,7 +33,7 @@
 }
 
 + (instancetype)notificationWithAttributes:(NSDictionary *)attributes {
-    return [[Notification alloc]initWithAttributes:attributes];
+    return [[CCNotification alloc]initWithAttributes:attributes];
 }
 
 + (void)getNotificationsWithPage:(NSUInteger)page andCount:(NSUInteger)count andBlock:(void (^)(NSArray * _Nullable, NSError * _Nullable))block {
@@ -43,7 +43,7 @@
             NSMutableArray *notifications = [NSMutableArray array];
             
             for (NSDictionary *attribute in messages) {
-                Notification *notif = [Notification notificationWithAttributes:attribute];
+                CCNotification *notif = [CCNotification notificationWithAttributes:attribute];
                 notif.rawRepresentation = attribute;
                 [notifications addObject:notif];
             }

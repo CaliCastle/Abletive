@@ -259,6 +259,16 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
+				TargetAttributes = {
+					35F593F604BA404ECD54BA6052042090 = {
+						DevelopmentTeam = LAAKXKAVC9;
+						DevelopmentTeamName = "Xiaonan Guo";
+					};
+					74BDE5EB0BB3CFCB6EE2405B094E42F1 = {
+						DevelopmentTeam = LAAKXKAVC9;
+						DevelopmentTeamName = "Xiaonan Guo";
+					};
+				};
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
