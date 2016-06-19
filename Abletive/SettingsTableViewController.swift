@@ -44,9 +44,9 @@ class SettingsTableViewController: UITableViewController {
             return 2
         default:
             if threeDTouchAvailable {
-                return 3
-            } else {
                 return 2
+            } else {
+                return 1
             }
         }
     }
