@@ -10,7 +10,7 @@ import UIKit
 
 class PersonalCardViewController: UIViewController,PersonalCardSettingsDelegate,RKCardViewDelegate {
 
-    let wallpapers : NSArray = NSArray(contentsOfFile: Bundle.main().pathForResource("PersonalCardWallpaper", ofType: "plist")!)!
+    let wallpapers : NSArray = NSArray(contentsOfFile: Bundle.main.path(forResource: "PersonalCardWallpaper", ofType: "plist")!)!
     
     var qrCodeImageView: UIImageView!
     var qrCode : UIImage!
@@ -83,16 +83,16 @@ class PersonalCardViewController: UIViewController,PersonalCardSettingsDelegate,
     }
     
     private func getUserDefaults() {
-        backgroundIndex = UserDefaults.standard().integer(forKey: "card-backgroundIndex")
-        backgroundBlur = UserDefaults.standard().bool(forKey: "card-blur")
-        qrCodeUrl = UserDefaults.standard().bool(forKey: "card-qrCodeStyle")
+        backgroundIndex = UserDefaults.standard.integer(forKey: "card-backgroundIndex")
+        backgroundBlur = UserDefaults.standard.bool(forKey: "card-blur")
+        qrCodeUrl = UserDefaults.standard.bool(forKey: "card-qrCodeStyle")
     }
     
     private func setupCard() {
         cardView = RKCardView(frame: CGRect(x: paddingX, y: paddingY, width: view.frame.size.width-2*paddingX, height: view.frame.size.height-2*paddingY))
-        cardView.titleLabel.text = UserDefaults.standard().object(forKey: "user")?.object(forKey: "displayname") as? String
+        cardView.titleLabel.text = (UserDefaults.standard.object(forKey: "user") as AnyObject).object(forKey: "displayname") as? String
         cardView.coverImageView.sd_setImage(with: URL(string: self.wallpapers.object(at: backgroundIndex) as! String), placeholderImage: UIImage(named: "LaunchLOGO.png"))
-        cardView.profileImageView.sd_setImage(with: URL(string: UserDefaults.standard().string(forKey: "user_avatar_path")!), placeholderImage: UIImage(named: "default-avatar"))
+        cardView.profileImageView.sd_setImage(with: URL(string: UserDefaults.standard.string(forKey: "user_avatar_path")!), placeholderImage: UIImage(named: "default-avatar"))
         cardView.addShadow()
         cardView.delegate = self
         
@@ -106,9 +106,9 @@ class PersonalCardViewController: UIViewController,PersonalCardSettingsDelegate,
         view.addSubview(cardView)
         
         if !qrCodeUrl {
-            qrCode = CCQRCodeImage.createNonInterpolatedUIImageForm(CCQRCodeImage.createQR(for: "abletive://user/\(UserDefaults.standard().object(forKey: "user")?.object(forKey: "id") as! Int)"), withSize: qrCodeSize)
+            qrCode = CCQRCodeImage.createNonInterpolatedUIImageForm(CCQRCodeImage.createQR(for: "abletive://user/\((UserDefaults.standard.object(forKey: "user") as AnyObject).object(forKey: "id") as! Int)"), withSize: qrCodeSize)
         } else {
-            qrCode = CCQRCodeImage.createNonInterpolatedUIImageForm(CCQRCodeImage.createQR(for: "http://abletive.com/author/\(UserDefaults.standard().object(forKey: "user")?.object(forKey: "id") as! Int)"), withSize: qrCodeSize)
+            qrCode = CCQRCodeImage.createNonInterpolatedUIImageForm(CCQRCodeImage.createQR(for: "http://abletive.com/author/\((UserDefaults.standard.object(forKey: "user") as AnyObject).object(forKey: "id") as! Int)"), withSize: qrCodeSize)
         }
         let qrCodeImage = CCQRCodeImage.imageBlack(toTransparent: qrCode, withRed: 80, andGreen: 70, andBlue: 99)
         qrCodeImageView = UIImageView(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: qrCodeSize * view.frame.size.height/667, height: qrCodeSize * view.frame.size.height/667)))
@@ -134,9 +134,9 @@ class PersonalCardViewController: UIViewController,PersonalCardSettingsDelegate,
         cardView.coverImageView.sd_setImage(with: URL(string: self.wallpapers.object(at: backgroundIndex) as! String), placeholderImage: UIImage(named: "LaunchLOGO.png"))
         
         if !qrCodeUrl {
-            qrCode = CCQRCodeImage.createNonInterpolatedUIImageForm(CCQRCodeImage.createQR(for: "abletive://user/\(UserDefaults.standard().object(forKey: "user")?.object(forKey: "id") as! Int)"), withSize: qrCodeSize)
+            qrCode = CCQRCodeImage.createNonInterpolatedUIImageForm(CCQRCodeImage.createQR(for: "abletive://user/\((UserDefaults.standard.object(forKey: "user") as AnyObject).object(forKey: "id") as! Int)"), withSize: qrCodeSize)
         } else {
-            qrCode = CCQRCodeImage.createNonInterpolatedUIImageForm(CCQRCodeImage.createQR(for: "http://abletive.com/author/\(UserDefaults.standard().object(forKey: "user")?.object(forKey: "id") as! Int)"), withSize: qrCodeSize)
+            qrCode = CCQRCodeImage.createNonInterpolatedUIImageForm(CCQRCodeImage.createQR(for: "http://abletive.com/author/\((UserDefaults.standard.object(forKey: "user") as AnyObject).object(forKey: "id") as! Int)"), withSize: qrCodeSize)
         }
         let qrCodeImage = CCQRCodeImage.imageBlack(toTransparent: qrCode, withRed: 80, andGreen: 70, andBlue: 99)
         

@@ -11,9 +11,9 @@ import UIKit
 public class AppConfiguration : NSObject {
 
     private struct Bundle {
-        static var identifier = Foundation.Bundle.main().objectForInfoDictionaryKey("CFBundleIdentifier") as! String
-        static let buildNumber = Foundation.Bundle.main().objectForInfoDictionaryKey("CFBundleVersion") as! String
-        static let version = Foundation.Bundle.main().objectForInfoDictionaryKey("CFBundleShortVersionString") as! String
+        static var identifier = Foundation.Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as! String
+        static let buildNumber = Foundation.Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+        static let version = Foundation.Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
     }
     
     public struct UserActivity {

@@ -12,7 +12,7 @@ class ChatShareTableViewController: UITableViewController {
 
     var chatTVC : ChatTableViewController? {
         get {
-            let rootVC = UIApplication.shared().windows.first?.rootViewController as! UITabBarController
+            let rootVC = UIApplication.shared.windows.first?.rootViewController as! UITabBarController
             
             let naviController = rootVC.viewControllers![1] as! UINavigationController
             
@@ -32,8 +32,8 @@ class ChatShareTableViewController: UITableViewController {
 
         title = "分享好友"
         
-        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 50, height: UIScreen.main().bounds.size.height - 150)
-        landscapeContentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 150, height: 100)
+        contentSizeInPopup = CGSize(width: UIScreen.main.bounds.size.width - 50, height: UIScreen.main.bounds.size.height - 150)
+        landscapeContentSizeInPopup = CGSize(width: UIScreen.main.bounds.size.width - 150, height: 100)
         
         tableView.tableFooterView = UIView()
     }

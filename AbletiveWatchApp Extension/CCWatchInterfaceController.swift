@@ -34,14 +34,13 @@ class CCWatchInterfaceController: WKInterfaceController, WCSessionDelegate {
     let kSettingKey = "Settings_Changed"
     let kCheckInKey = "CheckIn"
     let kPostCountKey = "PostCount"
-    
-    override func awake(withContext context: AnyObject?) {
+
+    override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
-        // Configure interface objects here.
         initSetup()
     }
-
+    
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
@@ -50,8 +49,8 @@ class CCWatchInterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     func initSetup() {
-        if let defaults = UserDefaults.standard().object(forKey: "userInformation") as? NSDictionary {
-            userID = UserDefaults.standard().string(forKey: "userID")
+        if let defaults = UserDefaults.standard.object(forKey: "userInformation") as? NSDictionary {
+            userID = UserDefaults.standard.string(forKey: "userID")
             currentUser = CCUser(attributes: defaults)
             loggedIn = true
         } else {
@@ -103,27 +102,27 @@ class CCWatchInterfaceController: WKInterfaceController, WCSessionDelegate {
             return
         }
         
-        UserDefaults.standard().set(userID!, forKey: "userID")
+        UserDefaults.standard.set(userID!, forKey: "userID")
         
         let request = URLRequest(url: URL(string: "https://abletive.com/api/user/get_personal_page_detail/?user_id=\(userID!)")!)
         
-        URLSession.shared().dataTask(with: request) { (data:Data?, response:URLResponse?, error:NSError?) -> Void in
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
             if error == nil {
                 // Request succeeded
                 do {
-                    var JSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
-                    JSON = NSMutableDictionary(dictionary: JSON as! [NSObject : AnyObject])
+                    var JSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSMutableDictionary
+                    JSON = NSMutableDictionary(dictionary: JSON as [NSObject : AnyObject])
                     
                     let userMembershipInfo = NSMutableDictionary(dictionary: JSON["membership"] as! [NSObject : AnyObject])
                     
                     userMembershipInfo.removeObject(forKey: "id")
                     
                     JSON.removeObject(forKey: "membership")
-                    JSON.set(userMembershipInfo, forKey: "membership")
+                    JSON.setObject(userMembershipInfo, forKey: "membership" as NSCopying)
                     
-                    UserDefaults.standard().set(JSON, forKey: "userInformation")
+                    UserDefaults.standard.set(JSON, forKey: "userInformation")
 
-                    self.currentUser = CCUser(attributes: JSON as! NSDictionary)
+                    self.currentUser = CCUser(attributes: JSON as NSDictionary)
 
                     self.updateViews()
                 }
@@ -140,9 +139,9 @@ class CCWatchInterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     func updateViews() {
-        if UserDefaults.standard().object(forKey: kCheckInKey) != nil {
+        if UserDefaults.standard.object(forKey: kCheckInKey) != nil {
             if loggedIn {
-                checkInButton.setHidden(!UserDefaults.standard().bool(forKey: kCheckInKey))
+                checkInButton.setHidden(!UserDefaults.standard.bool(forKey: kCheckInKey))
             } else {
                 checkInButton.setHidden(true)
             }
@@ -158,7 +157,7 @@ class CCWatchInterfaceController: WKInterfaceController, WCSessionDelegate {
         
         if loggedIn {
             if currentUser?.avatarURL != "" {
-                ImageLoader.sharedLoader.imageForUrl(CCFilterImageTag.filter((currentUser?.avatarURL)!)! as String, completionHandler: { (image, url) -> () in
+                ImageLoader.sharedLoader.imageForUrl(CCFilterImageTag.filter((currentUser?.avatarURL)! as NSString)! as String, completionHandler: { (image, url) -> () in
                     if image != nil {
                         self.avatarImage.setImage(image)
                     }
@@ -261,11 +260,11 @@ class CCWatchInterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     @available(watchOSApplicationExtension 2.2, *)
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: NSError?) {
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         
     }
     
-    func session(_ session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
+    private func session(_ session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
         if message["userLoggedIn"] != nil {
             // User has logged in
             currentUser = CCUser()
@@ -273,7 +272,7 @@ class CCWatchInterfaceController: WKInterfaceController, WCSessionDelegate {
             let userInfo = message["userInfo"] as? NSDictionary
             userID = String(userInfo!["id"] as! UInt)
             self.userDesc = userInfo!["description"] as? String
-            self.currentUser?.avatarURL = userInfo!["public_info"]!["avatar"] as? String
+            self.currentUser?.avatarURL = (userInfo!["public_info"] as! NSDictionary)["avatar"] as? String
             
             updateViews()
             
@@ -282,16 +281,16 @@ class CCWatchInterfaceController: WKInterfaceController, WCSessionDelegate {
         } else if message["userLoggedOut"] != nil {
             // User has logged out
             loggedIn = false
-            UserDefaults.standard().removeObject(forKey: "userInformation")
-            UserDefaults.standard().removeObject(forKey: "userID")
+            UserDefaults.standard.removeObject(forKey: "userInformation")
+            UserDefaults.standard.removeObject(forKey: "userID")
             updateViews()
         } else if message[kSettingKey] != nil {
-            UserDefaults.standard().set(Int(message[kPostCountKey] as! String)!, forKey: kPostCountKey)
-            UserDefaults.standard().set((message[kCheckInKey] as! Int) == 1, forKey: kCheckInKey)
+            UserDefaults.standard.set(Int(message[kPostCountKey] as! String)!, forKey: kPostCountKey)
+            UserDefaults.standard.set((message[kCheckInKey] as! Int) == 1, forKey: kCheckInKey)
             
             updateViews()
             
-            replyHandler(["status":"ok"])
+            replyHandler(["status":"ok" as AnyObject])
         }
     }
 

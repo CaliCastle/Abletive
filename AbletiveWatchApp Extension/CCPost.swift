@@ -23,7 +23,7 @@ public class CCPost : NSObject {
     
     init(attributes : NSDictionary) {
         title = attributes["title"] as! String
-        author = attributes["author"]!["nickname"] as! String
+        author = (attributes["author"] as! NSDictionary)["nickname"] as! String
         thumbnailURL = attributes["thumbnail"] as? String
     }
     
@@ -31,41 +31,41 @@ public class CCPost : NSObject {
         return posts
     }
     
-    class func fetchPosts(_ page : UInt = 1, count : UInt = 5, callback: (posts : Array<CCPost>) -> Void) {
+    class func fetchPosts(_ page : UInt = 1, count : UInt = 5, callback: @escaping (_ posts : Array<CCPost>) -> Void) {
         let request = URLRequest(url: URL(string: "https://abletive.com/api/get_posts?page=\(page)&count=\(count)")!)
         
-        URLSession.shared().dataTask(with: request) { (data : Data?, response : URLResponse?, error : NSError?) -> Void in
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
             if error == nil {
                 // Request succeeded
                 do {
-                    let JSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
+                    let JSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
                     let postsJSON = JSON["posts"] as! NSArray
                     for postJSON in postsJSON {
                         let post = CCPost(attributes: postJSON as! NSDictionary)
                         posts.append(post)
                     }
                     
-                    callback(posts: posts)
+                    callback(posts)
                 }
                 catch _ {
                     // Error handling
                 }
             }
-            }.resume()
+        }.resume()
     }
     
-    class func latest(_ callback: (post : CCPost) -> Void) {
+    class func latest(_ callback: @escaping (_ post : CCPost) -> Void) {
         let request = URLRequest(url: URL(string: "https://abletive.com/api/get_posts?page=1&count=1")!)
         
-        URLSession.shared().dataTask(with: request) { (data : Data?, response : URLResponse?, error : NSError?) -> Void in
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
             if error == nil {
                 do {
-                    let JSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments)
+                    let JSON = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! NSDictionary
                     let postJSON = JSON["posts"] as! NSArray
                     
                     let post = CCPost(attributes: postJSON.firstObject as! NSDictionary)
                     
-                    callback(post: post)
+                    callback(post)
                 }
                 catch _ {
                     // Error handling

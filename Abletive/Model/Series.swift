@@ -56,13 +56,13 @@ class Series: NSObject {
         
     }
     
-    static func getIndexSeries(_ callback: ([Series]?, NSError?) -> Void) {
-        AbletiveAPIClient.sharedScreenCast().get("index", parameters: ["_passphrase" : AbletivePassphrase], success: { (dataTask, response) -> Void in
-            let JSON = response as! NSDictionary
-            print(JSON)
-            }) { (dataTask, error) -> Void in
-                callback(nil, error)
-        }
+    static func getIndexSeries(_ callback: @escaping ([Series]?, NSError?) -> Void) {
+//        AbletiveAPIClient.sharedScreenCast().get("index", parameters: ["_passphrase" : AbletivePassphrase], success: { (dataTask, response) -> Void in
+//            let JSON = response as! NSDictionary
+//            print(JSON)
+//            }) { (dataTask, error) -> Void in
+//                callback(nil, error)
+//        }
     }
     
 }

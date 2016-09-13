@@ -37,8 +37,8 @@ class SettingAppleWatchTableViewController: UITableViewController {
                 
                 watchSupported = true
                 
-                checkInSwitch.isOn = UserDefaults.standard().object(forKey: kCheckInKey) == nil ? true : UserDefaults.standard().bool(forKey: kCheckInKey)
-                postCountLabel.text = UserDefaults.standard().object(forKey: kPostCountKey) == nil ? "5" : UserDefaults.standard().string(forKey: kPostCountKey)
+                checkInSwitch.isOn = UserDefaults.standard.object(forKey: kCheckInKey) == nil ? true : UserDefaults.standard.bool(forKey: kCheckInKey)
+                postCountLabel.text = UserDefaults.standard.object(forKey: kPostCountKey) == nil ? "5" : UserDefaults.standard.string(forKey: kPostCountKey)
                 postCountStepper.value = Double(postCountLabel.text!)!
             } else {
                 navigationController?.popViewController(animated: true)
@@ -68,7 +68,7 @@ class SettingAppleWatchTableViewController: UITableViewController {
 
     @IBAction func checkInSwitchDidChange(_ sender: UISwitch) {
         if #available(iOS 9.0, *) {
-            UserDefaults.standard().set(sender.isOn, forKey: kCheckInKey)
+            UserDefaults.standard.set(sender.isOn, forKey: kCheckInKey)
         } else {
             // Fallback on earlier versions
         }
@@ -78,7 +78,7 @@ class SettingAppleWatchTableViewController: UITableViewController {
     @IBAction func postCountStepperDidChange(_ sender: UIStepper) {
         if #available(iOS 9.0, *) {
             postCountLabel.text = String(Int(sender.value))
-            UserDefaults.standard().set(String(Int(sender.value)), forKey: kPostCountKey)
+            UserDefaults.standard.set(String(Int(sender.value)), forKey: kPostCountKey)
             
         } else {
             // Fallback on earlier versions
@@ -96,7 +96,7 @@ class SettingAppleWatchTableViewController: UITableViewController {
                 
                 isSaving = true
             
-                session.sendMessage(["Settings_Changed":"1","CheckIn":UserDefaults.standard().bool(forKey: kCheckInKey),"PostCount":UserDefaults.standard().object(forKey: kPostCountKey) == nil ? 5 : UserDefaults.standard().object(forKey: kPostCountKey)!], replyHandler: { (replies : Dictionary?) -> Void in
+                session.sendMessage(["Settings_Changed":"1","CheckIn":UserDefaults.standard.bool(forKey: kCheckInKey),"PostCount":UserDefaults.standard.object(forKey: kPostCountKey) == nil ? 5 : UserDefaults.standard.object(forKey: kPostCountKey)!], replyHandler: { (replies : Dictionary?) -> Void in
                     
                     self.isSaving = false
                     

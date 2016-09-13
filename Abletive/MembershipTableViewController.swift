@@ -32,7 +32,7 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
     
     let membershipInfo = [0:"12",1:"30",2:"88",3:"298"]
     let membershipNames = ["月费会员", "季费会员", "年费会员", "终身会员"]
-    let productIds = NSArray(contentsOf: Bundle.main().urlForResource("product_ids", withExtension: "plist")!)
+    let productIds = NSArray(contentsOf: Bundle.main.url(forResource: "product_ids", withExtension: "plist")!)
     
     let kInAppPurchaseFailedNotification = "kInAppPurchaseFailedNotification"
     let kInAppPurchaseSucceededNotification = "kInAppPurchaseSucceededNotification"
@@ -54,7 +54,7 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
 //            backgroundImageView.addSubview(blurEffectView)
 //            self.tableView.backgroundView = backgroundImageView
 //        }
-        avatarImageView.sd_setImage(with: URL(string: UserDefaults.standard().string(forKey: "user_avatar_path")!), placeholderImage: UIImage(named: "default-avatar"))
+        avatarImageView.sd_setImage(with: URL(string: UserDefaults.standard.string(forKey: "user_avatar_path")!), placeholderImage: UIImage(named: "default-avatar"))
         let backgroundImageView = UIImageView(frame: self.view.frame)
         backgroundImageView.contentMode = .scaleAspectFill
         backgroundImageView.image = self.avatarImageView.image
@@ -171,7 +171,7 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
     }
     
     func displayStoreUI() {
-        if products?.count >= 1 {
+        if (products?.count)! >= 1 {
             var product : SKProduct?
             for p in products! {
                 if productIds![currentMembershipSelection] as! String == p.productIdentifier {
@@ -194,7 +194,7 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
                 self.currentMembership = newMembership
                 self.updateViews()
                 
-                DispatchQueue.main.after(when: DispatchTime.now() + Double(Int64(3 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: { () -> Void in
+                DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + Double(Int64(3 * NSEC_PER_SEC)) / Double(NSEC_PER_SEC), execute: { 
                     TAOverlay.show(withSuccessText: "充值成功！感谢支持")
                 })
                 
@@ -204,7 +204,7 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
             }
         }
         
-        UserDefaults.standard().set(true, forKey: "IsVIP")
+        UserDefaults.standard.set(true, forKey: "IsVIP")
     }
     
     // MARK: Transaction helper methods
@@ -215,9 +215,9 @@ class MembershipTableViewController: UITableViewController, SKProductsRequestDel
         
         if wasSuccessful {
             // Send out a notification that we've finished the transaction
-            NotificationCenter.default().post(name: Notification.Name(rawValue: kInAppPurchaseSucceededNotification), object: self, userInfo: userInfo as [NSObject : AnyObject])
+            NotificationCenter.default.post(name: Notification.Name(rawValue: kInAppPurchaseSucceededNotification), object: self, userInfo: userInfo as [NSObject : AnyObject])
         } else {
-            NotificationCenter.default().post(name: Notification.Name(rawValue: kInAppPurchaseFailedNotification), object: self, userInfo: userInfo as [NSObject : AnyObject])
+            NotificationCenter.default.post(name: Notification.Name(rawValue: kInAppPurchaseFailedNotification), object: self, userInfo: userInfo as [NSObject : AnyObject])
         }
     }
     

@@ -24,9 +24,9 @@ class TodayTableViewController: UITableViewController, NCWidgetProviding {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        tableView.backgroundColor = UIColor.clear()
+        tableView.backgroundColor = UIColor.clear
         tableView.tableFooterView = UIView()
-        tableView.separatorColor = UIColor.lightGray()
+        tableView.separatorColor = UIColor.lightGray
         
         updateSize()
     }
@@ -47,7 +47,7 @@ class TodayTableViewController: UITableViewController, NCWidgetProviding {
     
     // MARK: - Widget Delegate
     
-    func widgetPerformUpdate(completionHandler: (NCUpdateResult) -> Void) {
+    private func widgetPerformUpdate(completionHandler: (NCUpdateResult) -> Void) {
         self.tableView.reloadData()
         completionHandler(.newData)
     }
@@ -79,7 +79,7 @@ class TodayTableViewController: UITableViewController, NCWidgetProviding {
         cell.thumbnailView.addSubview(indicator)
         indicator.startAnimating()
         
-        Post.globalTimelinePosts(withPage: (indexPath as NSIndexPath).row + 1) { (post : Post?, error : NSError?) -> Void in
+        Post.globalTimelinePosts(withPage: (indexPath as NSIndexPath).row + 1) { (post, error) -> Void in
             if error == nil {
                 cell.currentPost = post
             
@@ -108,7 +108,7 @@ class TodayTableViewController: UITableViewController, NCWidgetProviding {
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        cell.layer.backgroundColor = UIColor.clear().cgColor
+        cell.layer.backgroundColor = UIColor.clear.cgColor
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -124,10 +124,10 @@ class TodayTableViewController: UITableViewController, NCWidgetProviding {
         // Dispose of any resources that can be recreated.
     }
     
-    func getDataFromUrl(_ url:URL, completion: ((data: Data?, response: URLResponse?, error: NSError? ) -> Void)) {
-        URLSession.shared().dataTask(with: url) { (data, response, error) in
-            completion(data: data, response: response, error: error)
-            }.resume()
+    func getDataFromUrl(_ url:URL, completion: @escaping (Data?, URLResponse?, NSError?) -> Void) {
+//        URLSession.shared.dataTask(with: URLRequest(url: url)) { (data, response, error) in
+//            completion(data, response, error)
+//        }.resume()
     }
     
     /*

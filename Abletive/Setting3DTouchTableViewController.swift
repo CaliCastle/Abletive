@@ -19,14 +19,14 @@ class Setting3DTouchTableViewController: UITableViewController {
         
         tableView.tableFooterView = UIView()
         
-        checkInSwitch.isOn = UserDefaults.standard().object(forKey: kCheckInItemKey) == nil ? false : UserDefaults.standard().bool(forKey: kCheckInItemKey)
+        checkInSwitch.isOn = UserDefaults.standard.object(forKey: kCheckInItemKey) == nil ? false : UserDefaults.standard.bool(forKey: kCheckInItemKey)
         
         if #available(iOS 9.0, *) {
             
 
         } else {
             // Fallback on earlier versions
-            navigationController?.popViewController(animated: true)
+            self.navigationController?.popViewController(animated: true)
             TAOverlay.showWithErrorText("您的iOS不支持3D Touch功能")
         }
         
@@ -34,12 +34,12 @@ class Setting3DTouchTableViewController: UITableViewController {
 
     @IBAction func checkInSwitchDidChange(_ sender: UISwitch) {
         changeShortcutItem(sender.isOn)
-        UserDefaults.standard().set(sender.isOn, forKey: kCheckInItemKey)
+        UserDefaults.standard.set(sender.isOn, forKey: kCheckInItemKey)
     }
     
     func changeShortcutItem(_ checkInEnabled : Bool) {
         if #available(iOS 9.0, *) {
-            var shortcutItems = UIApplication.shared().shortcutItems
+            var shortcutItems = UIApplication.shared.shortcutItems
             
             var index = 0
             for shortcutItem : UIApplicationShortcutItem in shortcutItems! {
@@ -58,7 +58,7 @@ class Setting3DTouchTableViewController: UITableViewController {
             shortcutItems?.remove(at: index)
             shortcutItems?.insert(item, at: index)
             
-            UIApplication.shared().shortcutItems = shortcutItems
+            UIApplication.shared.shortcutItems = shortcutItems
             
         } else {
             // Fallback on earlier versions

@@ -23,9 +23,10 @@ class Inbox: NSObject {
         url = urls.firstObject as! String
     }
     
-    class func getInboxMessages(_ page : Int, count : Int, callback : ([Inbox]?, NSError?) -> Void) {
-        let user = UserDefaults.standard().dictionary(forKey: "user")!
+    class func getInboxMessages(_ page : Int, count : Int, callback : @escaping ([Inbox]?, NSError?) -> Void) {
+        let user = UserDefaults.standard.dictionary(forKey: "user")!
         let user_id = user["id"] as! Int
+        
         AbletiveAPIClient.shared().get("user/get_inbox", parameters: ["page" : page, "count" : count, "user_id" : user_id], success: { (dataTask, response) in
             let JSON = response as! NSDictionary
             if JSON["status"] as! String == "ok" {
@@ -41,7 +42,7 @@ class Inbox: NSObject {
             }
             }) { (dataTask, error) in
                 print(error)
-                callback(nil, error)
+                callback(nil, error as NSError?)
         }
     }
 }

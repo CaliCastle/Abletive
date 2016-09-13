@@ -28,8 +28,8 @@ public class CCUser : NSObject {
     }
     
     init(attributes : NSDictionary) {
-        userName = attributes["user_info"]!["display_name"] as? String
-        userID = attributes["user_info"]!["ID"] as? String
+        userName = (attributes["user_info"] as! NSDictionary)["display_name"] as? String
+        userID = (attributes["user_info"] as! NSDictionary)["ID"] as? String
         userFollowing = attributes["following_count"] as? String
         userFollowers = attributes["follower_count"] as? String
         avatarURL = attributes["avatar"] as? String
@@ -38,6 +38,6 @@ public class CCUser : NSObject {
         postCount = attributes["posts_count"] as? UInt
         commentCount = attributes["comments_count"] as? UInt
         credit = attributes["credit"] as? UInt
-        membership = attributes["membership"]!["user_type"] as? String
+        membership = (attributes["membership"] as! NSDictionary)["user_type"] as? String
     }
 }

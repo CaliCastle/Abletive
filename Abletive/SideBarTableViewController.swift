@@ -40,7 +40,7 @@ class SideBarTableViewController: UITableViewController {
             cell = UITableViewCell(style: .default, reuseIdentifier: "SideBarCell")
             // Configure the cell...
             cell?.backgroundColor = AppColor.transparent()
-            cell?.textLabel?.textColor = UIColor.darkText()
+            cell?.textLabel?.textColor = UIColor.darkText
             
             let selectedView:UIView = UIView(frame: CGRect(x: 0, y: 0, width: cell!.frame.size.width, height: cell!.frame.size.height))
             selectedView.backgroundColor = AppColor.mainBlack().withAlphaComponent(0.3)

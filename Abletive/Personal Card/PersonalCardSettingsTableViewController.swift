@@ -22,7 +22,7 @@ class PersonalCardSettingsTableViewController: UITableViewController,PersonalCar
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 50, height: UIScreen.main().bounds.height - 250)
+        contentSizeInPopup = CGSize(width: UIScreen.main.bounds.size.width - 50, height: UIScreen.main.bounds.height - 250)
     }
     
     override func viewDidLoad() {
@@ -32,9 +32,9 @@ class PersonalCardSettingsTableViewController: UITableViewController,PersonalCar
         
         view.backgroundColor = AppColor.secondaryBlack()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(PersonalCardSettingsTableViewController.saveSettings))
-        backgroundIndex = UserDefaults.standard().integer(forKey: "card-backgroundIndex")
-        backgroundBlurSwitch.isOn = UserDefaults.standard().bool(forKey: "card-blur")
-        qrCodeStyleSwitch.isOn = UserDefaults.standard().bool(forKey: "card-qrCodeStyle")
+        backgroundIndex = UserDefaults.standard.integer(forKey: "card-backgroundIndex")
+        backgroundBlurSwitch.isOn = UserDefaults.standard.bool(forKey: "card-blur")
+        qrCodeStyleSwitch.isOn = UserDefaults.standard.bool(forKey: "card-qrCodeStyle")
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,15 +43,15 @@ class PersonalCardSettingsTableViewController: UITableViewController,PersonalCar
     }
 
     @IBAction func backgroundBlurDidChange(_ sender: UISwitch) {
-        UserDefaults.standard().set(sender.isOn, forKey: "card-blur")
+        UserDefaults.standard.set(sender.isOn, forKey: "card-blur")
     }
     
     @IBAction func qrCodeStyleDidChange(_ sender: UISwitch) {
-        UserDefaults.standard().set(sender.isOn, forKey: "card-qrCodeStyle")
+        UserDefaults.standard.set(sender.isOn, forKey: "card-qrCodeStyle")
     }
     
     func saveSettings() {
-        let userInfo = NSDictionary(objects: [self.backgroundBlurSwitch.isOn,self.qrCodeStyleSwitch.isOn,self.backgroundIndex], forKeys: ["blur","qrcode","bgindex"])
+        let userInfo = NSDictionary(objects: [self.backgroundBlurSwitch.isOn,self.qrCodeStyleSwitch.isOn,self.backgroundIndex], forKeys: ["blur" as NSCopying,"qrcode" as NSCopying,"bgindex" as NSCopying])
         dismiss(animated: true, completion: nil)
         
         delegate?.settingsChanged(userInfo)
@@ -69,7 +69,7 @@ class PersonalCardSettingsTableViewController: UITableViewController,PersonalCar
     
     func didSelectWallpaperAtIndex(_ index: Int) {
         backgroundIndex = index
-        UserDefaults.standard().set(backgroundIndex, forKey: "card-backgroundIndex")
+        UserDefaults.standard.set(backgroundIndex, forKey: "card-backgroundIndex")
     }
 
     /*

@@ -20,7 +20,7 @@ class CCPostTableInterfaceController: WKInterfaceController {
     static var count : UInt = 5
     var posts : Array<CCPost> = CCPost.allPosts()
     
-    override func awake(withContext context: AnyObject?) {
+    override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
         // Configure interface objects here.
@@ -30,7 +30,7 @@ class CCPostTableInterfaceController: WKInterfaceController {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
         
-        CCPostTableInterfaceController.count = UserDefaults.standard().object(forKey: "PostCount") == nil ? 5 : UInt(UserDefaults.standard().integer(forKey: "PostCount"))
+        CCPostTableInterfaceController.count = UserDefaults.standard.object(forKey: "PostCount") == nil ? 5 : UInt(UserDefaults.standard.integer(forKey: "PostCount"))
         
         fetchPosts()
     }

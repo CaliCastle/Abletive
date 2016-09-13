@@ -14,7 +14,7 @@ class CCQRCodeInterfaceController: WKInterfaceController, WCSessionDelegate {
 
     @IBOutlet var qrCodeImage: WKInterfaceImage!
     
-    override func awake(withContext context: AnyObject?) {
+    override func awake(withContext context: Any?) {
         super.awake(withContext: context)
         
         // Configure interface objects here.
@@ -23,7 +23,7 @@ class CCQRCodeInterfaceController: WKInterfaceController, WCSessionDelegate {
     }
     
     @available(watchOSApplicationExtension 2.2, *)
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: NSError?) {
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         
     }
 

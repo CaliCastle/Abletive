@@ -81,16 +81,16 @@ class ScreenCastIndexTableViewController: UITableViewController, UICollectionVie
             let JSON = response as! NSDictionary
             
             self.allSeries = [Series]()
-            for seriesAttr in JSON["series"]!["list"] as! NSArray {
-                let series = Series(attributes: seriesAttr as! NSDictionary)
-                self.allSeries.append(series)
-            }
-            
-            self.allTutors = [CCUser]()
-            for tutorAttr in JSON["tutors"]!["list"] as! NSArray {
-                let tutor = CCUser(attributes: tutorAttr as! NSDictionary)
-                self.allTutors.append(tutor)
-            }
+//            for seriesAttr in JSON["series"]!["list"] as! NSArray {
+//                let series = Series(attributes: seriesAttr as! NSDictionary)
+//                self.allSeries.append(series)
+//            }
+//            
+//            self.allTutors = [CCUser]()
+//            for tutorAttr in JSON["tutors"]!["list"] as! NSArray {
+//                let tutor = CCUser(attributes: tutorAttr as! NSDictionary)
+//                self.allTutors.append(tutor)
+//            }
             
             self.allTestimonials = [Testimonial]()
             for testimonialAttr in JSON["testimonials"] as! NSArray {

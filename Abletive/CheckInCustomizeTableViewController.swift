@@ -13,7 +13,7 @@ class CheckInCustomizeTableViewController: UITableViewController {
     @IBOutlet weak var customizeTextField: UITextField!
     
     override func awakeFromNib() {
-        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 45, height: UIScreen.main().bounds.size.height * 0.35)
+        contentSizeInPopup = CGSize(width: UIScreen.main.bounds.size.width - 45, height: UIScreen.main.bounds.size.height * 0.35)
     }
     
     override func viewDidLoad() {
@@ -23,7 +23,7 @@ class CheckInCustomizeTableViewController: UITableViewController {
         
         tableView.tableFooterView = UIView()
         customizeTextField.backgroundColor = AppColor.transparent()
-        customizeTextField.text = UserDefaults.standard().string(forKey: "CheckInText")
+        customizeTextField.text = UserDefaults.standard.string(forKey: "CheckInText")
         
         customizeTextField.becomeFirstResponder()
     }
@@ -46,12 +46,12 @@ class CheckInCustomizeTableViewController: UITableViewController {
     }
     
     @IBAction func customizeTextFieldDidEndOnExit(_ sender: UITextField) {
-        if sender.text?.characters.count >= 35 {
+        if (sender.text?.characters.count)! >= 35 {
             MozTopAlertView.show(with: MozAlertTypeError, text: "长度不能超过20", parentView: popupController?.navigationBar)
         } else {
             sender.resignFirstResponder()
             
-            UserDefaults.standard().set(sender.text, forKey: "CheckInText")
+            UserDefaults.standard.set(sender.text, forKey: "CheckInText")
             
             popupController?.popViewController(animated: true)
         }

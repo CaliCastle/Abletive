@@ -95,7 +95,7 @@ public class SideBar: NSObject,SideBarTableViewDelegate {
         animator.addBehavior(gravityBehavior)
         
         let collisionBehavior : UICollisionBehavior = UICollisionBehavior(items: [sideBarContainerView])
-        collisionBehavior.addBoundary(withIdentifier: "sideBarBoundary", from: CGPoint(x: boundaryX, y: 20), to: CGPoint(x: boundaryX, y: originView.frame.size.height))
+        collisionBehavior.addBoundary(withIdentifier: "sideBarBoundary" as NSCopying, from: CGPoint(x: boundaryX, y: 20), to: CGPoint(x: boundaryX, y: originView.frame.size.height))
         animator.addBehavior(collisionBehavior)
         
         let pushBehavior : UIPushBehavior = UIPushBehavior(items: [sideBarContainerView], mode: .instantaneous)

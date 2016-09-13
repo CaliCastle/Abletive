@@ -15,12 +15,12 @@ class CCFilterImageTag: NSObject {
     
         if fullAvatarPath.contains("img src") {
             var range = fullAvatarPath.range(of: "\"")
-            fullAvatarPath = fullAvatarPath.substring(from: range.location+1)
+            fullAvatarPath = fullAvatarPath.substring(from: range.location+1) as NSString
             range = fullAvatarPath.range(of: "\"")
-            fullAvatarPath = fullAvatarPath.substring(to: range.location)
+            fullAvatarPath = fullAvatarPath.substring(to: range.location) as NSString
         }
         // Decode the string to url standard
         let characterSet = CharacterSet(charactersIn: fullAvatarPath as String);
-        return fullAvatarPath.addingPercentEncoding(withAllowedCharacters: characterSet)!;
+        return fullAvatarPath.addingPercentEncoding(withAllowedCharacters: characterSet)! as NSString?
     }
 }

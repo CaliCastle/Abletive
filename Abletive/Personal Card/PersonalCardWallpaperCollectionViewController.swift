@@ -20,13 +20,13 @@ class PersonalCardWallpaperCollectionViewController: UICollectionViewController,
 
     weak var delegate : PersonalCardWallpaperDelegate?
     
-    let wallpapers : NSArray = NSArray(contentsOfFile: Bundle.main().pathForResource("PersonalCardWallpaper", ofType: "plist")!)!
+    let wallpapers : NSArray = NSArray(contentsOfFile: Bundle.main.path(forResource: "PersonalCardWallpaper", ofType: "plist")!)!
     
     var backgroundIndex : Int = 0
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 50, height: UIScreen.main().bounds.height - 120)
+        contentSizeInPopup = CGSize(width: UIScreen.main.bounds.size.width - 50, height: UIScreen.main.bounds.height - 120)
     }
     
     override func viewDidLoad() {
@@ -36,10 +36,10 @@ class PersonalCardWallpaperCollectionViewController: UICollectionViewController,
         collectionView?.indicatorStyle = .white
         
         cellSize = contentSizeInPopup.width / 2 - paddingX
-        backgroundIndex = UserDefaults.standard().integer(forKey: "card-backgroundIndex")
+        backgroundIndex = UserDefaults.standard.integer(forKey: "card-backgroundIndex")
         // Register cell classes
         self.collectionView!.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-        collectionView?.scrollToItem(at: IndexPath(row: UserDefaults.standard().integer(forKey: "card-backgroundIndex"), section: 0), at: .top, animated: true)
+        collectionView?.scrollToItem(at: IndexPath(row: UserDefaults.standard.integer(forKey: "card-backgroundIndex"), section: 0), at: .top, animated: true)
         // Do any additional setup after loading the view.
         view.backgroundColor = AppColor.secondaryBlack()
     }

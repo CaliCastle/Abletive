@@ -22,8 +22,8 @@ class CCTodayViewController: UIViewController, NCWidgetProviding, UICollectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor.clear()
-        collectionView?.backgroundColor = UIColor.clear()
+        view.backgroundColor = UIColor.clear
+        collectionView?.backgroundColor = UIColor.clear
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
         
@@ -58,7 +58,7 @@ class CCTodayViewController: UIViewController, NCWidgetProviding, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        cell.backgroundColor = UIColor.clear()
+        cell.backgroundColor = UIColor.clear
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -68,20 +68,20 @@ class CCTodayViewController: UIViewController, NCWidgetProviding, UICollectionVi
         cell.thumbnailImageView.layer.masksToBounds = true
         
         // Earlier than iOS 10
-        if Double(UIDevice.current().systemVersion)! <= 9 {
-            cell.titleLabel.textColor = UIColor.white()
-            cell.authorLabel.textColor = UIColor.lightGray()
+        if Double(UIDevice.current.systemVersion)! <= 9 {
+            cell.titleLabel.textColor = UIColor.white
+            cell.authorLabel.textColor = UIColor.lightGray
         } else {
-            cell.titleLabel.textColor = UIColor.black()
-            cell.authorLabel.textColor = UIColor.darkGray()
+            cell.titleLabel.textColor = UIColor.black
+            cell.authorLabel.textColor = UIColor.darkGray
         }
         
-        Post.globalTimelinePosts(withPage: indexPath.item! + 1) { (post, error) in
+        Post.globalTimelinePosts(withPage: indexPath.item + 1) { (post, error) in
             if error == nil {
                 cell.currentPost = post
                 
                 if post?.imageMediumPath != nil && post?.imageMediumPath != "" {
-                    self.getDataFromUrl(URL(string: (post?.imageMediumPath)!)!, completion: { (data, response, error) -> Void in
+                    self.getDataFromUrl(url: URL(string: (post?.imageMediumPath)!)!, completion: { (data, response, error) -> Void in
                         if error == nil {
                             DispatchQueue.main.async(execute: { () -> Void in
                                 let image = UIImage(data: data!, scale: 1)
@@ -100,13 +100,15 @@ class CCTodayViewController: UIViewController, NCWidgetProviding, UICollectionVi
         return cell
     }
     
-    func getDataFromUrl(_ url:URL, completion: ((data: Data?, response: URLResponse?, error: NSError? ) -> Void)) {
-        URLSession.shared().dataTask(with: url) { (data, response, error) in
-            completion(data: data, response: response, error: error)
-            }.resume()
+    func getDataFromUrl(url:URL, completion: @escaping (Data?, URLResponse?, NSError?) -> Void) {
+//        let request = URLRequest(url: url)
+//        
+//        URLSession.shared.dataTask(with: request) { (data, response, error) in
+//            completion(data, response, error)
+//        }.resume()
     }
     
-    func widgetPerformUpdate(completionHandler: (NCUpdateResult) -> Void) {
+    private func widgetPerformUpdate(completionHandler: (NCUpdateResult) -> Void) {
         collectionView?.reloadData()
         completionHandler(NCUpdateResult.newData)
     }

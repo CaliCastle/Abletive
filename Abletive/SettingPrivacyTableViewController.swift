@@ -17,8 +17,8 @@ class SettingPrivacyTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        blurSwitch.isOn = UserDefaults.standard().bool(forKey: "Background_Blur")
-        authSwitch.isOn = UserDefaults.standard().bool(forKey: "Authentication_Profile")
+        blurSwitch.isOn = UserDefaults.standard.bool(forKey: "Background_Blur")
+        authSwitch.isOn = UserDefaults.standard.bool(forKey: "Authentication_Profile")
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,7 +27,7 @@ class SettingPrivacyTableViewController: UITableViewController {
     }
     
     @IBAction func blurSwitchDidChange(_ sender: UISwitch) {
-        UserDefaults.standard().set(sender.isOn, forKey: "Background_Blur")
+        UserDefaults.standard.set(sender.isOn, forKey: "Background_Blur")
     }
     
     @IBAction func authSwitchDidChange(_ sender: UISwitch) {
@@ -43,7 +43,7 @@ class SettingPrivacyTableViewController: UITableViewController {
                 context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "用来验证身份，保护资料信息", reply: { (success, error) in
                     if success {
                         DispatchQueue.main.async(execute: {
-                            UserDefaults.standard().set(on, forKey: "Authentication_Profile")
+                            UserDefaults.standard.set(on, forKey: "Authentication_Profile")
                         })
                     } else {
                         DispatchQueue.main.async(execute: { 
@@ -58,7 +58,7 @@ class SettingPrivacyTableViewController: UITableViewController {
                 context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "用来验证身份，保护资料信息", reply: { (success, error) in
                     if success {
                         DispatchQueue.main.async(execute: {
-                            UserDefaults.standard().set(on, forKey: "Authentication_Profile")
+                            UserDefaults.standard.set(on, forKey: "Authentication_Profile")
                         })
                     } else {
                         DispatchQueue.main.async(execute: {

@@ -13,7 +13,7 @@ class SettingThemeTableViewController: UITableViewController {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        contentSizeInPopup = CGSize(width: UIScreen.main().bounds.size.width - 50, height: UIScreen.main().bounds.size.height - 250)
+        contentSizeInPopup = CGSize(width: UIScreen.main.bounds.size.width - 50, height: UIScreen.main.bounds.size.height - 250)
     }
     
     override func viewDidLoad() {
@@ -37,8 +37,8 @@ class SettingThemeTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        UserDefaults.standard().set((indexPath as NSIndexPath).row, forKey: "theme")
-        NotificationCenter.default().post(name: Notification.Name(rawValue: "themeChanged"), object: nil)
+        UserDefaults.standard.set((indexPath as NSIndexPath).row, forKey: "theme")
+        NotificationCenter.default.post(name: Notification.Name(rawValue: "themeChanged"), object: nil)
         tableView.reloadData()
     }
 
@@ -46,7 +46,7 @@ class SettingThemeTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SettingThemeCell", for: indexPath)
 
         // Configure the cell...
-        if UserDefaults.standard().integer(forKey: "theme") == (indexPath as NSIndexPath).row {
+        if UserDefaults.standard.integer(forKey: "theme") == (indexPath as NSIndexPath).row {
             cell.accessoryType = .checkmark
         } else {
             cell.accessoryType = .none

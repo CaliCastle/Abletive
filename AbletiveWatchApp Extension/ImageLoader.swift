@@ -10,7 +10,7 @@ import Foundation
 
 class ImageLoader {
     
-    let cache = Cache<NSString, UIImage>()
+    let cache = NSCache<NSString, UIImage>()
     
     class var sharedLoader : ImageLoader {
         struct Static {
@@ -19,36 +19,34 @@ class ImageLoader {
         return Static.instance
     }
     
-    func imageForUrl(_ urlString: String, completionHandler:(image: UIImage?, url: String) -> ()) {
-        DispatchQueue.global(attributes: DispatchQueue.GlobalAttributes.qosBackground).async(execute: {()in
+    func imageForUrl(_ urlString: String, completionHandler:@escaping (_ image: UIImage?, _ url: String) -> ()) {
+        DispatchQueue.global(qos: DispatchQoS.background.qosClass).async {
             let data = self.cache.object(forKey: NSString(string: urlString))
             
             if data != nil {
                 
                 DispatchQueue.main.async(execute: {() in
-                    completionHandler(image: data, url: urlString)
+                    completionHandler(data, urlString)
                 })
                 return
             }
             
-            let downloadTask: URLSessionDataTask = URLSession.shared().dataTask(with: URL(string: urlString)!, completionHandler: {(data: Data?, response: URLResponse?, error: NSError?) -> Void in
+            let downloadTask : URLSessionDataTask = URLSession.shared.dataTask(with: URL(string: urlString)!, completionHandler: { (data, response, error) in
                 if (error != nil) {
-                    completionHandler(image: nil, url: urlString)
+                    completionHandler(nil, urlString)
                     return
                 }
                 
                 if let data = data {
                     let image = UIImage(data: data)
-                    self.cache.setObject(image!, forKey: urlString)
+                    self.cache.setObject(image!, forKey: urlString as NSString)
                     DispatchQueue.main.async(execute: {() in
-                        completionHandler(image: image, url: urlString)
+                        completionHandler(image, urlString)
                     })
                     return
                 }
-                
             })
             downloadTask.resume()
-        })
-        
+        }
     }
 }
